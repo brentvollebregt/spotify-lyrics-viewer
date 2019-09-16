@@ -37,12 +37,3 @@ app.get('/', function (req, res) {
 ```
 
 > For development, use [nodemon](https://www.npmjs.com/package/nodemon)
-
-
-
-Good:
-https://daveceddia.com/deploy-react-express-app-heroku/
-
-
-Deploy create-react-app with an Express backend to Heroku:
-https://medium.com/@chloechong.us/how-to-deploy-a-create-react-app-with-an-express-backend-to-heroku-32decfee6d18
