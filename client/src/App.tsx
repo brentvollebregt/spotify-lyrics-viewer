@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 const App: React.FC = () => {
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    fetch('/api/ping')
+      .then(r => r.text())
+      .then(msg => setMessage(msg));
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -18,6 +26,7 @@ const App: React.FC = () => {
         >
           Learn React
         </a>
+        <div>{message}</div>
       </header>
     </div>
   );
