@@ -1,25 +1,13 @@
 import express from "express";
 import path from "path";
+import GeniusRoutes from "./routes/genius";
+import SpotifyRoutes from "./routes/spotify";
 
 const app = express();
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, "client/build")));
-
-app.get("/api/ping", (req, res) => {
-    res.send("pong");
-    // res.json(passwords);
-});
-
-app.get("/api/test", (req, res) => {
-    res.send("test");
-    // res.json(passwords);
-});
-
-// Catch all non-matched urls
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname + '/client/build/index.html'));
-// });
+app.use(express.static(path.join(__dirname, "client/build"))); // Serve static files from the React app
+app.use('/api/genius', GeniusRoutes);
+app.use('/api/spotify', SpotifyRoutes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
