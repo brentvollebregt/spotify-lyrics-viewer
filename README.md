@@ -19,21 +19,15 @@ View the lyrics of the current playing Spotify song in your browser
     - [Genius search for lyrics](https://docs.genius.com/#search-h2)
 - Database interaction: [sequelize](https://www.npmjs.com/package/sequelize)
 
-### Hosting
-[www.heroku.com](https://www.heroku.com/)
-
 ### Flow
 - Wait for one second over the song and poll every 5 seconds? (can increase/decrease this)
     - Also provide a refresh button
 
 ### Examples
-- [sequelize + express](https://github.com/sequelize/express-example)
-- [react-express-starter](https://github.com/philnash/react-express-starter) - maybe a non-ideal layout but I will start with it
+- [TypeScript Server](https://developer.okta.com/blog/2018/11/15/node-express-typescript)
+- [Express Layout](https://github.com/sequelize/express-example)
 
-```javascript
-app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
+```python
+import requests
+r = requests.get('https://api.genius.com/search', params={'q': 'Clocks Coldplay'}, headers={'Authorization': 'Bearer XXXXXXXXXXXXXXXXXXXX'})
 ```
-
-> For development, use [nodemon](https://www.npmjs.com/package/nodemon)

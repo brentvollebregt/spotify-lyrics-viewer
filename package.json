@@ -2,10 +2,13 @@
   "name": "spotify-lyrics-viewer-online",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
+    "dev": "ts-node-dev --respawn --transpileOnly src/index.ts",
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "repository": {
@@ -20,7 +23,15 @@
   },
   "homepage": "https://github.com/brentvollebregt/spotify-lyrics-viewer-online#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "@types/express": "^4.17.1",
+    "@types/node": "^12.11.1",
+    "axios": "^0.19.0",
+    "cheerio": "^1.0.0-rc.3",
+    "express": "^4.17.1",
+    "typescript": "^3.6.4"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "ts-node-dev": "^1.0.0-pre.43",
+    "tslint": "^5.20.0"
+  }
 }

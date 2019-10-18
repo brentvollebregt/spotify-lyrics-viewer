@@ -1,13 +1,18 @@
-const express = require('express');
-const path = require('path');
+import express from "express";
+import path from "path";
 
 const app = express();
 
 // Serve static files from the React app
-app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(express.static(path.join(__dirname, "client/build")));
 
-app.get('/api/ping', (req, res) => {
-    res.send('pong')
+app.get("/api/ping", (req, res) => {
+    res.send("pong");
+    // res.json(passwords);
+});
+
+app.get("/api/test", (req, res) => {
+    res.send("test");
     // res.json(passwords);
 });
 

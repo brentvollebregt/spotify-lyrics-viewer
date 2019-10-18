@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const App: React.FC = () => {
   const [message, setMessage] = useState('');
@@ -14,6 +14,6 @@ const App: React.FC = () => {
       <div>Response: {message}</div>
     </div>
   );
-}
+};
 
 export default App;
