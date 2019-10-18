@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config(); // Setup .env
+
 import express from "express";
 import path from "path";
 import GeniusRoutes from "./routes/genius";
