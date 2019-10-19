@@ -1,9 +1,10 @@
 import React from 'react';
+import { Container } from 'react-bootstrap';
 
 const About: React.FunctionComponent = () => {
-    return <div>
+    return <Container>
         <h1>About</h1>
-    </div>;
+    </Container>;
 };
 
 export default About;

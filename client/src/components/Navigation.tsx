@@ -35,7 +35,7 @@ const Navigation: React.FunctionComponent<IProps> = (props: IProps) => {
                     )}
                 </Nav>
                 <Nav>
-                    <Nav.Link href="#">Controls (TEMP)</Nav.Link>
+                    <Nav.Link href="#" onClick={goTo('/spotify-authorization')}>Controls (TEMP)</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
         </Container>
