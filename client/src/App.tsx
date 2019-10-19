@@ -1,19 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useRoutes, useRedirect } from 'hookrouter';
+import Navigation from './components/Navigation';
+import About from './pages/About';
+import LyricsView from './pages/LyricsView';
+import NotFound from './pages/NotFound';
+import SpotifyAuthorization from './pages/SpotifyAuthorization';
 
 const App: React.FC = () => {
-  const [message, setMessage] = useState('');
+  const routes = {
+    '/': () => <LyricsView />,
+    '/about': () => <About />,
+    '/spotify-authorization': () => <SpotifyAuthorization />,
+  };
+  const routeResult = useRoutes(routes);
+  useRedirect('/spotify-authorization/', '/spotify-authorization');
 
-  useEffect(() => {
-    fetch('/api/ping')
-      .then(r => r.text())
-      .then(msg => setMessage(msg));
-  }, []);
-
-  return (
-    <div>
-      <div>Response: {message}</div>
-    </div>
-  );
+  return <>
+    <Navigation />
+    {routeResult || <NotFound />}
+  </>;
 };
 
 export default App;
