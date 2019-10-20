@@ -1,6 +1,7 @@
 import React from 'react';
 import { navigate } from 'hookrouter';
 import { Container, Spinner } from 'react-bootstrap';
+import { spotifyAuthentication } from '../../api';
 import { randomString } from '../../utils';
 import Config from '../../config';
 
@@ -11,22 +12,30 @@ const localStorageStateKey = 'spotify-auth-random-state';
 interface IProps {}
 
 const SpotifyAuthorization: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { hash } = window.location;
+    const { search } = window.location;
+
+    const onCodeReceived = (code: string) => {
+        // TODO Request for token
+        spotifyAuthentication(code)
+            .then(console.log)
+            .catch(console.error);
+        navigate('/');
+    };
 
     let message = <></>;
 
-    if (hash === '') { // No token in URL, redirect user to request for one
+    if (search === '') { // No token in URL, redirect user to request for one
         // Setup random state
         const randomState = randomString(16);
         localStorage.setItem(localStorageStateKey, randomState);
         // Redirect
         const urlParameters = {
             client_id: Config.spotify.client_id,
-            response_type: 'token',
             redirect_uri: window.location.href,
-            state: randomState,
+            response_type: 'code',
             scope: Config.spotify.permission_scope,
-            show_dialog: true,
+            show_dialog: false,
+            state: randomState,
         };
         const urlParametersEncoded = new URLSearchParams(urlParameters as any);
         window.location.href = 'https://accounts.spotify.com/authorize?' + urlParametersEncoded;
@@ -36,21 +45,18 @@ const SpotifyAuthorization: React.FunctionComponent<IProps> = (props: IProps) =>
         </>;
 
     } else { // We have received the token, read it from the URL
-        const params = new URLSearchParams(hash.substr(1));
-        const accessToken = params.get('access_token');
-        const expiresIn = params.get('expires_in');
+        const params = new URLSearchParams(search.substr(1));
+        const code = params.get('code');
         const state = params.get('state');
 
-        if (accessToken !== null && expiresIn !== null && state !== null) { // All parameters are present
+        if (code !== null && state !== null) { // All parameters are present
             const storedRandomState = localStorage.getItem(localStorageStateKey);
             if (storedRandomState !== null && storedRandomState === state) { // Random state was set and matches
                 localStorage.removeItem(localStorageStateKey);
-                // TODO Do something with the token
-                // onTokenRecieved(accessToken, parseInt(expiresIn));
-                // navigate('/'); // Go home
+                onCodeReceived(code);
                 message = <>
                     <Spinner animation="border" />
-                    <p className="lead">Recieved token</p>
+                    <p className="lead">Authenticating</p>
                 </>;
 
             } else { // Token received but it does not match the state stored (if there was one)
