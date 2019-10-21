@@ -21,7 +21,7 @@ router.get('/lyrics', async (req, res) => {
     }
 
     const lyrics = await getLyrics(searchResults.hits[0].result.path);
-    res.send(lyrics);
+    res.send(lyrics.trim());
 });
 
 export default router;
