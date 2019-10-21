@@ -28,10 +28,18 @@ const App: React.FC = () => {
         }
     }, [token]);
 
+    useEffect(() => {
+        // TODO Prepare for expiry
+    }, [token]);
+
+    useEffect(() => {
+        // TODO Request for token from server to see if one is already stored
+    }, []);
+
     const onNewToken = (accessToken: string, expiresAt: number) => {
         setToken({ expiry: new Date(expiresAt), value: accessToken });
     };
-    const clearToken = () => setToken(null);
+    const clearToken = () => setToken(null); // TODO Delete token server side
 
     const routes = {
         '/': () => <LyricsView token={token} user={user} />,
