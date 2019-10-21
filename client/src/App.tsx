@@ -10,10 +10,9 @@ import SpotifyAuthorization from './pages/SpotifyAuthorization';
 const App: React.FC = () => {
   const [token, setToken] = useState<IToken | null>(null);
 
-  const onNewToken = (accessToken: string, expiresIn: number) => {
-    const expiryDate = new Date();
-    expiryDate.setSeconds(expiryDate.getSeconds() + expiresIn);
-    setToken({ expiry: expiryDate, value: accessToken });
+  const onNewToken = (accessToken: string, expiresAt: number) => {
+    setToken({ expiry: new Date(expiresAt), value: accessToken });
+    console.log({ expiry: new Date(expiresAt), value: accessToken });
   };
 
   const routes = {

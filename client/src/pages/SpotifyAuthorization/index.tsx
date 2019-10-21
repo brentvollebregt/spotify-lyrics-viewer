@@ -22,10 +22,10 @@ const SpotifyAuthorization: React.FunctionComponent<IProps> = (props: IProps) =>
     } else { // We have received the token, read it from the URL
         const params = new URLSearchParams(search.substr(1));
         const accessToken = params.get('access_token');
-        const expiresIn = params.get('expires_in');
+        const expiresAt = params.get('expires_at');
 
-        if (accessToken !== null && expiresIn !== null) { // All parameters are present
-            onNewToken(accessToken, parseInt(expiresIn, 10));
+        if (accessToken !== null && expiresAt !== null) { // All parameters are present
+            onNewToken(accessToken, parseInt(expiresAt, 10));
             navigate('/');
             message = <p className="lead">Token received</p>;
         } else {

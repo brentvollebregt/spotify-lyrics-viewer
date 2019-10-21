@@ -1,11 +1,14 @@
 import express from "express";
+import { Dictionary, Request } from "express-serve-static-core";
 import SpotifyWebApi from 'spotify-web-api-node';
 import Config from '../config';
 import { randomString } from '../utils';
 import { isStoredTokenValid } from '../utils/spotify';
 import { ITokenExpiryPair } from '../dto/spotify';
+import { URLSearchParams } from "url";
 
 export const subRoute = '/api/spotify';
+
 const getRedirectUri = (host: string) => `http://${host}${subRoute}/authentication-callback`;
 const millisecondsOffsetFromNow = (offset: number) => (new Date()).getTime() + (offset * 1000);
 
@@ -22,6 +25,7 @@ router.get('/authenticate', (req, res) => {
     // Make the call and clear the session
     const authorizeURL = spotifyApi.createAuthorizeURL(Config.spotify.permission_scope.split(' '), state);
     req.session.authentication_state = state;
+    req.session.authentication_origin = req.headers.referer;
     req.session.expires_at = undefined;
     req.session.access_token = undefined;
     req.session.refresh_token = undefined;
@@ -42,6 +46,10 @@ router.get('/authentication-callback', async (req, res) => {
     }
     req.session.authentication_state = undefined;
 
+    // Pull out origin to redirect to and clear it
+    const originToRedirectTo = req.session.authentication_origin;
+    req.session.authentication_origin = undefined;
+
     // Setup API object
     const spotifyApi = new SpotifyWebApi({
         clientId: Config.spotify.client_id,
@@ -55,12 +63,12 @@ router.get('/authentication-callback', async (req, res) => {
     req.session.access_token = authorizationResponse.body.access_token;
     req.session.refresh_token = authorizationResponse.body.refresh_token;
 
-    // Respond with the updated values
+    // Redirect user with values
     const responseData: ITokenExpiryPair = {
         access_token: req.session.access_token,
         expires_at: req.session.expires_at
     };
-    res.json(responseData);
+    res.redirect(`${originToRedirectTo}?${new URLSearchParams(responseData as any)}`);
     res.end();
 });
 
