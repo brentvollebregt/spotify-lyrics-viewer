@@ -2,24 +2,31 @@ import express from "express";
 import SpotifyWebApi from 'spotify-web-api-node';
 import Config from '../config';
 import { randomString } from '../utils';
+import { isStoredTokenValid } from '../utils/spotify';
+import { ITokenExpiryPair } from '../dto/spotify';
 
 export const subRoute = '/api/spotify';
 const getRedirectUri = (host: string) => `http://${host}${subRoute}/authentication-callback`;
+const millisecondsOffsetFromNow = (offset: number) => (new Date()).getTime() + (offset * 1000);
 
 const router = express.Router();
 
 router.get('/authenticate', (req, res) => {
+    // Setup API object
     const spotifyApi = new SpotifyWebApi({
         clientId: Config.spotify.client_id,
         redirectUri: getRedirectUri(req.headers.host)
     });
     const state = randomString(16);
-    const authorizeURL = spotifyApi.createAuthorizeURL(Config.spotify.permission_scope.split(' '), state);
 
+    // Make the call and clear the session
+    const authorizeURL = spotifyApi.createAuthorizeURL(Config.spotify.permission_scope.split(' '), state);
     req.session.authentication_state = state;
-    req.session.expires_in = undefined;
+    req.session.expires_at = undefined;
     req.session.access_token = undefined;
     req.session.refresh_token = undefined;
+
+    // Redirect user
     res.redirect(authorizeURL);
     res.end();
 });
@@ -27,30 +34,73 @@ router.get('/authenticate', (req, res) => {
 router.get('/authentication-callback', async (req, res) => {
     const { code, state } = req.query;
 
-    // Verify state is expected
-    if (state !== req.session.authentication_state) {
+    // Verify this request is expected (using the state value)
+    if (state === undefined || state !== req.session.authentication_state) {
         res.status(400).send('Unexpected state value');
+        res.end();
         return;
     }
     req.session.authentication_state = undefined;
 
-    // Get an access and refresh token
+    // Setup API object
     const spotifyApi = new SpotifyWebApi({
         clientId: Config.spotify.client_id,
         clientSecret: Config.spotify.client_secret,
         redirectUri: getRedirectUri(req.headers.host)
     });
 
+    // Make the call and put data into the session
     const authorizationResponse = await spotifyApi.authorizationCodeGrant(code);
-    req.session.expires_in = authorizationResponse.body.expires_in;
+    req.session.expires_at = millisecondsOffsetFromNow(authorizationResponse.body.expires_in);
     req.session.access_token = authorizationResponse.body.access_token;
     req.session.refresh_token = authorizationResponse.body.refresh_token;
 
-    res.json({ success: true, token: authorizationResponse.body.access_token });
+    // Respond with the updated values
+    const responseData: ITokenExpiryPair = {
+        access_token: req.session.access_token,
+        expires_at: req.session.expires_at
+    };
+    res.json(responseData);
+    res.end();
+});
+
+router.get('/token', (req, res) => {
+    // Verify the data in the session is sufficient to fulfil this request
+    if (!isStoredTokenValid(req)) {
+        res.status(401).send('No token available');
+        res.end();
+        return;
+    }
+
+    // Respond with the updated values
+    const responseData: ITokenExpiryPair = {
+        access_token: req.session.access_token,
+        expires_at: req.session.expires_at
+    };
+    res.json(responseData);
+    res.end();
+});
+
+router.delete('/token', (req, res) => {
+    // Clear out the state
+    req.session.expires_at = undefined;
+    req.session.access_token = undefined;
+    req.session.refresh_token = undefined;
+
+    // 200 success
+    res.send('');
     res.end();
 });
 
 router.get('/refresh-token', async (req, res) => {
+    // Verify the data in the session is sufficient to fulfil this request
+    if (!isStoredTokenValid(req)) {
+        res.status(401).send('No token available');
+        res.end();
+        return;
+    }
+
+    // Setup API object
     const spotifyApi = new SpotifyWebApi({
         clientId: Config.spotify.client_id,
         clientSecret: Config.spotify.client_secret,
@@ -59,16 +109,17 @@ router.get('/refresh-token', async (req, res) => {
     spotifyApi.setAccessToken(req.session.access_token);
     spotifyApi.setRefreshToken(req.session.refresh_token);
 
-    const refreshResponse = await spotifyApi.refreshAccessToken().catch(e => {
-        console.error(e);
-    });
-    if (refreshResponse) {
-        res.json(refreshResponse.body);
-    }
-    // req.session.expires_in = refreshResponse.body.expires_in;
-    // req.session.access_token = refreshResponse.body.access_token;
+    // Make the call and put data into the session
+    const refreshResponse = await spotifyApi.refreshAccessToken();
+    req.session.expires_at = millisecondsOffsetFromNow(refreshResponse.body.expires_in);
+    req.session.access_token = refreshResponse.body.access_token;
 
-    // res.json({ success: true, token: refreshResponse.body.access_token });
+    // Respond with the updated values
+    const responseData: ITokenExpiryPair = {
+        access_token: req.session.access_token,
+        expires_at: req.session.expires_at
+    };
+    res.json(responseData);
     res.end();
 });
 
