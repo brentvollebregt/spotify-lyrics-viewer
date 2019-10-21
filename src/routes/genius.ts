@@ -1,6 +1,8 @@
 import express from "express";
 import { getLyrics, search } from '../api/genius';
 
+export const subRoute = '/api/genius';
+
 const router = express.Router();
 
 router.get('/lyrics', async (req, res) => {
