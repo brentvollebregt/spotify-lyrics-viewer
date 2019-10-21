@@ -9,7 +9,8 @@
         "no-console": false,
         "quotemark": [false],
         "arrow-parens": false,
-        "ordered-imports": false
+        "ordered-imports": false,
+        "max-line-length": [true, { "limit": 150 }]
     },
     "rulesDirectory": []
 }

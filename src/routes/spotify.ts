@@ -1,5 +1,4 @@
 import express from "express";
-import { Dictionary, Request } from "express-serve-static-core";
 import SpotifyWebApi from 'spotify-web-api-node';
 import Config from '../config';
 import { randomString } from '../utils';
@@ -15,6 +14,7 @@ const millisecondsOffsetFromNow = (offset: number) => (new Date()).getTime() + (
 const router = express.Router();
 
 router.get('/authenticate', (req, res) => {
+    // Auth: https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow
     // Setup API object
     const spotifyApi = new SpotifyWebApi({
         clientId: Config.spotify.client_id,

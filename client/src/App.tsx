@@ -1,32 +1,50 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRoutes, useRedirect } from 'hookrouter';
-import { IToken } from './models';
+import SpotifyWebApi from 'spotify-web-api-js';
+import cogoToast from 'cogo-toast';
 import Navigation from './components/Navigation';
 import About from './pages/About';
 import LyricsView from './pages/LyricsView';
 import NotFound from './pages/NotFound';
 import SpotifyAuthorization from './pages/SpotifyAuthorization';
+import { IToken } from './models';
 
 const App: React.FC = () => {
-  const [token, setToken] = useState<IToken | null>(null);
+    const [token, setToken] = useState<IToken | null>(null);
+    const [user, setUser] = useState<SpotifyApi.UserObjectPrivate | null>(null);
 
-  const onNewToken = (accessToken: string, expiresAt: number) => {
-    setToken({ expiry: new Date(expiresAt), value: accessToken });
-    console.log({ expiry: new Date(expiresAt), value: accessToken });
-  };
+    useEffect(() => {  // Request the user when the token changes
+        if (token === null) {
+            setUser(null);
+        } else {
+            const spotifyApi = new SpotifyWebApi();
+            spotifyApi.setAccessToken(token.value);
+            spotifyApi.getMe()
+                .then(newUser => setUser(newUser))
+                .catch(err => cogoToast.error(
+                    'Could not get your profile. Make sure you are connected to the internet and that your token is valid.',
+                    { position: "bottom-center", heading: 'Error When Fetching Your Profile', hideAfter: 20, onClick: (hide: any) => hide() }
+                ));
+        }
+    }, [token]);
 
-  const routes = {
-    '/': () => <LyricsView />,
-    '/about': () => <About />,
-    '/spotify-authorization': () => <SpotifyAuthorization onNewToken={onNewToken} />,
-  };
-  const routeResult = useRoutes(routes);
-  useRedirect('/spotify-authorization/', '/spotify-authorization');
+    const onNewToken = (accessToken: string, expiresAt: number) => {
+        setToken({ expiry: new Date(expiresAt), value: accessToken });
+    };
+    const clearToken = () => setToken(null);
 
-  return <>
-    <Navigation />
-    {routeResult || <NotFound />}
-  </>;
+    const routes = {
+        '/': () => <LyricsView token={token} user={user} />,
+        '/about': () => <About />,
+        '/spotify-authorization': () => <SpotifyAuthorization onNewToken={onNewToken} />,
+    };
+    const routeResult = useRoutes(routes);
+    useRedirect('/spotify-authorization/', '/spotify-authorization');
+
+    return <>
+        <Navigation user={user} onLogout={clearToken} />
+        {routeResult || <NotFound />}
+    </>;
 };
 
 export default App;

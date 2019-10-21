@@ -1,18 +1,29 @@
 import React from 'react';
 import { navigate, usePath } from 'hookrouter';
 import { Container, Nav, Navbar } from 'react-bootstrap';
+import SpotifyLoginStatusButton from '../components/SpotifyLoginStatusButton';
 
 const navbarLinks: { [key: string]: string } = {
     '/': 'Home',
     '/about': 'About',
 };
 
-interface IProps { }
+interface IProps {
+    user: SpotifyApi.UserObjectPrivate | null;
+    onLogout: () => void;
+}
 
 const Navigation: React.FunctionComponent<IProps> = (props: IProps) => {
+    const { user, onLogout } = props;
     const currentPath = usePath();
 
     const goTo = (location: string) => () => navigate(location);
+    const logoutCheck = () => {
+        const answer = window.confirm('Are you sure you want to logout?');
+        if (answer) {
+            onLogout();
+        }
+    };
 
     return <Navbar collapseOnSelect expand="md" bg="light" variant="light" sticky="top">
         <Container>
@@ -35,7 +46,7 @@ const Navigation: React.FunctionComponent<IProps> = (props: IProps) => {
                     )}
                 </Nav>
                 <Nav>
-                    <Nav.Link href="#" onClick={goTo('/spotify-authorization')}>Controls (TEMP)</Nav.Link>
+                    <SpotifyLoginStatusButton user={user} onLoggedInClick={logoutCheck} />
                 </Nav>
             </Navbar.Collapse>
         </Container>

@@ -2,8 +2,8 @@ import React from 'react';
 import { Container } from 'react-bootstrap';
 
 const About: React.FunctionComponent = () => {
-    return <Container>
-        <h1>About</h1>
+    return <Container className="text-center">
+        <h2>About</h2>
     </Container>;
 };
 
