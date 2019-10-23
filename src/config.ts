@@ -1,4 +1,7 @@
 export default {
+    client: {
+        relative_build_directory: '../client/build'
+    },
     genius: {
         access_token: process.env.GENIUS_ACCESS_TOKEN
     },

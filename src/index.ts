@@ -33,7 +33,11 @@ app.use((req, res, next) => {
 });
 
 // Static files from the React app
-app.use(express.static(path.join(__dirname, "client/build")));
+const clientBuildDirectory = path.join(__dirname, Config.client.relative_build_directory);
+app.use(express.static(clientBuildDirectory));
+app.use('/', express.static(path.join(clientBuildDirectory, 'index.html')));
+app.use('/about', express.static(path.join(clientBuildDirectory, 'index.html')));
+app.use('/spotify-authorization', express.static(path.join(clientBuildDirectory, 'index.html')));
 
 // API Endpoints
 app.use(geniusSubRoute, GeniusRoutes);
