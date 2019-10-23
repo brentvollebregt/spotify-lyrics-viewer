@@ -1,6 +1,7 @@
 export default {
     client: {
-        relative_build_directory: '../client/build'
+        relative_build_directory: '../client/build',
+        routes: ['/', '/about', '/spotify-authorization']
     },
     genius: {
         access_token: process.env.GENIUS_ACCESS_TOKEN
