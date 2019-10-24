@@ -7,6 +7,7 @@ import About from './pages/About';
 import LyricsView from './pages/LyricsView';
 import NotFound from './pages/NotFound';
 import SpotifyAuthorization from './pages/SpotifyAuthorization';
+import { deleteSession } from './api';
 import { IToken } from './models';
 
 const App: React.FC = () => {
@@ -28,18 +29,21 @@ const App: React.FC = () => {
         }
     }, [token]);
 
-    useEffect(() => {
+    useEffect(() => { // Request for a new token before expiry
         // TODO Prepare for expiry
     }, [token]);
 
-    useEffect(() => {
+    useEffect(() => { // Request for a token on load to see if data is already in the state
         // TODO Request for token from server to see if one is already stored
     }, []);
 
     const onNewToken = (accessToken: string, expiresAt: number) => {
         setToken({ expiry: new Date(expiresAt), value: accessToken });
     };
-    const clearToken = () => setToken(null); // TODO Delete token server side
+    const clearToken = () => {
+        setToken(null);
+        deleteSession();
+    };
 
     const routes = {
         '/': () => <LyricsView token={token} user={user} />,

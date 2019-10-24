@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import SpotifyWebApi from 'spotify-web-api-js';
 import { Container, Spinner } from 'react-bootstrap';
 import Welcome from './Welcome';
-import { getGeniusLyrics } from '../../api';
+import { geniusGetLyrics } from '../../api';
 import { IToken } from '../../models';
 
 interface ILyricUriPair {
@@ -38,7 +38,7 @@ const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
         } else {
             if (lyrics === null || currentlyPlaying.item.id !== lyrics.spotifyId) {
                 // Get lyrics
-                getGeniusLyrics(`${currentlyPlaying.item.name} ${currentlyPlaying.item.artists[0].name}`)
+                geniusGetLyrics(`${currentlyPlaying.item.name} ${currentlyPlaying.item.artists[0].name}`)
                     .then(newLyrics => {
                         if (currentlyPlaying.item !== null) {
                             setLyrics({ content: newLyrics, spotifyId: currentlyPlaying.item.id });

@@ -6,6 +6,7 @@ import cookieSession from "cookie-session";
 import path from "path";
 import Config from './config';
 import GeniusRoutes, { subRoute as geniusSubRoute } from "./routes/genius";
+import SessionRoutes, { subRoute as sessionSubRoute } from "./routes/session";
 import SpotifyRoutes, { subRoute as spotifySubRoute } from "./routes/spotify";
 
 const app = express();
@@ -29,7 +30,9 @@ app.use((req, res, next) => {
     if (Config.server.allowed_origins.indexOf(origin) !== -1) {
         res.header('Access-Control-Allow-Origin', origin);
     }
-    res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
+    res.header('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Credentials', 'true');
     next();
 });
 
@@ -42,6 +45,7 @@ Config.client.routes.forEach(route =>
 
 // API Endpoints
 app.use(geniusSubRoute, GeniusRoutes);
+app.use(sessionSubRoute, SessionRoutes);
 app.use(spotifySubRoute, SpotifyRoutes);
 
 const port = process.env.PORT || 5000;
