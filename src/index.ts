@@ -10,6 +10,8 @@ import SpotifyRoutes, { subRoute as spotifySubRoute } from "./routes/spotify";
 
 const app = express();
 
+app.set('trust proxy', 1); // Trust first proxy
+
 app.use(express.json());
 
 // Session
