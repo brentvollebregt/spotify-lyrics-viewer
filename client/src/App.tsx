@@ -7,12 +7,13 @@ import About from './pages/About';
 import LyricsView from './pages/LyricsView';
 import NotFound from './pages/NotFound';
 import SpotifyAuthorization from './pages/SpotifyAuthorization';
-import { deleteSession, spotifyGetCurrentToken } from './api';
+import { deleteSession, spotifyGetCurrentToken, spotifyRefreshToken } from './api';
 import { IToken } from './models';
 
 const App: React.FC = () => {
     const [token, setToken] = useState<IToken | null>(null);
     const [user, setUser] = useState<SpotifyApi.UserObjectPrivate | null>(null);
+    const [tokenTimeout, setTokenTimeout] = useState<NodeJS.Timeout | null>(null);
 
     useEffect(() => {  // Request the user when the token changes
         if (token === null) {
@@ -30,7 +31,33 @@ const App: React.FC = () => {
     }, [token]);
 
     useEffect(() => { // Request for a new token before expiry
-        // TODO Prepare for expiry
+        if (tokenTimeout !== null) {
+            clearTimeout(tokenTimeout);
+        }
+
+        if (token !== null) {
+            const timeToRefresh = (token.expiry.getTime() - (new Date()).getTime()) - (60 * 1000); // (future - now) - 1min
+            setTokenTimeout(setTimeout(() => {
+                spotifyRefreshToken()
+                    .then(newToken => {
+                        if (newToken !== null) {
+                            onNewToken(newToken.access_token, newToken.expires_at);
+                        } else {
+                            cogoToast.warn(
+                                'Unable to keep logged into Spotify. Please log back in.',
+                                { position: "bottom-center", heading: 'Spotify Login Expired', hideAfter: 20, onClick: (hide: any) => hide() }
+                            );
+                            clearToken();
+                        }
+                    });
+            }, timeToRefresh));
+        }
+
+        return () => {
+            if (tokenTimeout !== null) {
+                clearTimeout(tokenTimeout);
+            }
+        };
     }, [token]);
 
     useEffect(() => { // Request for a token on load to see if data is already in the state

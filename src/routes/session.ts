@@ -15,9 +15,7 @@ router.get('/', (req, res) => {
 });
 
 router.delete('/', (req, res) => {
-    console.log('delete session');
     req.session = null;
-    res.send('');
     res.end();
 });
 
