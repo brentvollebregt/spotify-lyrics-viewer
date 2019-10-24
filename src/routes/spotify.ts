@@ -8,7 +8,7 @@ import { URLSearchParams } from "url";
 
 export const subRoute = '/api/spotify';
 
-const getRedirectUri = (host: string) => `http://${host}${subRoute}/authentication-callback`;
+const getRedirectUri = (protocol: string, host: string) => `${protocol}://${host}${subRoute}/authentication-callback`;
 const millisecondsOffsetFromNow = (offset: number) => (new Date()).getTime() + (offset * 1000);
 
 const router = express.Router();
@@ -16,9 +16,10 @@ const router = express.Router();
 router.get('/authenticate', (req, res) => {
     // Auth: https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow
     // Setup API object
+    const redirectUri = getRedirectUri(req.protocol, req.headers.host);
     const spotifyApi = new SpotifyWebApi({
         clientId: Config.spotify.client_id,
-        redirectUri: getRedirectUri(req.headers.host)
+        redirectUri
     });
     const state = randomString(16);
 
@@ -26,6 +27,7 @@ router.get('/authenticate', (req, res) => {
     const authorizeURL = spotifyApi.createAuthorizeURL(Config.spotify.permission_scope.split(' '), state);
     req.session.authentication_state = state;
     req.session.authentication_origin = req.headers.referer;
+    req.session.redirected_uri = redirectUri;
     req.session.expires_at = undefined;
     req.session.access_token = undefined;
     req.session.refresh_token = undefined;
@@ -50,12 +52,13 @@ router.get('/authentication-callback', async (req, res) => {
     const originToRedirectTo = req.session.authentication_origin;
     req.session.authentication_origin = undefined;
 
-    // Setup API object
+    // Setup API object (and clear used redirect uri)
     const spotifyApi = new SpotifyWebApi({
         clientId: Config.spotify.client_id,
         clientSecret: Config.spotify.client_secret,
-        redirectUri: getRedirectUri(req.headers.host)
+        redirectUri: req.session.redirected_uri
     });
+    req.session.redirected_uri = undefined;
 
     // Make the call and put data into the session
     const authorizationResponse = await spotifyApi.authorizationCodeGrant(code);
@@ -112,7 +115,7 @@ router.get('/refresh-token', async (req, res) => {
     const spotifyApi = new SpotifyWebApi({
         clientId: Config.spotify.client_id,
         clientSecret: Config.spotify.client_secret,
-        redirectUri: getRedirectUri(req.headers.host)
+        redirectUri: getRedirectUri(req.protocol, req.headers.host)
     });
     spotifyApi.setAccessToken(req.session.access_token);
     spotifyApi.setRefreshToken(req.session.refresh_token);

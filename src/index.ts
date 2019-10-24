@@ -25,7 +25,7 @@ app.use(cookieSession({
 
 // CORS
 app.use((req, res, next) => {
-    const origin  = req.get('origin') || req.get('referrer');
+    const origin = req.get('origin') || req.get('referrer');
     if (Config.server.allowed_origins.indexOf(origin) !== -1) {
         res.header('Access-Control-Allow-Origin', origin);
     }
