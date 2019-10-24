@@ -17,11 +17,9 @@ app.use(express.json());
 
 // Session
 app.use(cookieSession({
-    name: 'session',
     keys: Config.server.session_keys,
-    // Cookie Options
-    maxAge: 48 * 60 * 60 * 1000, // 48 hours
-    secure: app.get('env') === 'production'
+    maxAge: 48 * 60 * 60 * 1000, // Expires in 48 hours
+    secure: app.get('env') === 'production' // SSL is only used in prod
 }));
 
 // CORS

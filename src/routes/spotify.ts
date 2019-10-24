@@ -92,17 +92,6 @@ router.get('/token', (req, res) => {
     res.end();
 });
 
-router.delete('/token', (req, res) => {
-    // Clear out the state
-    req.session.expires_at = undefined;
-    req.session.access_token = undefined;
-    req.session.refresh_token = undefined;
-
-    // 200 success
-    res.send('');
-    res.end();
-});
-
 router.get('/refresh-token', async (req, res) => {
     // Verify the data in the session is sufficient to fulfil this request
     if (!isStoredTokenValid(req)) {

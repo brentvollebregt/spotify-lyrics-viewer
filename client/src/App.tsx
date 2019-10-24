@@ -7,7 +7,7 @@ import About from './pages/About';
 import LyricsView from './pages/LyricsView';
 import NotFound from './pages/NotFound';
 import SpotifyAuthorization from './pages/SpotifyAuthorization';
-import { deleteSession } from './api';
+import { deleteSession, spotifyGetCurrentToken } from './api';
 import { IToken } from './models';
 
 const App: React.FC = () => {
@@ -34,7 +34,12 @@ const App: React.FC = () => {
     }, [token]);
 
     useEffect(() => { // Request for a token on load to see if data is already in the state
-        // TODO Request for token from server to see if one is already stored
+        spotifyGetCurrentToken()
+            .then(newToken => {
+                if (newToken !== null) {
+                    onNewToken(newToken.access_token, newToken.expires_at);
+                }
+            });
     }, []);
 
     const onNewToken = (accessToken: string, expiresAt: number) => {
