@@ -8,7 +8,7 @@ export default {
     },
     server: {
         allowed_origins: process.env.SERVER_ALLOWED_ORIGINS,
-        secret: process.env.SERVER_SECRET
+        session_keys: process.env.SERVER_SESSION_KEYS.split(' ')
     },
     spotify: {
         client_id: process.env.SPOTIFY_CLIENT_ID,

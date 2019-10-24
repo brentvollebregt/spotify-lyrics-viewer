@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 dotenv.config(); // Setup .env
 
 import express from "express";
-import session from 'express-session';
+import cookieSession from "cookie-session";
 import path from "path";
 import Config from './config';
 import GeniusRoutes, { subRoute as geniusSubRoute } from "./routes/genius";
@@ -13,13 +13,12 @@ const app = express();
 app.use(express.json());
 
 // Session
-app.use(session({
-    cookie: {
-        secure: app.get('env') === 'production'
-    },
-    resave: false,
-    saveUninitialized: true,
-    secret: Config.server.secret
+app.use(cookieSession({
+    name: 'session',
+    keys: Config.server.session_keys,
+    // Cookie Options
+    maxAge: 48 * 60 * 60 * 1000, // 48 hours
+    secure: app.get('env') === 'production'
 }));
 
 // CORS
