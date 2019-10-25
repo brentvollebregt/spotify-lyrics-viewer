@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import SpotifyWebApi from 'spotify-web-api-js';
+import Advertisement from './Advertisement';
 import Error from './Error';
 import Loading from './Loading';
 import NoTrackPlaying from './NoTrackPlaying';
@@ -21,7 +22,7 @@ interface IProps {
 const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
     const { token, user } = props;
 
-    const [currentlyPlaying, setCurrentlyPlaying] = useState<SpotifyApi.CurrentlyPlayingObject | "NotPlaying" | "Loading" | "Error">("Loading");
+    const [currentlyPlaying, setCurrentlyPlaying] = useState<SpotifyApi.CurrentlyPlayingObject | "NotPlaying" | "Advertisement" | "Loading" | "Error">("Loading");
     const [lyrics, setLyrics] = useState<ILyricUriPair | undefined>(undefined);
 
     useEffect(() => { // Initially get playing song
@@ -32,6 +33,8 @@ const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
                 .then((currentlyPlayingObject: SpotifyApi.CurrentlyPlayingObject | "") => {
                     if (currentlyPlayingObject === "") {
                         setCurrentlyPlaying("NotPlaying"); // HTTP 204 when no track is currently playing
+                    } else if ((currentlyPlayingObject as any).currently_playing_type === "ad") {
+                        setCurrentlyPlaying("Advertisement"); // Handle ads where no lyrics are associated
                     } else {
                         setCurrentlyPlaying(currentlyPlayingObject);
                     }
@@ -43,7 +46,7 @@ const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
     }, [token]);
 
     useEffect(() => { // Get new lyrics when the current playing item changes
-        if (currentlyPlaying === "NotPlaying" || currentlyPlaying === "Loading" || currentlyPlaying === "Error" || !currentlyPlaying.item) {
+        if (currentlyPlaying === "NotPlaying" || currentlyPlaying === "Advertisement" || currentlyPlaying === "Loading" || currentlyPlaying === "Error" || !currentlyPlaying.item) {
             setLyrics(undefined);
         } else {
             if (lyrics === undefined || currentlyPlaying.item.id !== lyrics.spotifyId) {
@@ -64,6 +67,8 @@ const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
         return <Loading />;
     } else if (currentlyPlaying === "NotPlaying") {
         return <NoTrackPlaying />;
+    } else if (currentlyPlaying === "Advertisement") {
+        return <Advertisement />;
     } else if (currentlyPlaying === "Error") {
         return <Error />;
     } else {
