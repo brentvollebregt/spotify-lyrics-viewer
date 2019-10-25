@@ -10,7 +10,7 @@
         "quotemark": [false],
         "arrow-parens": false,
         "ordered-imports": false,
-        "max-line-length": [true, { "limit": 150 }]
+        "max-line-length": [false]
     },
     "rulesDirectory": []
 }

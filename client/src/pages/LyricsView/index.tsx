@@ -24,6 +24,7 @@ const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
 
     const [currentlyPlaying, setCurrentlyPlaying] = useState<SpotifyApi.CurrentlyPlayingObject | "NotPlaying" | "Advertisement" | "Loading" | "Error">("Loading");
     const [lyrics, setLyrics] = useState<ILyricUriPair | undefined>(undefined);
+    const [checkSongTimeout, setCheckSongTimeout] = useState<NodeJS.Timeout | null>(null);
 
     const updateCurrentPlaying = (tokenValue: string) => {
         const spotifyApi = new SpotifyWebApi();
@@ -41,12 +42,43 @@ const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
             .catch(e => setCurrentlyPlaying("Error"));
     };
 
-    useEffect(() => { // Initially get playing song
+    useEffect(() => { // Get currently playing song on load (when the token changes)
         if (token !== null) {
             updateCurrentPlaying(token.value);
         } else {
             setCurrentlyPlaying("Loading");
         }
+    }, [token]);
+
+    useEffect(() => { // Setup a check for a new song at the end of the current song
+        if (checkSongTimeout !== null) {
+            clearTimeout(checkSongTimeout);
+        }
+
+        if (currentlyPlaying !== "NotPlaying" && currentlyPlaying !== "Advertisement" && currentlyPlaying !== "Loading" && currentlyPlaying !== "Error" && currentlyPlaying.item) {
+            const timeToRefresh = currentlyPlaying.item.duration_ms - (currentlyPlaying.progress_ms === null ? 0 : currentlyPlaying.progress_ms) + 500; // (duration - progress) - 500ms
+            setCheckSongTimeout(setTimeout(() => {
+                if (token !== null) {
+                    updateCurrentPlaying(token.value);
+                }
+            }, timeToRefresh));
+        }
+
+        return () => {
+            if (checkSongTimeout !== null) {
+                clearTimeout(checkSongTimeout);
+            }
+        };
+    }, [currentlyPlaying]);
+
+    useEffect(() => { // Setup timers to periodically check for a new song (in case someone skips)
+        const intervalCheck = setInterval(() => {
+            if (token !== null) {
+                updateCurrentPlaying(token.value);
+            }
+        }, 5000); // Every 5 seconds
+
+        return () => clearTimeout(intervalCheck);
     }, [token]);
 
     useEffect(() => { // Get new lyrics when the current playing item changes
