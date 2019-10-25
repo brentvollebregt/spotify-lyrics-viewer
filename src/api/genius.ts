@@ -1,5 +1,6 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
+import diacritics from 'diacritics';
 import config from '../config';
 
 interface ISearchHit {
@@ -48,7 +49,7 @@ interface ISearchResponse {
 export function search(term: string): Promise<ISearchResponse> {
     const parameters = {
         access_token: config.genius.access_token,
-        q: term,
+        q: diacritics.remove(term),
     };
     return axios.get('https://api.genius.com/search?' + (new URLSearchParams(parameters)))
         .then(response => response.data.response)
