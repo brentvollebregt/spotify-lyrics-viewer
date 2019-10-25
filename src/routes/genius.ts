@@ -6,14 +6,15 @@ export const subRoute = '/api/genius';
 const router = express.Router();
 
 router.get('/lyrics', async (req, res) => {
-    // Verify a query has been provided
-    if (!('q' in req.query)) {
-        res.status(400).send('No query provided');
+    // Verify expected parameters have been provided
+    const { artist, title } = req.query;
+    if (artist === undefined || title === undefined) {
+        res.status(400).send('Please provide an artist and title');
         res.end();
         return;
     }
 
-    const searchResults = await search(req.query.q);
+    const searchResults = await search(`${artist} ${title}`);
 
     // Verify a match was found
     if (searchResults.hits.length === 0) {

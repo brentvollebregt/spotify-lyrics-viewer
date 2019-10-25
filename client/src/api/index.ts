@@ -1,8 +1,9 @@
 import Config from '../config';
 import { ITokenExpiryPair } from './dto';
 
-export function geniusGetLyrics(query: string): Promise<string> {
-    return fetch(`${Config.api.root}/api/genius/lyrics?${new URLSearchParams({ q: query })}`)
+export function geniusGetLyrics(artist: string, title: string): Promise<string> {
+    const parameters = { artist, title };
+    return fetch(`${Config.api.root}/api/genius/lyrics?${new URLSearchParams(parameters)}`)
         .then(r => r.text());
 }
 

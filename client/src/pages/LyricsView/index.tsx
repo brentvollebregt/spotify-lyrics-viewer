@@ -9,6 +9,8 @@ import Welcome from './Welcome';
 import { geniusGetLyrics } from '../../api';
 import { IToken } from '../../models';
 
+const periodicTrackCheckDelayMs = 5000;
+
 interface ILyricUriPair {
     content: string;
     spotifyId: string;
@@ -76,7 +78,7 @@ const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
             if (token !== null) {
                 updateCurrentPlaying(token.value);
             }
-        }, 5000); // Every 5 seconds
+        }, periodicTrackCheckDelayMs);
 
         return () => clearTimeout(intervalCheck);
     }, [token]);
@@ -87,7 +89,7 @@ const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
         } else {
             if (lyrics === undefined || currentlyPlaying.item.id !== lyrics.spotifyId) {
                 // Get lyrics
-                geniusGetLyrics(`${currentlyPlaying.item.name} ${currentlyPlaying.item.artists[0].name}`)
+                geniusGetLyrics(currentlyPlaying.item.artists[0].name, currentlyPlaying.item.name)
                     .then(newLyrics => {
                         if (currentlyPlaying.item !== null) {
                             setLyrics({ content: newLyrics, spotifyId: currentlyPlaying.item.id });
