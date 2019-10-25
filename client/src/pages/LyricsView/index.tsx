@@ -25,21 +25,25 @@ const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
     const [currentlyPlaying, setCurrentlyPlaying] = useState<SpotifyApi.CurrentlyPlayingObject | "NotPlaying" | "Advertisement" | "Loading" | "Error">("Loading");
     const [lyrics, setLyrics] = useState<ILyricUriPair | undefined>(undefined);
 
+    const updateCurrentPlaying = (tokenValue: string) => {
+        const spotifyApi = new SpotifyWebApi();
+        spotifyApi.setAccessToken(tokenValue);
+        spotifyApi.getMyCurrentPlayingTrack()
+            .then((currentlyPlayingObject: SpotifyApi.CurrentlyPlayingObject | "") => {
+                if (currentlyPlayingObject === "") {
+                    setCurrentlyPlaying("NotPlaying"); // HTTP 204 when no track is currently playing
+                } else if (currentlyPlayingObject.currently_playing_type === "ad") {
+                    setCurrentlyPlaying("Advertisement"); // Handle ads where no lyrics are associated
+                } else {
+                    setCurrentlyPlaying(currentlyPlayingObject);
+                }
+            })
+            .catch(e => setCurrentlyPlaying("Error"));
+    };
+
     useEffect(() => { // Initially get playing song
         if (token !== null) {
-            const spotifyApi = new SpotifyWebApi();
-            spotifyApi.setAccessToken(token.value);
-            spotifyApi.getMyCurrentPlayingTrack()
-                .then((currentlyPlayingObject: SpotifyApi.CurrentlyPlayingObject | "") => {
-                    if (currentlyPlayingObject === "") {
-                        setCurrentlyPlaying("NotPlaying"); // HTTP 204 when no track is currently playing
-                    } else if ((currentlyPlayingObject as any).currently_playing_type === "ad") {
-                        setCurrentlyPlaying("Advertisement"); // Handle ads where no lyrics are associated
-                    } else {
-                        setCurrentlyPlaying(currentlyPlayingObject);
-                    }
-                })
-                .catch(e => setCurrentlyPlaying("Error"));
+            updateCurrentPlaying(token.value);
         } else {
             setCurrentlyPlaying("Loading");
         }
