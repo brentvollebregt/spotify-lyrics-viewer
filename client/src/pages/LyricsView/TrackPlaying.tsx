@@ -9,7 +9,6 @@ import PlayArrow from '@material-ui/icons/PlayArrow';
 import Pause from '@material-ui/icons/Pause';
 import SkipPrevious from '@material-ui/icons/SkipPrevious';
 import SkipNext from '@material-ui/icons/SkipNext';
-import { clearTimeout } from 'timers';
 
 const ProgressSlider = withStyles({
     active: {},
@@ -71,7 +70,7 @@ const TrackPlaying: React.FunctionComponent<IProps> = (props: IProps) => {
 
         const smoothingDelay = 500;
         setSmoothProgressTimer(setInterval(() => {
-            if (!userSlidingProgress) {
+            if (!userSlidingProgress && currentlyPlaying.is_playing) {
                 setProgress(value => Math.min(value + smoothingDelay, currentSongDuration));
             }
         }, smoothingDelay));
@@ -82,7 +81,7 @@ const TrackPlaying: React.FunctionComponent<IProps> = (props: IProps) => {
             }
         };
 
-    }, []);
+    }, [userSlidingProgress, currentlyPlaying.is_playing]);
 
     const onUserStartSliding = () => {
         setUserSlidingProgress(true);
