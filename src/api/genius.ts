@@ -65,7 +65,6 @@ export function getLyrics(geniusUrl: string): Promise<string> {
                 return e.replaceWith(e.html());
             }); // Replace out all links in the scope
             const lyrics = $($('.lyrics')[0]).text(); // Get the lyrics as HTML
-            // const lyrics = $.html($('.lyrics')[0]); // Get the lyrics as HTML
             return lyrics;
         });
 }
