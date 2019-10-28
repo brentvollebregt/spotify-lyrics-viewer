@@ -43,25 +43,25 @@ const responseError = (title: string, request: XMLHttpRequest) => cogoToast.erro
 );
 
 interface IProps {
-    currentlyPlaying: SpotifyApi.CurrentlyPlayingObject;
+    current: SpotifyApi.CurrentlyPlayingObject;
     lyrics?: string;
     token?: string;
 }
 
 const TrackPlaying: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { currentlyPlaying, lyrics, token } = props;
+    const { current, lyrics, token } = props;
 
     const [progress, setProgress] = useState(0);
     const [userSlidingProgress, setUserSlidingProgress] = useState(false);
     const [smoothProgressTimer, setSmoothProgressTimer] = useState<NodeJS.Timeout | null>(null);
 
-    const currentSongDuration = currentlyPlaying.item === null ? 0 : currentlyPlaying.item.duration_ms;
+    const currentSongDuration = current.item === null ? 0 : current.item.duration_ms;
 
     useEffect(() => { // Use the current progress when the user is not sliding
-        if (!userSlidingProgress && currentlyPlaying.progress_ms !== null) {
-            setProgress(currentlyPlaying.progress_ms);
+        if (!userSlidingProgress && current.progress_ms !== null) {
+            setProgress(current.progress_ms);
         }
-    }, [userSlidingProgress, currentlyPlaying.progress_ms]);
+    }, [userSlidingProgress, current.progress_ms]);
 
     useEffect(() => { // Smoother progress bar
         if (smoothProgressTimer !== null) {
@@ -70,7 +70,7 @@ const TrackPlaying: React.FunctionComponent<IProps> = (props: IProps) => {
 
         const smoothingDelay = 500;
         setSmoothProgressTimer(setInterval(() => {
-            if (!userSlidingProgress && currentlyPlaying.is_playing) {
+            if (!userSlidingProgress && current.is_playing) {
                 setProgress(value => Math.min(value + smoothingDelay, currentSongDuration));
             }
         }, smoothingDelay));
@@ -81,7 +81,7 @@ const TrackPlaying: React.FunctionComponent<IProps> = (props: IProps) => {
             }
         };
 
-    }, [userSlidingProgress, currentlyPlaying.is_playing]);
+    }, [userSlidingProgress, current.is_playing]);
 
     const onUserStartSliding = () => {
         setUserSlidingProgress(true);
@@ -119,7 +119,7 @@ const TrackPlaying: React.FunctionComponent<IProps> = (props: IProps) => {
         if (token) {
             const spotifyApi = new SpotifyWebApi();
             spotifyApi.setAccessToken(token);
-            if (currentlyPlaying.is_playing) {
+            if (current.is_playing) {
                 spotifyApi.pause()
                     .catch(e => responseError('Failed to Pause', e));
             } else {
@@ -132,17 +132,17 @@ const TrackPlaying: React.FunctionComponent<IProps> = (props: IProps) => {
     return <Container className="my-3">
         <div style={{ display: 'grid', gridTemplateColumns: '130px 230px 1fr', maxWidth: 700, margin: 'auto', background: '#f3f3f3' }}>
             <div className="m-2">
-                {currentlyPlaying.item
-                    ? <img src={currentlyPlaying.item.album.images[0].url} alt={`${currentlyPlaying.item.album.name} Album Art`} className="w-100" />
+                {current.item
+                    ? <img src={current.item.album.images[0].url} alt={`${current.item.album.name} Album Art`} className="w-100" />
                     : <Spinner animation="border" />
                 }
             </div>
 
             <div className="ml-1 d-flex flex-column justify-content-center">
-                {currentlyPlaying.item && <>
-                    <p className="m-1">{currentlyPlaying.item.name}</p>
-                    <p className="m-1">{currentlyPlaying.item.artists.map(a => a.name).join(', ')}</p>
-                    <p className="m-1">{currentlyPlaying.item.album.name}</p>
+                {current.item && <>
+                    <p className="m-1">{current.item.name}</p>
+                    <p className="m-1">{current.item.artists.map(a => a.name).join(', ')}</p>
+                    <p className="m-1">{current.item.album.name}</p>
                 </>}
             </div>
 
@@ -153,7 +153,7 @@ const TrackPlaying: React.FunctionComponent<IProps> = (props: IProps) => {
                             <SkipPrevious fontSize="large" />
                         </IconButton>
                         <IconButton onClick={onPlayPauseToggle} className="p-2">
-                            {currentlyPlaying.is_playing
+                            {current.is_playing
                                 ? <PlayArrow fontSize="large" />
                                 : <Pause fontSize="large" />
                             }

@@ -111,7 +111,7 @@ const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
         return <Error />;
     } else {
         return <TrackPlaying
-            currentlyPlaying={currentlyPlaying}
+            current={currentlyPlaying}
             lyrics={lyrics !== undefined ? lyrics.content : undefined}
             token={token === null ? undefined : token.value}
         />;
