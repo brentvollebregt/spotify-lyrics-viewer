@@ -9,6 +9,7 @@ import PlayArrow from '@material-ui/icons/PlayArrow';
 import Pause from '@material-ui/icons/Pause';
 import SkipPrevious from '@material-ui/icons/SkipPrevious';
 import SkipNext from '@material-ui/icons/SkipNext';
+import { clearTimeout } from 'timers';
 
 const ProgressSlider = withStyles({
     active: {},
@@ -53,12 +54,35 @@ const TrackPlaying: React.FunctionComponent<IProps> = (props: IProps) => {
 
     const [progress, setProgress] = useState(0);
     const [userSlidingProgress, setUserSlidingProgress] = useState(false);
+    const [smoothProgressTimer, setSmoothProgressTimer] = useState<NodeJS.Timeout | null>(null);
+
+    const currentSongDuration = currentlyPlaying.item === null ? 0 : currentlyPlaying.item.duration_ms;
 
     useEffect(() => { // Use the current progress when the user is not sliding
         if (!userSlidingProgress && currentlyPlaying.progress_ms !== null) {
             setProgress(currentlyPlaying.progress_ms);
         }
     }, [userSlidingProgress, currentlyPlaying.progress_ms]);
+
+    useEffect(() => { // Smoother progress bar
+        if (smoothProgressTimer !== null) {
+            clearTimeout(smoothProgressTimer);
+        }
+
+        const smoothingDelay = 500;
+        setSmoothProgressTimer(setInterval(() => {
+            if (!userSlidingProgress) {
+                setProgress(value => Math.min(value + smoothingDelay, currentSongDuration));
+            }
+        }, smoothingDelay));
+
+        return () => {
+            if (smoothProgressTimer !== null) {
+                clearTimeout(smoothProgressTimer);
+            }
+        };
+
+    }, []);
 
     const onUserStartSliding = () => {
         setUserSlidingProgress(true);
@@ -143,7 +167,7 @@ const TrackPlaying: React.FunctionComponent<IProps> = (props: IProps) => {
                         valueLabelDisplay="off"
                         value={progress}
                         min={0}
-                        max={currentlyPlaying.item === null ? 0 : currentlyPlaying.item.duration_ms}
+                        max={currentSongDuration}
                         onMouseDown={onUserStartSliding}
                         onMouseUp={onUserFinishedSliding}
                         onChange={onUserSlide}
