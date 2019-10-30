@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import SpotifyWebApi from 'spotify-web-api-js';
 import cogoToast from 'cogo-toast';
-import { Container, Spinner } from 'react-bootstrap';
+import MarkJS from 'mark.js';
+import { Container, Spinner, Form, FormControlProps } from 'react-bootstrap';
 import { withStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
 import IconButton from '@material-ui/core/IconButton';
@@ -9,6 +10,7 @@ import PlayArrow from '@material-ui/icons/PlayArrow';
 import Pause from '@material-ui/icons/Pause';
 import SkipPrevious from '@material-ui/icons/SkipPrevious';
 import SkipNext from '@material-ui/icons/SkipNext';
+import { ReplaceProps, BsPrefixProps } from 'react-bootstrap/helpers';
 
 const ProgressSlider = withStyles({
     active: {},
@@ -54,6 +56,8 @@ const TrackPlaying: React.FunctionComponent<IProps> = (props: IProps) => {
     const [progress, setProgress] = useState(0);
     const [userSlidingProgress, setUserSlidingProgress] = useState(false);
     const [smoothProgressTimer, setSmoothProgressTimer] = useState<NodeJS.Timeout | null>(null);
+    const lyricsRef = useRef<HTMLDivElement | null>(null);
+    const [search, setSearch] = useState('');
 
     const currentSongDuration = current.item === null ? 0 : current.item.duration_ms;
 
@@ -83,9 +87,17 @@ const TrackPlaying: React.FunctionComponent<IProps> = (props: IProps) => {
 
     }, [userSlidingProgress, current.is_playing]);
 
-    const onUserStartSliding = () => {
-        setUserSlidingProgress(true);
-    };
+    useEffect(() => { // Highlight text when the search is changed
+        if (lyricsRef.current !== null) {
+            const instance = new MarkJS(lyricsRef.current);
+            instance.unmark();
+            instance.mark(search);
+        }
+    }, [search]);
+
+    const onUserSearch = (event: React.FormEvent<ReplaceProps<"input", BsPrefixProps<"input"> & FormControlProps>>) => setSearch(event.currentTarget.value === undefined ? '' : event.currentTarget.value);
+
+    const onUserStartSliding = () => setUserSlidingProgress(true);
     const onUserFinishedSliding = () => {
         setUserSlidingProgress(false);
         if (token) {
@@ -177,8 +189,11 @@ const TrackPlaying: React.FunctionComponent<IProps> = (props: IProps) => {
         </div>
 
         <div className="text-center mt-4">
+            <div>
+                <Form.Control onChange={onUserSearch} value={search} placeholder="Search lyrics you heard to find your position..." className="text-center" />
+            </div>
             {lyrics
-                ? <div style={{ whiteSpace: 'pre-wrap' }}>{lyrics}</div>
+                ? <div style={{ whiteSpace: 'pre-wrap' }} ref={lyricsRef}>{lyrics}</div>
                 : <Spinner animation="border" />
             }
         </div>

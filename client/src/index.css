@@ -6,3 +6,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+mark {
+  background: orange;
+  color: black;
+  padding: 0;
+}
