@@ -7,7 +7,15 @@ import './LyricsDisplay.css';
 
 const useStyles = makeStyles({
     lyrics: {
+        fontSize: 18,
+        lineHeight: '1.7em',
+        margin: 'auto',
+        maxWidth: 700,
         whiteSpace: 'pre-wrap'
+    },
+    searchWrapper: {
+        margin: 'auto',
+        maxWidth: 700,
     }
 });
 
@@ -35,7 +43,7 @@ const LyricsDisplay: React.FunctionComponent<IProps> = (props: IProps) => {
     const onUserSearch = (event: React.FormEvent<ReplaceProps<"input", BsPrefixProps<"input"> & FormControlProps>>) => setSearch(event.currentTarget.value === undefined ? '' : event.currentTarget.value);
 
     return <div className="text-center">
-        <div>
+        <div className={`${classes.searchWrapper} mb-3`}>
             <Form.Control onChange={onUserSearch} value={search} placeholder="Search lyrics you heard to find your position..." className="text-center" />
         </div>
         {lyrics
