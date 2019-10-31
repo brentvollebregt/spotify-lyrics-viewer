@@ -128,7 +128,7 @@ const PlayerStatus: React.FunctionComponent<IProps> = (props: IProps) => {
     };
 
     return <div style={{ display: 'grid', gridTemplateColumns: '130px 230px 1fr', maxWidth: 700, margin: 'auto', background: '#f3f3f3' }}>
-        <div className="m-2">
+        <div className="m-1">
             {albumArtUrl
                 ? <img src={albumArtUrl} alt={`${album} Album Art`} className="w-100" />
                 : <Spinner animation="border" />

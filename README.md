@@ -5,7 +5,6 @@ View the lyrics of the current playing Spotify song in your browser
 - Send title, artist and album for lyrics from server to client
     - Display these at the bottom
     - Link to genius page also
-- Highlighter input to find current position: https://markjs.io/
 - Better looking non-playing track components
 
 ### Frontend
@@ -17,3 +16,4 @@ View the lyrics of the current playing Spotify song in your browser
 
 #### Settings tab
 - Refresh button?
+- Set check delay

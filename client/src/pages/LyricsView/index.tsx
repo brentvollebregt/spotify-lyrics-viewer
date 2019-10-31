@@ -88,6 +88,7 @@ const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
             setLyrics(undefined);
         } else {
             if (lyrics === undefined || currentlyPlaying.item.id !== lyrics.spotifyId) {
+                setLyrics(undefined);
                 // Get lyrics
                 geniusGetLyrics(currentlyPlaying.item.artists[0].name, currentlyPlaying.item.name)
                     .then(newLyrics => {
@@ -110,11 +111,7 @@ const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
     } else if (currentlyPlaying === "Error") {
         return <Error />;
     } else {
-        return <TrackPlaying
-            current={currentlyPlaying}
-            lyrics={lyrics !== undefined ? lyrics.content : undefined}
-            token={token === null ? undefined : token.value}
-        />;
+        return <TrackPlaying current={currentlyPlaying} lyrics={lyrics !== undefined ? lyrics.content : undefined} />;
     }
 };
 
