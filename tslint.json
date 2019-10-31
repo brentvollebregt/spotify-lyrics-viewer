@@ -10,6 +10,7 @@
         "quotemark": [false],
         "arrow-parens": false,
         "ordered-imports": false,
+        "object-literal-key-quotes": false,
         "max-line-length": [false]
     },
     "rulesDirectory": []

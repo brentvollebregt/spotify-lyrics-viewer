@@ -2,6 +2,10 @@
 View the lyrics of the current playing Spotify song in your browser
 
 ## Plan
+- Send title, artist and album for lyrics from server to client
+    - Display these at the bottom
+    - Link to genius page also
+- Better looking non-playing track components
 
 ### Frontend
 - Bright fluorescent colours as the background with black/white text
@@ -10,6 +14,6 @@ View the lyrics of the current playing Spotify song in your browser
 - Album art, song name, the artist at top (option to hide this). Lyrics down the page vertically (middle).
 - No need for a nav as there is only one page
 
-### Flow
-- Wait for one second over the song and poll every 5 seconds? (can increase/decrease this)
-    - Also provide a refresh button
+#### Settings tab
+- Refresh button?
+- Set check delay
