@@ -1,0 +1,24 @@
+name: Build and Deploy Client to gh-pages
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Build and Deploy
+      uses: JamesIves/github-pages-deploy-action@master
+      env:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        BASE_BRANCH: master
+        BRANCH: gh-pages
+        FOLDER: client/build
+        BUILD_SCRIPT: npm install && npm run-script build
+        CNAME: spotify-lyrics-viewer.nitratine.net
+        REACT_APP_API_ROOT: https://spotify-lyrics-viewer-online.herokuapp.com/
+        REACT_APP_SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
