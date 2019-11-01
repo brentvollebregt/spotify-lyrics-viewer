@@ -109,7 +109,6 @@ const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
     } else if (currentlyPlaying === "Error") {
         return <Error />;
     } else if (currentlyPlaying.currently_playing_type === "ad") {
-        console.log("ad", currentlyPlaying);
         return <Advertisement
             current={currentlyPlaying}
             token={token === null ? undefined : token.value}
