@@ -5,11 +5,10 @@
   "main": "build/index.js",
   "scripts": {
     "dev": "ts-node-dev --inspect --respawn --transpileOnly src/index.ts",
-    "build": "tsc",
+    "build": "tsc && cd client && pwd && npm install && npm run build",
     "prestart": "npm run build",
     "start": "node .",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "heroku-postbuild": "cd client && npm install && npm run build"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
