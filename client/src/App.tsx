@@ -81,9 +81,10 @@ const App: React.FC = () => {
         '/': () => <LyricsView token={token} user={user} />,
         '/about': () => <About />,
         '/spotify-authorization': () => <SpotifyAuthorization onNewToken={onNewToken} />,
+        '/spotify-authorization/': () => <SpotifyAuthorization onNewToken={onNewToken} />,
     };
     const routeResult = useRoutes(routes);
-    useRedirect('/spotify-authorization/', '/spotify-authorization');
+    useRedirect('/about/', '/about');
 
     return <>
         <Navigation user={user} onLogout={clearToken} />
