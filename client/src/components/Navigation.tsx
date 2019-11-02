@@ -2,6 +2,7 @@ import React from 'react';
 import { navigate, usePath } from 'hookrouter';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import SpotifyLoginStatusButton from '../components/SpotifyLoginStatusButton';
+import BannerImage from '../img/banner.png';
 
 const navbarLinks: { [key: string]: string } = {
     '/': 'Home',
@@ -29,7 +30,7 @@ const Navigation: React.FunctionComponent<IProps> = (props: IProps) => {
         <Container>
             <Navbar.Brand onClick={goTo('/')}>
                 <img
-                    src={'https://via.placeholder.com/320x60'}
+                    src={BannerImage}
                     height="30"
                     className="d-inline-block align-top"
                     alt="Emotionify Banner Logo"
