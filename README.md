@@ -1,4 +1,4 @@
-# Spotify Lyrics Viewer Online
+# Spotify Lyrics Viewer
 View the lyrics of the current playing Spotify song in your browser
 
 ## Plan
