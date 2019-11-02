@@ -20,5 +20,5 @@ jobs:
         FOLDER: client/build
         BUILD_SCRIPT: cd client && npm install && npm run-script build && cd ..
         CNAME: spotify-lyrics-viewer.nitratine.net
-        REACT_APP_API_ROOT: https://spotify-lyrics-viewer-online.herokuapp.com
+        REACT_APP_API_ROOT: https://spotify-lyrics-viewer.herokuapp.com
         REACT_APP_SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}

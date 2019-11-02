@@ -1,5 +1,5 @@
 {
-  "name": "spotify-lyrics-viewer-online",
+  "name": "spotify-lyrics-viewer",
   "version": "1.0.0",
   "description": "",
   "main": "build/index.js",
@@ -13,15 +13,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/brentvollebregt/spotify-lyrics-viewer-online.git"
+    "url": "git+https://github.com/brentvollebregt/spotify-lyrics-viewer.git"
   },
   "keywords": [],
   "author": "Brent Vollebregt",
   "license": "",
   "bugs": {
-    "url": "https://github.com/brentvollebregt/spotify-lyrics-viewer-online/issues"
+    "url": "https://github.com/brentvollebregt/spotify-lyrics-viewer/issues"
   },
-  "homepage": "https://github.com/brentvollebregt/spotify-lyrics-viewer-online#readme",
+  "homepage": "https://github.com/brentvollebregt/spotify-lyrics-viewer#readme",
   "dependencies": {
     "@types/cheerio": "^0.22.13",
     "@types/cookie-session": "^2.0.37",
