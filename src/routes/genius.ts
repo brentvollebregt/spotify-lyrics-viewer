@@ -23,8 +23,8 @@ router.get('/lyrics', async (req, res) => {
         return;
     }
 
-    const lyrics = await getLyrics(searchResults.hits[0].result.path);
-    res.send(lyrics.trim());
+    const lyricsAndDetails = await getLyrics(searchResults.hits[0].result.path);
+    res.send(lyricsAndDetails);
     res.end();
 });
 
