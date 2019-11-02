@@ -1,6 +1,7 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
 import diacritics from 'diacritics';
+import { ILyricsAndDetails } from '../dto';
 import config from '../config';
 
 interface ISearchHit {
@@ -56,15 +57,17 @@ export function search(term: string): Promise<ISearchResponse> {
         .catch(e => console.error(e.data));
 }
 
-export function getLyrics(geniusUrl: string): Promise<string> {
+export function getLyrics(geniusUrl: string): Promise<ILyricsAndDetails> {
     return axios.get(`https://genius.com${geniusUrl}`)
         .then(r => {
             const $ = cheerio.load(r.data); // Load in the page
+            const title = $('h1.header_with_cover_art-primary_info-title').text();
+            const artist = $('a.header_with_cover_art-primary_info-primary_artist').text();
             $('a', '.lyrics').each((index, element) => {
                 const e = $(element);
                 return e.replaceWith(e.html());
             }); // Replace out all links in the scope
-            const lyrics = $($('.lyrics')[0]).text(); // Get the lyrics as HTML
-            return lyrics;
+            const lyrics = $($('.lyrics')[0]).text().trim(); // Get the lyrics as HTML
+            return { artist, geniusUrl, lyrics, title };
         });
 }

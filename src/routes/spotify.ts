@@ -3,7 +3,7 @@ import SpotifyWebApi from 'spotify-web-api-node';
 import Config from '../config';
 import { randomString } from '../utils';
 import { isStoredTokenValid } from '../utils/spotify';
-import { ITokenExpiryPair } from '../dto/spotify';
+import { ITokenExpiryPair } from '../dto';
 import { URLSearchParams } from "url";
 
 export const subRoute = '/api/spotify';

@@ -28,10 +28,13 @@ const useStyles = makeStyles({
 
 interface IProps {
     lyrics?: string;
+    lyricsArtist?: string;
+    lyricsTitle?: string;
+    geniusUrl?: string;
 }
 
 const LyricsDisplay: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { lyrics } = props;
+    const { lyrics, lyricsArtist, lyricsTitle, geniusUrl } = props;
 
     const classes = useStyles();
     const lyricsRef = useRef<HTMLDivElement | null>(null);
@@ -71,7 +74,12 @@ const LyricsDisplay: React.FunctionComponent<IProps> = (props: IProps) => {
             </IconButton>
         }
         {lyrics
-            ? <div className={classes.lyrics} ref={lyricsRef}>{lyrics}</div>
+            ? <div>
+                <div className={classes.lyrics} ref={lyricsRef}>{lyrics}</div>
+                <div className="mt-4 text-left">
+                    <a href={`https://genius.com${geniusUrl}`} target="_blank">Lyrics for {lyricsTitle} by {lyricsArtist}</a>
+                </div>
+            </div>
             : <Spinner animation="border" />
         }
     </div>;

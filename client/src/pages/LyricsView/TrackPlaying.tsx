@@ -2,15 +2,16 @@ import React from 'react';
 import { Container } from 'react-bootstrap';
 import PlayerStatus from './sharedComponents/PlayerStatus';
 import LyricsDisplay from './sharedComponents/LyricsDisplay';
+import { ILyricDetails } from './';
 
 interface IProps {
     current: SpotifyApi.CurrentlyPlayingObject;
-    lyrics?: string;
+    lyricDetails?: ILyricDetails;
     token?: string;
 }
 
 const TrackPlaying: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { current, lyrics, token } = props;
+    const { current, lyricDetails, token } = props;
 
     const albumArtUrl = current.item ? current.item.album.images[0].url : undefined;
     const title = current.item ? current.item.name : undefined;
@@ -33,7 +34,10 @@ const TrackPlaying: React.FunctionComponent<IProps> = (props: IProps) => {
         />
         <div className="mt-3">
             <LyricsDisplay
-                lyrics={lyrics}
+                lyrics={lyricDetails ? lyricDetails.content : undefined}
+                lyricsArtist={lyricDetails ? lyricDetails.artist : undefined}
+                lyricsTitle={lyricDetails ? lyricDetails.title : undefined}
+                geniusUrl={lyricDetails ? lyricDetails.geniusUrl : undefined}
             />
         </div>
     </Container>;

@@ -11,9 +11,12 @@ import { IToken } from '../../models';
 
 const periodicTrackCheckDelayMs = 5000;
 
-interface ILyricUriPair {
+export interface ILyricDetails {
     content: string;
     spotifyId: string;
+    artist: string;
+    title: string;
+    geniusUrl: string;
 }
 
 interface IProps {
@@ -25,7 +28,7 @@ const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
     const { token, user } = props;
 
     const [currentlyPlaying, setCurrentlyPlaying] = useState<SpotifyApi.CurrentlyPlayingObject | "NotPlaying" | "Loading" | "Error">("Loading");
-    const [lyrics, setLyrics] = useState<ILyricUriPair | undefined>(undefined);
+    const [lyrics, setLyrics] = useState<ILyricDetails | undefined>(undefined);
     const [checkSongTimeout, setCheckSongTimeout] = useState<NodeJS.Timeout | null>(null);
 
     const updateCurrentPlaying = (tokenValue: string) => {
@@ -91,7 +94,13 @@ const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
                 geniusGetLyrics(currentlyPlaying.item.artists[0].name, currentlyPlaying.item.name)
                     .then(newLyrics => {
                         if (currentlyPlaying.item !== null) {
-                            setLyrics({ content: newLyrics, spotifyId: currentlyPlaying.item.id });
+                            setLyrics({
+                                artist: newLyrics.artist,
+                                content: newLyrics.lyrics,
+                                geniusUrl: newLyrics.geniusUrl,
+                                spotifyId: currentlyPlaying.item.id,
+                                title: newLyrics.title,
+                            });
                         }
                     });
             }
@@ -116,7 +125,7 @@ const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
     } else {
         return <TrackPlaying
             current={currentlyPlaying}
-            lyrics={lyrics !== undefined ? lyrics.content : undefined}
+            lyricDetails={lyrics}
             token={token === null ? undefined : token.value}
         />;
     }

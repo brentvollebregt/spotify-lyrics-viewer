@@ -1,10 +1,10 @@
 import Config from '../config';
-import { ITokenExpiryPair } from './dto';
+import { ITokenExpiryPair, ILyricsAndDetails } from './dto';
 
-export function geniusGetLyrics(artist: string, title: string): Promise<string> {
+export function geniusGetLyrics(artist: string, title: string): Promise<ILyricsAndDetails> {
     const parameters = { artist, title };
     return fetch(`${Config.api.root}/api/genius/lyrics?${new URLSearchParams(parameters)}`)
-        .then(r => r.text());
+        .then(r => r.json());
 }
 
 export function spotifyGetCurrentToken(): Promise<ITokenExpiryPair | null> {
