@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import SpotifyWebApi from 'spotify-web-api-js';
+import cogoToast from 'cogo-toast';
 import Advertisement from './Advertisement';
 import Error from './Error';
 import Loading from './Loading';
@@ -42,7 +43,13 @@ const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
                     setCurrentlyPlaying(currentlyPlayingObject);
                 }
             })
-            .catch(e => setCurrentlyPlaying("Error"));
+            .catch((request: XMLHttpRequest) => {
+                setCurrentlyPlaying("Error");
+                cogoToast.error(
+                    JSON.parse(request.responseText).error.message,
+                    { position: "bottom-center", heading: 'Failed to Get Current Song', hideAfter: 20, onClick: (hide: any) => hide() }
+                );
+            });
     };
 
     useEffect(() => { // Get currently playing song on load (when the token changes)

@@ -3,8 +3,8 @@ import { Container } from 'react-bootstrap';
 
 const NoTrackPlaying: React.FunctionComponent = () => {
     return <Container className="text-center">
-        <h2>No song playing</h2>
-        <p>Play a song for lyrics to be displayed. (make sure a private session is not being used)</p>
+        <h2>No Song is Playing</h2>
+        <p>A song must be playing on Spotify for lyrics to be displayed.<br />Also make sure you are not using a private session.</p>
     </Container>;
 };
 

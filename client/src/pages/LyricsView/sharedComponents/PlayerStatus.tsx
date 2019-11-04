@@ -131,7 +131,9 @@ const PlayerStatus: React.FunctionComponent<IProps> = (props: IProps) => {
         <div className="m-1">
             {albumArtUrl
                 ? <img src={albumArtUrl} alt={`${album} Album Art`} className="w-100" />
-                : <Spinner animation="border" />
+                : <div className="d-flex justify-content-center align-items-center h-100">
+                    <Spinner animation="border" />
+                </div>
             }
         </div>
 
