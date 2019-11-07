@@ -24,7 +24,6 @@ jobs:
         cd ..
       env:
         REACT_APP_API_ROOT: https://spotify-lyrics-viewer.herokuapp.com
-        REACT_APP_SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v2.5.0
