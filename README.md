@@ -1,3 +1,9 @@
+<div style="text-align: center">
+    <a href="https://emotionify.nitratine.net/"><img src="./client/src/img/banner.png" alt="Emotionify Banner" style="background: white;"></a>
+</div>
+<p align="center">View the lyrics of the current playing Spotify song in your browser.</p>
+<p align="center"><a href="https://spotify-lyrics-viewer.nitratine.net/">🌐: spotify-lyrics-viewer.nitratine.net</a></p>
+
 # Spotify Lyrics Viewer
 View the lyrics of the current playing Spotify song in your browser
 
@@ -17,7 +23,7 @@ View the lyrics of the current playing Spotify song in your browser
     - Go back to the project root: `cd ..`
 4. Execute `npm start` to start the server
 
-### Development Setup
+### 🧪 Development Setup
 When running the client in development mode using `npm start`, the client will use the `REACT_APP_API_ROOT` environment variable value to decide where to send requests. If this is not provided, the current hosted URL will be used.
 
 `npm run dev` can also be used for development of the server; this allows for hot-reloading. Running the client using `npm start` and setting `REACT_APP_API_ROOT` to where the server is running will allow for a development setup with hot-reloading.
