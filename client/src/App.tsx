@@ -88,7 +88,9 @@ const App: React.FC = () => {
 
     return <>
         <Navigation user={user} onLogout={clearToken} />
-        {routeResult || <NotFound />}
+        <div className="my-3">
+            {routeResult || <NotFound />}
+        </div>
     </>;
 };
 

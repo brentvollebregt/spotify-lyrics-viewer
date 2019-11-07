@@ -21,7 +21,7 @@ const TrackPlaying: React.FunctionComponent<IProps> = (props: IProps) => {
     const progressMs = current.progress_ms !== null ? current.progress_ms : 0;
     const isPlaying = current.is_playing;
 
-    return <Container className="my-3">
+    return <Container>
         <PlayerStatus
             albumArtUrl={albumArtUrl}
             title={title}
