@@ -4,7 +4,7 @@ import PlayerStatus from './sharedComponents/PlayerStatus';
 import LyricsDisplay from './sharedComponents/LyricsDisplay';
 
 const Loading: React.FunctionComponent = () => {
-    return <Container className="my-3">
+    return <Container>
         <PlayerStatus
             albumArtUrl={undefined}
             title=""
