@@ -3,6 +3,7 @@ import { useRoutes, useRedirect } from 'hookrouter';
 import SpotifyWebApi from 'spotify-web-api-js';
 import cogoToast from 'cogo-toast';
 import Navigation from './components/Navigation';
+import Footer from './components/Footer';
 import About from './pages/About';
 import LyricsView from './pages/LyricsView';
 import NotFound from './pages/NotFound';
@@ -91,6 +92,7 @@ const App: React.FC = () => {
         <div className="my-3">
             {routeResult || <NotFound />}
         </div>
+        <Footer />
     </>;
 };
 
