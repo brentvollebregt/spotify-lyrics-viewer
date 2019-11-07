@@ -4,9 +4,6 @@
 <p align="center">View the lyrics of the current playing Spotify song in your browser.</p>
 <p align="center"><a href="https://spotify-lyrics-viewer.nitratine.net/">🌐: spotify-lyrics-viewer.nitratine.net</a></p>
 
-# Spotify Lyrics Viewer
-View the lyrics of the current playing Spotify song in your browser
-
 ## 🛠️ Setup
 1. Clone the repo.
 2. Setup the server
