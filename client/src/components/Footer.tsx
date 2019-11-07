@@ -18,6 +18,6 @@ const Footer: React.FunctionComponent = () => {
       </div>
     </Container>
   </footer>;
-}
+};
 
 export default Footer;
