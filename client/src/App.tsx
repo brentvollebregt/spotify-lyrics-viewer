@@ -24,10 +24,12 @@ const App: React.FC = () => {
             spotifyApi.setAccessToken(token.value);
             spotifyApi.getMe()
                 .then(newUser => setUser(newUser))
-                .catch(err => cogoToast.error(
-                    'Could not get your profile. Make sure you are connected to the internet and that your token is valid.',
-                    { position: "bottom-center", heading: 'Error When Fetching Your Profile', hideAfter: 20, onClick: (hide: any) => hide() }
-                ));
+                .catch(err => {
+                    const { hide } = cogoToast.error(
+                        'Could not get your profile. Make sure you are connected to the internet and that your token is valid.',
+                        { position: "bottom-center", heading: 'Error When Fetching Your Profile', hideAfter: 20, onClick: () => hide() }
+                    );
+                });
         }
     }, [token]);
 
@@ -44,9 +46,9 @@ const App: React.FC = () => {
                         if (newToken !== null) {
                             onNewToken(newToken.access_token, newToken.expires_at);
                         } else {
-                            cogoToast.warn(
+                            const { hide } = cogoToast.warn(
                                 'Unable to keep logged into Spotify. Please log back in.',
-                                { position: "bottom-center", heading: 'Spotify Login Expired', hideAfter: 20, onClick: (hide: any) => hide() }
+                                { position: "bottom-center", heading: 'Spotify Login Expired', hideAfter: 20, onClick: () => hide() }
                             );
                             clearToken();
                         }
@@ -79,7 +81,7 @@ const App: React.FC = () => {
     };
 
     const routes = {
-        '/': () => <LyricsView token={token} user={user} />,
+        '/': () => <LyricsView token={token} user={user} invalidateToken={clearToken} />,
         '/about': () => <About />,
         '/spotify-authorization': () => <SpotifyAuthorization onNewToken={onNewToken} />,
         '/spotify-authorization/': () => <SpotifyAuthorization onNewToken={onNewToken} />,
