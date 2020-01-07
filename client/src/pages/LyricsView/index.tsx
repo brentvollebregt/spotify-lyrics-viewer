@@ -45,9 +45,9 @@ const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
             })
             .catch((request: XMLHttpRequest) => {
                 setCurrentlyPlaying("Error");
-                cogoToast.error(
+                const { hide } = cogoToast.error(
                     request.responseText,
-                    { position: "bottom-center", heading: 'Failed to Get Current Song', hideAfter: 20, onClick: (hide: any) => hide() }
+                    { position: "bottom-center", heading: 'Failed to Get Current Song', hideAfter: 20, onClick: () => hide() }
                 );
             });
     };

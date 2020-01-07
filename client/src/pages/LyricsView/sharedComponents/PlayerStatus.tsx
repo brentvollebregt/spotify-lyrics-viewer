@@ -32,10 +32,12 @@ const ProgressSlider = withStyles({
     }
 })(Slider);
 
-const responseError = (title: string, request: XMLHttpRequest) => cogoToast.error(
-    JSON.parse(request.responseText).error.message,
-    { position: "bottom-center", heading: title, hideAfter: 20, onClick: (hide: any) => hide() }
-);
+const responseError = (title: string, request: XMLHttpRequest) => {
+    const { hide } = cogoToast.error(
+        JSON.parse(request.responseText).error.message,
+        { position: "bottom-center", heading: title, hideAfter: 20, onClick: () => hide() }
+    );
+};
 
 interface IProps {
     albumArtUrl?: string;
