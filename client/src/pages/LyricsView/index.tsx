@@ -23,10 +23,11 @@ export interface ILyricDetails {
 interface IProps {
     token: IToken | null;
     user: SpotifyApi.UserObjectPrivate | null;
+    invalidateToken: () => void;
 }
 
 const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { token, user } = props;
+    const { token, user, invalidateToken } = props;
 
     const [currentlyPlaying, setCurrentlyPlaying] = useState<SpotifyApi.CurrentlyPlayingObject | "NotPlaying" | "Loading" | "Error">("Loading");
     const [lyrics, setLyrics] = useState<ILyricDetails | undefined>(undefined);
@@ -44,11 +45,19 @@ const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
                 }
             })
             .catch((request: XMLHttpRequest) => {
-                setCurrentlyPlaying("Error");
-                const { hide } = cogoToast.error(
-                    request.responseText,
-                    { position: "bottom-center", heading: 'Failed to Get Current Song', hideAfter: 20, onClick: () => hide() }
-                );
+                if (request.status === 401) {
+                    invalidateToken();
+                    const { hide } = cogoToast.info(
+                        'You have been logged out',
+                        { position: "bottom-center", heading: 'Token expired', hideAfter: 20, onClick: () => hide() }
+                    );
+                } else {
+                    setCurrentlyPlaying("Error");
+                    const { hide } = cogoToast.error(
+                        request.responseText,
+                        { position: "bottom-center", heading: 'Failed to Get Current Song', hideAfter: 20, onClick: () => hide() }
+                    );
+                }
             });
     };
 

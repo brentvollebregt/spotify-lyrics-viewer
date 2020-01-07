@@ -81,7 +81,7 @@ const App: React.FC = () => {
     };
 
     const routes = {
-        '/': () => <LyricsView token={token} user={user} />,
+        '/': () => <LyricsView token={token} user={user} invalidateToken={clearToken} />,
         '/about': () => <About />,
         '/spotify-authorization': () => <SpotifyAuthorization onNewToken={onNewToken} />,
         '/spotify-authorization/': () => <SpotifyAuthorization onNewToken={onNewToken} />,
