@@ -10,6 +10,16 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>Spotify Lyrics Viewer</title>
 
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=%REACT_APP_GOOGLE_ANALYTICS_TRACKING_ID%"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', '%REACT_APP_GOOGLE_ANALYTICS_TRACKING_ID%');
+    </script>
+
     <!-- Bootstrap Styles -->
     <link
       rel="stylesheet"
