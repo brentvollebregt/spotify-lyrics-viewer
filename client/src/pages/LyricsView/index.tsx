@@ -22,12 +22,11 @@ export interface ILyricDetails {
 
 interface IProps {
     token: IToken | null;
-    user: SpotifyApi.UserObjectPrivate | null;
     invalidateToken: () => void;
 }
 
 const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { token, user, invalidateToken } = props;
+    const { token, invalidateToken } = props;
 
     const [currentlyPlaying, setCurrentlyPlaying] = useState<SpotifyApi.CurrentlyPlayingObject | "NotPlaying" | "Loading" | "Error">("Loading");
     const [lyrics, setLyrics] = useState<ILyricDetails | undefined>(undefined);
@@ -123,10 +122,8 @@ const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
         }
     }, [currentlyPlaying]);
 
-    if (user === null) {
-        return <Welcome
-            user={user}
-        />;
+    if (token === null) {
+        return <Welcome />;
     } else if (currentlyPlaying === "Loading") {
         return <Loading />;
     } else if (currentlyPlaying === "NotPlaying") {
