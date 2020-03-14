@@ -5,19 +5,27 @@
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <meta name="description" content="View lyrics of the current song playing on Spotify" />
+    <meta
+      name="description"
+      content="View the lyrics of the current song playing on your Spotify account"
+    />
     <link rel="apple-touch-icon" href="logo.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>Spotify Lyrics Viewer</title>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=%REACT_APP_GOOGLE_ANALYTICS_TRACKING_ID%"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=%REACT_APP_GOOGLE_ANALYTICS_TRACKING_ID%"
+    ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-      gtag('config', '%REACT_APP_GOOGLE_ANALYTICS_TRACKING_ID%');
+      gtag("config", "%REACT_APP_GOOGLE_ANALYTICS_TRACKING_ID%");
     </script>
 
     <!-- Bootstrap Styles -->

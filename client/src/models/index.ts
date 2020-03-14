@@ -1,4 +1,4 @@
 export interface IToken {
-    value: string;
-    expiry: Date;
+  value: string;
+  expiry: Date;
 }
