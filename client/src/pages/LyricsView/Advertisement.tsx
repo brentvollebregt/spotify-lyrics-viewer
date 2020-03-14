@@ -1,29 +1,31 @@
-import React from 'react';
-import { Container } from 'react-bootstrap';
-import PlayerStatus from './sharedComponents/PlayerStatus';
-import SpotifyLogoRound from '../../img/spotify-logo-round.png';
+import React from "react";
+import { Container } from "react-bootstrap";
+import PlayerStatus from "./sharedComponents/PlayerStatus";
+import SpotifyLogoRound from "../../img/spotify-logo-round.png";
 
 const adDuration = 30 * 1000; // Typically 30s
 
 interface IProps {
-    current: SpotifyApi.CurrentlyPlayingObject;
-    token?: string;
+  current: SpotifyApi.CurrentlyPlayingObject;
+  token?: string;
 }
 
 const Advertisement: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { current, token } = props;
-    return <Container>
-        <PlayerStatus
-            albumArtUrl={SpotifyLogoRound}
-            title="Advertisement"
-            artist="Spotify"
-            album=""
-            durationMs={adDuration}
-            progressMs={current.progress_ms !== null ? current.progress_ms : 0}
-            isPlaying={current.is_playing}
-            spotifyToken={token}
-        />
-    </Container>;
+  const { current, token } = props;
+  return (
+    <Container>
+      <PlayerStatus
+        albumArtUrl={SpotifyLogoRound}
+        title="Advertisement"
+        artist="Spotify"
+        album=""
+        durationMs={adDuration}
+        progressMs={current.progress_ms !== null ? current.progress_ms : 0}
+        isPlaying={current.is_playing}
+        spotifyToken={token}
+      />
+    </Container>
+  );
 };
 
 export default Advertisement;
