@@ -10,6 +10,7 @@ import NotFound from './pages/NotFound';
 import SpotifyAuthorization from './pages/SpotifyAuthorization';
 import { deleteSession, spotifyGetCurrentToken, spotifyRefreshToken } from './api';
 import { IToken } from './models';
+import MetaTags from './components/MetaTags';
 
 const App: React.FC = () => {
     const [token, setToken] = useState<IToken | null>(null);
@@ -81,8 +82,12 @@ const App: React.FC = () => {
     };
 
     const routes = {
-        '/': () => <LyricsView token={token} invalidateToken={clearToken} />,
-        '/about': () => <About />,
+        '/': () => <MetaTags route="/" description="View the lyrics of the current song playing on your Spotify account in your browser.">
+            <LyricsView token={token} invalidateToken={clearToken} />
+        </MetaTags>,
+        '/about': () => <MetaTags route="/about" titlePrefix="About - " description="Spotify Lyrics Viewer is a tool that allows you to view the lyrics of the current playing song on Spotify.">
+            <About />
+        </MetaTags>,
         '/spotify-authorization': () => <SpotifyAuthorization onNewToken={onNewToken} />,
         '/spotify-authorization/': () => <SpotifyAuthorization onNewToken={onNewToken} />,
     };
