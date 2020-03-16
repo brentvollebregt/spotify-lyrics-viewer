@@ -1,5 +1,5 @@
 import Config from "../config";
-import { ITokenExpiryPair, ILyricsAndDetails } from "./dto";
+import { ITokenExpiryPair, ILyricsAndDetails } from "../../../src/dto";
 
 export function geniusGetLyrics(artist: string, title: string): Promise<ILyricsAndDetails> {
   const parameters = { artist, title };

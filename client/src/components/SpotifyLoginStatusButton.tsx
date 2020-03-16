@@ -8,9 +8,7 @@ interface IProps {
   onLoggedInClick?: () => void;
 }
 
-const SpotifyLoginStatusButton: React.FunctionComponent<IProps> = (props: IProps) => {
-  const { user, onLoggedInClick } = props;
-
+const SpotifyLoginStatusButton: React.FunctionComponent<IProps> = ({ user, onLoggedInClick }) => {
   const loggedInStatusButtonClick = () => {
     if (user === null) {
       navigate("/spotify-authorization");

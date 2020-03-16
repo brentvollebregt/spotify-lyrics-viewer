@@ -28,9 +28,7 @@ const App: React.FC = () => {
         .getMe()
         .then(newUser => setUser(newUser))
         .catch(err => {
-          const {
-            hide
-          } = cogoToast.error(
+          const { hide } = cogoToast.error(
             "Could not get your profile. Make sure you are connected to the internet and that your token is valid.",
             {
               position: "bottom-center",
@@ -57,14 +55,15 @@ const App: React.FC = () => {
             if (newToken !== null) {
               onNewToken(newToken.access_token, newToken.expires_at);
             } else {
-              const {
-                hide
-              } = cogoToast.warn("Unable to keep logged into Spotify. Please log back in.", {
-                position: "bottom-center",
-                heading: "Spotify Login Expired",
-                hideAfter: 20,
-                onClick: () => hide()
-              });
+              const { hide } = cogoToast.warn(
+                "Unable to keep logged into Spotify. Please log back in.",
+                {
+                  position: "bottom-center",
+                  heading: "Spotify Login Expired",
+                  hideAfter: 20,
+                  onClick: () => hide()
+                }
+              );
               clearToken();
             }
           });

@@ -10,8 +10,7 @@ interface IProps {
   token?: string;
 }
 
-const Advertisement: React.FunctionComponent<IProps> = (props: IProps) => {
-  const { current, token } = props;
+const Advertisement: React.FunctionComponent<IProps> = ({ current, token }) => {
   return (
     <Container>
       <PlayerStatus
