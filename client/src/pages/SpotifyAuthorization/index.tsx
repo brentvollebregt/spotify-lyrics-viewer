@@ -7,8 +7,7 @@ interface IProps {
   onNewToken: (accessToken: string, expiresIn: number) => void;
 }
 
-const SpotifyAuthorization: React.FunctionComponent<IProps> = (props: IProps) => {
-  const { onNewToken } = props;
+const SpotifyAuthorization: React.FunctionComponent<IProps> = ({ onNewToken }) => {
   const { search } = window.location;
 
   let message = <></>;

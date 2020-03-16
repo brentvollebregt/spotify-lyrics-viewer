@@ -52,18 +52,16 @@ interface IProps {
   spotifyToken?: string;
 }
 
-const PlayerStatus: React.FunctionComponent<IProps> = (props: IProps) => {
-  const {
-    albumArtUrl,
-    title,
-    artist,
-    album,
-    durationMs,
-    progressMs,
-    isPlaying,
-    spotifyToken
-  } = props;
-
+const PlayerStatus: React.FunctionComponent<IProps> = ({
+  albumArtUrl,
+  title,
+  artist,
+  album,
+  durationMs,
+  progressMs,
+  isPlaying,
+  spotifyToken
+}) => {
   const [progress, setProgress] = useState(0);
   const [userSlidingProgress, setUserSlidingProgress] = useState(false);
   const [smoothProgressTimer, setSmoothProgressTimer] = useState<NodeJS.Timeout | null>(null);

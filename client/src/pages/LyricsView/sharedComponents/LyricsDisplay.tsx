@@ -33,9 +33,12 @@ interface IProps {
   geniusUrl?: string;
 }
 
-const LyricsDisplay: React.FunctionComponent<IProps> = (props: IProps) => {
-  const { lyrics, lyricsArtist, lyricsTitle, geniusUrl } = props;
-
+const LyricsDisplay: React.FunctionComponent<IProps> = ({
+  lyrics,
+  lyricsArtist,
+  lyricsTitle,
+  geniusUrl
+}) => {
   const classes = useStyles();
   const lyricsRef = useRef<HTMLDivElement | null>(null);
   const searchInputRef = useRef<HTMLInputElement | null>(null);

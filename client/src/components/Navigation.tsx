@@ -14,8 +14,7 @@ interface IProps {
   onLogout: () => void;
 }
 
-const Navigation: React.FunctionComponent<IProps> = (props: IProps) => {
-  const { user, onLogout } = props;
+const Navigation: React.FunctionComponent<IProps> = ({ user, onLogout }) => {
   const currentPath = usePath();
 
   const goTo = (location: string) => () => navigate(location);

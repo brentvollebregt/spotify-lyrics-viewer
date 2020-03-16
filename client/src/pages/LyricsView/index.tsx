@@ -25,9 +25,7 @@ interface IProps {
   invalidateToken: () => void;
 }
 
-const LyricsView: React.FunctionComponent<IProps> = (props: IProps) => {
-  const { token, invalidateToken } = props;
-
+const LyricsView: React.FunctionComponent<IProps> = ({ token, invalidateToken }) => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState<
     SpotifyApi.CurrentlyPlayingObject | "NotPlaying" | "Loading" | "Error"
   >("Loading");

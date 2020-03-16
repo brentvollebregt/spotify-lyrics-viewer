@@ -10,9 +10,7 @@ interface IProps {
   token?: string;
 }
 
-const TrackPlaying: React.FunctionComponent<IProps> = (props: IProps) => {
-  const { current, lyricDetails, token } = props;
-
+const TrackPlaying: React.FunctionComponent<IProps> = ({ current, lyricDetails, token }) => {
   const albumArtUrl = current.item ? current.item.album.images[0].url : undefined;
   const title = current.item ? current.item.name : undefined;
   const artist = current.item ? current.item.artists.map(a => a.name).join(", ") : undefined;
