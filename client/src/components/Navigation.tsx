@@ -33,7 +33,7 @@ const Navigation: React.FunctionComponent<IProps> = ({ user, onLogout }) => {
             src={BannerImage}
             height="30"
             className="d-inline-block align-top"
-            alt="Emotionify Banner Logo"
+            alt="Spotify Lyrics Viewer Banner Logo"
             style={{ cursor: "pointer" }}
           />
         </Navbar.Brand>
