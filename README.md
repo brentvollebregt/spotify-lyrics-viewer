@@ -29,6 +29,10 @@ When running the client in development mode using `npm start`, the client will u
 
 > `launch.json` also offers the ability to connect and debug the the server when running `npm run dev`.
 
+## Screenshot
+
+![Spotify Lyrics Viewer showing lyrics](https://nitratine.net/posts/spotify-lyrics-viewer/sample.png)
+
 ## 📝 Features
 
 - **Spotify authorization ([Authorization Code Flow](https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow)) for current song identification**
