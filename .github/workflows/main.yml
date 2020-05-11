@@ -3,32 +3,33 @@ name: Build and Deploy Client to gh-pages
 on:
   push:
     branches:
-    - master
+      - master
 
 jobs:
   build-deploy:
     runs-on: ubuntu-18.04
     steps:
-    - uses: actions/checkout@master
+      - uses: actions/checkout@master
 
-    - name: Setup Node
-      uses: actions/setup-node@v1
-      with:
-        node-version: '10.x'
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
 
-    - name: Install Dependencies and Build
-      run: |
-        cd client
-        npm install
-        npm run build
-        cd ..
-      env:
-        REACT_APP_API_ROOT: https://spotify-lyrics-viewer.herokuapp.com
-        REACT_APP_GOOGLE_ANALYTICS_TRACKING_ID: UA-117153268-4
+      - name: Install Dependencies and Build
+        run: |
+          cd client
+          npm install
+          npm run build
+          cd ..
+        env:
+          REACT_APP_API_ROOT: https://spotify-lyrics-viewer.herokuapp.com
+          REACT_APP_GOOGLE_ANALYTICS_TRACKING_ID: UA-117153268-4
+          CI: false
 
-    - name: Deploy
-      uses: peaceiris/actions-gh-pages@v2.5.0
-      env:
-        ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-        PUBLISH_BRANCH: gh-pages
-        PUBLISH_DIR: ./client/build
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v2.5.0
+        env:
+          ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: ./client/build
