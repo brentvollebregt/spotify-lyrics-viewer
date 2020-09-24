@@ -2,6 +2,8 @@ import dotenv from "dotenv";
 dotenv.config(); // Setup .env
 
 import express from "express";
+import https from "https";
+import fs from "fs";
 import cookieSession from "cookie-session";
 import path from "path";
 import Config from "./config";
@@ -10,6 +12,7 @@ import SessionRoutes, { subRoute as sessionSubRoute } from "./routes/session";
 import SpotifyRoutes, { subRoute as spotifySubRoute } from "./routes/spotify";
 
 const app = express();
+const isProduction = app.get("env") === "production";
 
 app.set("trust proxy", 1); // Trust first proxy
 
@@ -20,7 +23,8 @@ app.use(
   cookieSession({
     keys: Config.server.session_keys,
     maxAge: 48 * 60 * 60 * 1000, // Expires in 48 hours
-    secure: app.get("env") === "production" // SSL is only used in prod
+    sameSite: "none",
+    secure: true // This is why we need SSL in dev
   })
 );
 
@@ -49,6 +53,22 @@ app.use(sessionSubRoute, SessionRoutes);
 app.use(spotifySubRoute, SpotifyRoutes);
 
 const port = process.env.PORT || 5000;
-app.listen(port, () => {
-  console.log(`Listening on ${port}`);
-});
+
+if (!isProduction) {
+  // Even when running locally, we need to use HTTPS.Read the README for details.
+  https
+    .createServer(
+      {
+        cert: fs.readFileSync("server.cert"),
+        key: fs.readFileSync("server.key")
+      },
+      app
+    )
+    .listen(port, () => {
+      console.log(`Listening on ${port} with HTTPS`);
+    });
+} else {
+  app.listen(port, () => {
+    console.log(`Listening on ${port}`);
+  });
+}

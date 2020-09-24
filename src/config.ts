@@ -7,7 +7,7 @@ export default {
     access_token: process.env.GENIUS_ACCESS_TOKEN
   },
   server: {
-    allowed_origins: process.env.SERVER_ALLOWED_ORIGINS,
+    allowed_origins: process.env.SERVER_ALLOWED_ORIGINS.split(","),
     session_keys: process.env.SERVER_SESSION_KEYS.split(" ")
   },
   spotify: {
