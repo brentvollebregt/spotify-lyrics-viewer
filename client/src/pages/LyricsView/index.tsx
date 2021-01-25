@@ -12,12 +12,16 @@ import { IToken } from "../../models";
 
 const periodicTrackCheckDelayMs = 5000;
 
-export interface ILyricDetails {
+interface ILyricDetails {
   content: string;
-  spotifyId: string;
   artist: string;
   title: string;
   geniusUrl: string;
+}
+
+export interface ITrackLyrics {
+  currentlyPlayingItemId: string;
+  lyrics: ILyricDetails | undefined;
 }
 
 interface IProps {
@@ -29,7 +33,7 @@ const LyricsView: React.FunctionComponent<IProps> = ({ token, invalidateToken })
   const [currentlyPlaying, setCurrentlyPlaying] = useState<
     SpotifyApi.CurrentlyPlayingObject | "NotPlaying" | "Loading" | "Error"
   >("Loading");
-  const [lyrics, setLyrics] = useState<ILyricDetails | undefined>(undefined);
+  const [lyrics, setLyrics] = useState<ITrackLyrics | undefined>(undefined); // undefined = no lyrics yet, .lyrics=undefined = no lyrics exist
   const [checkSongTimeout, setCheckSongTimeout] = useState<NodeJS.Timeout | null>(null);
 
   const updateCurrentPlaying = (tokenValue: string) => {
@@ -127,18 +131,33 @@ const LyricsView: React.FunctionComponent<IProps> = ({ token, invalidateToken })
     ) {
       setLyrics(undefined);
     } else {
-      if (lyrics === undefined || currentlyPlaying.item.id !== lyrics.spotifyId) {
-        setLyrics(undefined);
+      if (
+        lyrics === undefined || // We just don't have the lyrics
+        currentlyPlaying.item.id !== lyrics.currentlyPlayingItemId || // Song has changed
+        (lyrics.lyrics !== undefined && lyrics.lyrics.content === "") // The lyrics are empty for some reason
+      ) {
+        // Only remove the current lyrics if they aren't empty for some reason (to keep the "Trying again" message)
+        if (
+          !(lyrics !== undefined && lyrics.lyrics !== undefined && lyrics.lyrics.content === "")
+        ) {
+          setLyrics(undefined);
+        }
+
         // Get lyrics
         geniusGetLyrics(currentlyPlaying.item.artists[0].name, currentlyPlaying.item.name).then(
           newLyrics => {
             if (currentlyPlaying.item !== null) {
               setLyrics({
-                artist: newLyrics.artist,
-                content: newLyrics.lyrics,
-                geniusUrl: newLyrics.geniusUrl,
-                spotifyId: currentlyPlaying.item.id,
-                title: newLyrics.title
+                currentlyPlayingItemId: currentlyPlaying.item.id,
+                lyrics:
+                  newLyrics === null
+                    ? undefined
+                    : {
+                        artist: newLyrics.artist,
+                        content: newLyrics.lyrics,
+                        geniusUrl: newLyrics.geniusUrl,
+                        title: newLyrics.title
+                      }
               });
             }
           }
