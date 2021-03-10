@@ -1,12 +1,15 @@
 import React from "react";
-import { Container } from "react-bootstrap";
+import { Box, Typography } from "@material-ui/core";
 
 const Error: React.FunctionComponent = () => {
   return (
-    <Container className="text-center">
-      <h2>Error</h2>
-      <p>An unexpected error ocurred</p>
-    </Container>
+    <Box textAlign="center">
+      <Typography variant="h4" gutterBottom>
+        Error
+      </Typography>
+
+      <Typography>An unexpected error ocurred</Typography>
+    </Box>
   );
 };
 

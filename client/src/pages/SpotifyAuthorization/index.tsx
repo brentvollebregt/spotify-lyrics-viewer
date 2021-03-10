@@ -1,13 +1,14 @@
 import React from "react";
 import { navigate } from "hookrouter";
-import { Container, Spinner } from "react-bootstrap";
+import { Box, CircularProgress, Typography } from "@material-ui/core";
+
 import Config from "../../config";
 
 interface IProps {
   onNewToken: (accessToken: string, expiresIn: number) => void;
 }
 
-const SpotifyAuthorization: React.FunctionComponent<IProps> = ({ onNewToken }) => {
+const SpotifyAuthorization: React.FC<IProps> = ({ onNewToken }) => {
   const { search } = window.location;
 
   let message = <></>;
@@ -17,8 +18,10 @@ const SpotifyAuthorization: React.FunctionComponent<IProps> = ({ onNewToken }) =
     window.location.href = Config.api.root + Config.api.spotify_authentication_route;
     message = (
       <>
-        <Spinner animation="border" />
-        <p className="lead">Redirecting</p>
+        <Box mb={2}>
+          <Typography variant="subtitle1">Redirecting</Typography>
+        </Box>
+        <CircularProgress size={30} />
       </>
     );
   } else {
@@ -31,17 +34,21 @@ const SpotifyAuthorization: React.FunctionComponent<IProps> = ({ onNewToken }) =
       // All parameters are present
       onNewToken(accessToken, parseInt(expiresAt, 10));
       navigate("/");
-      message = <p className="lead">Token received</p>;
+      message = <Typography variant="subtitle1">Token received</Typography>;
     } else {
-      message = <p className="lead">Incorrect URL parameters</p>;
+      message = <Typography variant="subtitle1">Incorrect URL parameters</Typography>;
     }
   }
 
   return (
-    <Container className="text-center">
-      <h1>Spotify Authorization</h1>
-      {message}
-    </Container>
+    <>
+      <Typography variant="h4" align="center">
+        Spotify Authorization
+      </Typography>
+      <Box alignItems="center" textAlign="center">
+        {message}
+      </Box>
+    </>
   );
 };
 

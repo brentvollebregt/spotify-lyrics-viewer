@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState, RefObject } from "react";
 import MarkJS from "mark.js";
-import { makeStyles } from "@material-ui/core/styles";
-import { IconButton } from "@material-ui/core";
+import { IconButton, makeStyles } from "@material-ui/core";
 import { Search } from "@material-ui/icons";
 import { Button, InputGroup, FormControl, Spinner, FormControlProps } from "react-bootstrap";
 import { ReplaceProps, BsPrefixProps } from "react-bootstrap/helpers";
+
 import "./LyricsDisplay.css";
 
 const useStyles = makeStyles({
@@ -70,6 +70,7 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
 
   return (
     <div className={`${classes.root} text-center`}>
+      {/* TODO https://material-ui.com/components/text-fields/#input-adornments */}
       {searchShown ? (
         <InputGroup className="mb-3">
           <FormControl

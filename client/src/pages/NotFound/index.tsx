@@ -1,10 +1,11 @@
 import React from "react";
+import { Typography } from "@material-ui/core";
 
-const NotFound: React.FunctionComponent = () => {
+const NotFound: React.FC = () => {
   return (
-    <div>
-      <h1>Not Found</h1>
-    </div>
+    <Typography variant="h4" align="center">
+      Page Not Found
+    </Typography>
   );
 };
 

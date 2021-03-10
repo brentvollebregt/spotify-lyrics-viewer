@@ -1,14 +1,21 @@
 import React from "react";
-import { Container } from "react-bootstrap";
+import { Box, Typography } from "@material-ui/core";
+
 import SpotifyLoginStatusButton from "../../components/SpotifyLoginStatusButton";
 
 const Welcome: React.FunctionComponent = () => {
   return (
-    <Container className="text-center">
-      <h2>Spotify Lyrics Viewer</h2>
-      <p>To get access to your current playing song, you need to sign into Spotify.</p>
+    <Box textAlign="center">
+      <Typography variant="h4" gutterBottom>
+        Spotify Lyrics Viewer
+      </Typography>
+
+      <Typography gutterBottom>
+        To get access to your current playing song, you need to sign into Spotify.
+      </Typography>
+
       <SpotifyLoginStatusButton user={null} />
-    </Container>
+    </Box>
   );
 };
 

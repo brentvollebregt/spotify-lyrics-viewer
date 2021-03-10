@@ -1,16 +1,19 @@
 import React from "react";
-import { Container } from "react-bootstrap";
+import { Box, Typography } from "@material-ui/core";
 
 const NoTrackPlaying: React.FunctionComponent = () => {
   return (
-    <Container className="text-center">
-      <h2>No Song is Playing</h2>
-      <p>
+    <Box textAlign="center">
+      <Typography variant="h4" gutterBottom>
+        No Song is Playing
+      </Typography>
+
+      <Typography>
         A song must be playing on Spotify for lyrics to be displayed.
         <br />
         Also make sure you are not using a private session.
-      </p>
-    </Container>
+      </Typography>
+    </Box>
   );
 };
 

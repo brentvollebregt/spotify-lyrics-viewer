@@ -1,7 +1,8 @@
 import React from "react";
+import { AppBar, Toolbar, Typography, Container, Box } from "@material-ui/core";
 import { navigate, usePath } from "hookrouter";
-import { Container, Nav, Navbar } from "react-bootstrap";
-import SpotifyLoginStatusButton from "../components/SpotifyLoginStatusButton";
+
+import SpotifyLoginStatusButton from "./SpotifyLoginStatusButton";
 import BannerImage from "../img/banner.png";
 
 const navbarLinks: { [key: string]: string } = {
@@ -15,7 +16,7 @@ interface IProps {
 }
 
 const Navigation: React.FunctionComponent<IProps> = ({ user, onLogout }) => {
-  const currentPath = usePath();
+  const currentPath = usePath(); // TODO Active
 
   const goTo = (location: string) => () => navigate(location);
   const logoutCheck = () => {
@@ -26,9 +27,9 @@ const Navigation: React.FunctionComponent<IProps> = ({ user, onLogout }) => {
   };
 
   return (
-    <Navbar collapseOnSelect expand="md" bg="light" variant="light" sticky="top">
-      <Container>
-        <Navbar.Brand onClick={goTo("/")}>
+    <AppBar position="static" style={{ background: "#f8f9fa" }}>
+      <Container maxWidth="md">
+        <Toolbar>
           <img
             src={BannerImage}
             height="30"
@@ -36,22 +37,21 @@ const Navigation: React.FunctionComponent<IProps> = ({ user, onLogout }) => {
             alt="Spotify Lyrics Viewer Banner Logo"
             style={{ cursor: "pointer" }}
           />
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="mr-auto">
-            {Object.keys(navbarLinks).map(path => (
-              <Nav.Link key={path} href="#" onClick={goTo(path)} active={currentPath === path}>
-                {navbarLinks[path]}
-              </Nav.Link>
-            ))}
-          </Nav>
-          <Nav>
-            <SpotifyLoginStatusButton user={user} onLoggedInClick={logoutCheck} />
-          </Nav>
-        </Navbar.Collapse>
+
+          {Object.keys(navbarLinks).map(path => (
+            <Box display="inline" ml={2}>
+              <a href="#" onClick={goTo(path)}>
+                <Typography variant="body1">{navbarLinks[path]}</Typography>
+              </a>
+            </Box>
+          ))}
+
+          <div style={{ flexGrow: 1 }} />
+
+          <SpotifyLoginStatusButton user={user} onLoggedInClick={logoutCheck} />
+        </Toolbar>
       </Container>
-    </Navbar>
+    </AppBar>
   );
 };
 
