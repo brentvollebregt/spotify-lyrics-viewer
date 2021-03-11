@@ -107,11 +107,11 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
           <div className={classes.lyrics} ref={lyricsRef}>
             {lyrics}
           </div>
-          <div className="mt-4 text-left">
+          <Box mt={2} textAlign="left">
             <a href={`https://genius.com${geniusUrl}`} target="_blank">
               Lyrics for {lyricsTitle} by {lyricsArtist}
             </a>
-          </div>
+          </Box>
         </div>
       ) : (
         <CircularProgress size={30} />

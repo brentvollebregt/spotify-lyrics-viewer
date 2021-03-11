@@ -1,5 +1,5 @@
 import React from "react";
-import { CircularProgress } from "@material-ui/core";
+import { Box, CircularProgress, Typography } from "@material-ui/core";
 
 import LyricsDisplay from "./LyricsDisplay";
 import { ITrackLyrics } from "../../types/trackLyrics";
@@ -12,30 +12,30 @@ const TrackPlaying: React.FunctionComponent<IProps> = ({ lyricDetails }) => {
   // No lyrics yet
   if (lyricDetails === undefined) {
     return (
-      <div className="text-center">
+      <Box textAlign="center">
         <CircularProgress size={30} />
-      </div>
+      </Box>
     );
   }
 
   // No lyrics found
   if (lyricDetails.lyrics === undefined) {
     return (
-      <div className="text-center">
-        <div>No lyrics found for the current track.</div>
-      </div>
+      <Box textAlign="center">
+        <Typography>No lyrics found for the current track.</Typography>
+      </Box>
     );
   }
 
   // Lyrics miss
   if (lyricDetails.lyrics.content === "") {
     return (
-      <div className="text-center">
-        <div>No lyrics found. Trying again.</div>
-        <div className="mt-2">
+      <Box textAlign="center">
+        <Typography>No lyrics found. Trying again.</Typography>
+        <Box mt={1}>
           <CircularProgress size={30} />
-        </div>
-      </div>
+        </Box>
+      </Box>
     );
   }
 
