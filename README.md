@@ -39,9 +39,10 @@ When running the server locally, HTTPS needs to be setup due to the use of Secur
 
 > `launch.json` offers the ability to connect and debug the the server when running `npm run dev`.
 
-## Screenshot
+## Screenshots
 
 ![Spotify Lyrics Viewer showing lyrics](https://nitratine.net/posts/spotify-lyrics-viewer/sample.png)
+![Spotify Lyrics Viewer showing lyrics in dark mode](https://nitratine.net/posts/spotify-lyrics-viewer/sample-dark.png)
 
 ## 📝 Features
 
