@@ -117,7 +117,7 @@ const Player: React.FC<PlayerProps> = ({ currentlyPlayingSong, token }) => {
             <SkipNextIcon fontSize="large" className={classes.control} onClick={onSkipNext} />
           </div>
 
-          <Box display="inline-flex" alignItems="center">
+          <Box display="inline-flex" alignItems="center" className={classes.sliderWrapper}>
             <Slider
               valueLabelDisplay="off"
               value={smoothedProgressMs}
@@ -126,6 +126,7 @@ const Player: React.FC<PlayerProps> = ({ currentlyPlayingSong, token }) => {
               onMouseDown={onUserStartSliding}
               onMouseUp={onUserFinishedSliding}
               onChange={onUserSlide}
+              className={classes.slider}
             />
           </Box>
         </div>
@@ -146,7 +147,10 @@ const useStyles = makeStyles(theme => ({
   playerWrapper: {
     display: "grid",
     gridTemplateColumns: "auto auto 1fr",
-    gridGap: 16
+    gridColumnGap: 16,
+    [theme.breakpoints.down("xs")]: {
+      gridTemplateColumns: "auto auto"
+    }
   },
   songWrapper: {
     display: "inline-grid",
@@ -174,10 +178,22 @@ const useStyles = makeStyles(theme => ({
   controlsWrapper: {
     display: "inline-grid",
     gridTemplateColumns: "auto auto auto",
-    alignItems: "center"
+    alignItems: "center",
+    justifyContent: "center"
   },
   control: {
     color: theme.palette.text.primary
+  },
+  sliderWrapper: {
+    [theme.breakpoints.down("xs")]: {
+      gridColumnStart: 1,
+      gridColumnEnd: 3
+    }
+  },
+  slider: {
+    [theme.breakpoints.down("xs")]: {
+      padding: "10px 0"
+    }
   }
 }));
 
