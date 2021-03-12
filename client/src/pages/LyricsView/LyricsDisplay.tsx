@@ -91,7 +91,7 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
           </Typography>
           <Box mt={2} textAlign="left">
             <Typography>
-              <Link href={`https://genius.com${geniusUrl}`} target="_blank">
+              <Link href={`https://genius.com${geniusUrl}`}>
                 Lyrics for {lyricsTitle} by {lyricsArtist}
               </Link>
             </Typography>
