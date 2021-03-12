@@ -7,7 +7,9 @@ import {
   Box,
   makeStyles,
   IconButton,
-  Avatar
+  Avatar,
+  useMediaQuery,
+  useTheme
 } from "@material-ui/core";
 import { navigate, usePath } from "hookrouter";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
@@ -15,6 +17,7 @@ import DarkModeIcon from "@material-ui/icons/Brightness4";
 import LightModeIcon from "@material-ui/icons/Brightness7";
 import GitHubIcon from "@material-ui/icons/GitHub";
 
+import LogoImage from "../img/logo.png";
 import BannerImage from "../img/banner.png";
 import BannerImageDark from "../img/banner-dark.png";
 
@@ -38,6 +41,9 @@ const Navigation: React.FunctionComponent<IProps> = ({
 }) => {
   const classes = useStyles();
   const currentPath = usePath();
+  const theme = useTheme();
+
+  const showFullLogo = useMediaQuery(theme.breakpoints.up("sm"));
 
   const goTo = (location: string) => () => navigate(location);
 
@@ -59,14 +65,24 @@ const Navigation: React.FunctionComponent<IProps> = ({
   return (
     <AppBar position="static" className={classes.appBar}>
       <Container maxWidth="md">
-        <Toolbar>
-          <img
-            src={isDarkMode ? BannerImageDark : BannerImage}
-            height="30"
-            alt="Spotify Lyrics Viewer Banner Logo"
-            style={{ cursor: "pointer" }}
-            onClick={goTo("/")}
-          />
+        <Toolbar className={classes.toolbar}>
+          {showFullLogo ? (
+            <img
+              src={isDarkMode ? BannerImageDark : BannerImage}
+              height="30"
+              alt="Spotify Lyrics Viewer Banner"
+              className={classes.logo}
+              onClick={goTo("/")}
+            />
+          ) : (
+            <img
+              src={LogoImage}
+              height="30"
+              alt="Spotify Lyrics Viewer Logo"
+              className={classes.logo}
+              onClick={goTo("/")}
+            />
+          )}
 
           {Object.keys(navbarLinks).map(path => (
             <Box display="inline" ml={2}>
@@ -80,7 +96,7 @@ const Navigation: React.FunctionComponent<IProps> = ({
             </Box>
           ))}
 
-          <div style={{ flexGrow: 1 }} />
+          <div className={classes.grow} />
 
           <IconButton onClick={onGitHubIconClicked}>
             <GitHubIcon />
@@ -113,6 +129,12 @@ const useStyles = makeStyles(theme => ({
   appBar: {
     backgroundColor: theme.palette.background.paper
   },
+  toolbar: {
+    padding: 0
+  },
+  logo: {
+    cursor: "pointer"
+  },
   link: {
     textDecoration: "none",
     color: theme.palette.text.secondary,
@@ -126,6 +148,10 @@ const useStyles = makeStyles(theme => ({
   userIcon: {
     width: 30,
     height: 30
+  },
+  // Utils
+  grow: {
+    flexGrow: 1
   }
 }));
 
