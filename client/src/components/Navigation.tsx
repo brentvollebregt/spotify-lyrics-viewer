@@ -9,7 +9,8 @@ import {
   IconButton,
   Avatar,
   useMediaQuery,
-  useTheme
+  useTheme,
+  Link
 } from "@material-ui/core";
 import { navigate, usePath } from "hookrouter";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
@@ -45,10 +46,9 @@ const Navigation: React.FunctionComponent<IProps> = ({
 
   const showFullLogo = useMediaQuery(theme.breakpoints.up("sm"));
 
-  const goTo = (location: string) => () => navigate(location);
-
-  const onGitHubIconClicked = () => {
-    window.location.href = "https://github.com/brentvollebregt/spotify-lyrics-viewer";
+  const goTo = (location: string) => (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    event.preventDefault();
+    navigate(location);
   };
 
   const onUserIconClick = () => {
@@ -66,41 +66,43 @@ const Navigation: React.FunctionComponent<IProps> = ({
     <AppBar position="static" className={classes.appBar}>
       <Container maxWidth="md">
         <Toolbar className={classes.toolbar}>
-          {showFullLogo ? (
-            <img
-              src={isDarkMode ? BannerImageDark : BannerImage}
-              height="30"
-              alt="Spotify Lyrics Viewer Banner"
-              className={classes.logo}
-              onClick={goTo("/")}
-            />
-          ) : (
-            <img
-              src={LogoImage}
-              height="30"
-              alt="Spotify Lyrics Viewer Logo"
-              className={classes.logo}
-              onClick={goTo("/")}
-            />
-          )}
+          <Link href="/" onClick={goTo("/")}>
+            {showFullLogo ? (
+              <img
+                src={isDarkMode ? BannerImageDark : BannerImage}
+                height="30"
+                alt="Spotify Lyrics Viewer Banner"
+                className={classes.logo}
+              />
+            ) : (
+              <img
+                src={LogoImage}
+                height="30"
+                alt="Spotify Lyrics Viewer Logo"
+                className={classes.logo}
+              />
+            )}
+          </Link>
 
           {Object.keys(navbarLinks).map(path => (
             <Box display="inline" ml={2}>
-              <a
-                href="#"
+              <Link
+                href={path}
                 onClick={goTo(path)}
                 className={`${classes.link} ${currentPath === path ? classes.activeLink : ""}`}
               >
                 <Typography variant="body1">{navbarLinks[path]}</Typography>
-              </a>
+              </Link>
             </Box>
           ))}
 
           <div className={classes.grow} />
 
-          <IconButton onClick={onGitHubIconClicked}>
-            <GitHubIcon />
-          </IconButton>
+          <Link href="https://github.com/brentvollebregt/spotify-lyrics-viewer">
+            <IconButton>
+              <GitHubIcon />
+            </IconButton>
+          </Link>
 
           <IconButton onClick={onThemeToggle}>
             {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
@@ -139,7 +141,8 @@ const useStyles = makeStyles(theme => ({
     textDecoration: "none",
     color: theme.palette.text.secondary,
     "&:hover": {
-      color: theme.palette.text.primary
+      color: theme.palette.text.primary,
+      textDecoration: "none"
     }
   },
   activeLink: {
