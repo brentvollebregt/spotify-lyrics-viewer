@@ -29,7 +29,7 @@ const App: React.FC = () => {
     deleteSession();
   };
 
-  const user = useUser(token);
+  const user = useUser(token, clearToken);
   useTokenRefresh(token, onNewToken, clearToken);
   const currentlyPlayingSong = useCurrentlyPlayingSong(token, clearToken);
   const lyrics = useLyrics(currentlyPlayingSong);

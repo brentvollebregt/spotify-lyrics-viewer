@@ -4,7 +4,7 @@ import cogoToast from "cogo-toast";
 
 import { IToken } from "../types/token";
 
-const useUser = (token: IToken | null) => {
+const useUser = (token: IToken | null, clearToken: () => void) => {
   const [user, setUser] = useState<SpotifyApi.UserObjectPrivate | null>(null);
 
   // Request the user when the token changes
@@ -20,7 +20,7 @@ const useUser = (token: IToken | null) => {
         .catch(err => {
           console.error(err);
           const { hide } = cogoToast.error(
-            "Could not get your profile. Make sure you are connected to the internet and that your token is valid.",
+            "Could not get your profile. Make sure you are connected to the internet.",
             {
               position: "bottom-center",
               heading: "Error When Fetching Your Profile",
