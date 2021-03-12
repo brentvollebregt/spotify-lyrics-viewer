@@ -16,12 +16,10 @@ import useUser from "./hooks/useUser";
 import useTokenRefresh from "./hooks/useTokenRefresh";
 import useCurrentlyPlayingSong from "./hooks/useCurrentlyPlayingSong";
 import useLyrics from "./hooks/useLyrics";
-import getTheme from "./theme";
+import useThemeState from "./hooks/useThemeState";
 
 const App: React.FC = () => {
   const [token, setToken] = useState<IToken | null>(null);
-  const [darkMode, setDarkMode] = useState(false);
-  const theme = useMemo(() => getTheme(darkMode), [darkMode]); // Without this a new theme will be calculated each time a hook re-renders this component
 
   const onNewToken = (accessToken: string, expiresAt: number) => {
     setToken({ expiry: new Date(expiresAt), value: accessToken } as IToken);
@@ -35,6 +33,7 @@ const App: React.FC = () => {
   useTokenRefresh(token, onNewToken, clearToken);
   const currentlyPlayingSong = useCurrentlyPlayingSong(token, clearToken);
   const lyrics = useLyrics(currentlyPlayingSong);
+  const { theme, toggleTheme, darkModeEnabled } = useThemeState();
 
   // Request for a token on load to see if data is already in the state
   useEffect(() => {
@@ -76,8 +75,8 @@ const App: React.FC = () => {
         <Navigation
           user={user}
           onLogout={clearToken}
-          onThemeToggle={() => setDarkMode(m => !m)}
-          isDarkMode={darkMode}
+          onThemeToggle={toggleTheme}
+          isDarkMode={darkModeEnabled}
         />
 
         <Box py={3} style={{ overflow: "auto" }}>

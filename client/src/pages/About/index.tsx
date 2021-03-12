@@ -16,8 +16,10 @@ const About: React.FC = () => {
         <Typography gutterBottom>
           To do this, we first log you into Spotify so we can see the current song playing. The
           title and artist are then used to try and find the lyrics on{" "}
-          <Link href="https://genius.com/">GENIUS</Link> and whatever lyrics matched the best are
-          displayed to you.
+          <Link href="https://genius.com/" target="_blank">
+            GENIUS
+          </Link>{" "}
+          and whatever lyrics matched the best are displayed to you.
         </Typography>
         <Typography gutterBottom>
           Please note that the lyrics returned may not be for the current playing song in some

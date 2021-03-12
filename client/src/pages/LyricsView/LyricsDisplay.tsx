@@ -5,33 +5,15 @@ import {
   CircularProgress,
   IconButton,
   InputAdornment,
+  Link,
   makeStyles,
-  TextField
+  TextField,
+  Typography
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import CloseIcon from "@material-ui/icons/Close";
 
 import "./LyricsDisplay.css";
-
-const useStyles = makeStyles({
-  lyrics: {
-    fontSize: 18,
-    lineHeight: "1.7em",
-    whiteSpace: "pre-wrap"
-  },
-  root: {
-    margin: "auto",
-    maxWidth: 700,
-    position: "relative",
-    textAlign: "center"
-  },
-  toggleSearchButton: {
-    margin: "-6px -6px 0 0",
-    position: "absolute",
-    right: 0,
-    top: 0
-  }
-});
 
 interface IProps {
   lyrics?: string;
@@ -104,13 +86,15 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
       )}
       {lyrics ? (
         <div>
-          <div className={classes.lyrics} ref={lyricsRef}>
+          <Typography component="div" className={classes.lyrics} ref={lyricsRef}>
             {lyrics}
-          </div>
+          </Typography>
           <Box mt={2} textAlign="left">
-            <a href={`https://genius.com${geniusUrl}`} target="_blank">
-              Lyrics for {lyricsTitle} by {lyricsArtist}
-            </a>
+            <Typography>
+              <Link href={`https://genius.com${geniusUrl}`} target="_blank">
+                Lyrics for {lyricsTitle} by {lyricsArtist}
+              </Link>
+            </Typography>
           </Box>
         </div>
       ) : (
@@ -119,5 +103,25 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
     </div>
   );
 };
+
+const useStyles = makeStyles({
+  lyrics: {
+    fontSize: 18,
+    lineHeight: "1.7em",
+    whiteSpace: "pre-wrap"
+  },
+  root: {
+    margin: "auto",
+    maxWidth: 700,
+    position: "relative",
+    textAlign: "center"
+  },
+  toggleSearchButton: {
+    margin: "-6px -6px 0 0",
+    position: "absolute",
+    right: 0,
+    top: 0
+  }
+});
 
 export default LyricsDisplay;
