@@ -56,7 +56,7 @@ const Navigation: React.FunctionComponent<IProps> = ({
   };
 
   return (
-    <AppBar position="static" style={{ background: "#f8f9fa" }}>
+    <AppBar position="static" className={classes.appBar}>
       <Container maxWidth="md">
         <Toolbar>
           <img
@@ -94,7 +94,7 @@ const Navigation: React.FunctionComponent<IProps> = ({
               <Avatar
                 alt={user.display_name + " Logo"}
                 src={user.images !== undefined ? user.images[0].url : undefined}
-                style={{ width: 30, height: 30 }}
+                className={classes.userIcon}
               >
                 {user.display_name?.substring(0, 1)}
               </Avatar>
@@ -109,6 +109,9 @@ const Navigation: React.FunctionComponent<IProps> = ({
 };
 
 const useStyles = makeStyles(theme => ({
+  appBar: {
+    backgroundColor: theme.palette.background.paper
+  },
   link: {
     textDecoration: "none",
     color: theme.palette.text.secondary,
@@ -118,6 +121,10 @@ const useStyles = makeStyles(theme => ({
   },
   activeLink: {
     color: theme.palette.text.primary
+  },
+  userIcon: {
+    width: 30,
+    height: 30
   }
 }));
 

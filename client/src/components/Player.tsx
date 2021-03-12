@@ -1,5 +1,5 @@
 import React from "react";
-import { AppBar, Box, Slider, Container } from "@material-ui/core";
+import { AppBar, Box, Slider, Container, makeStyles } from "@material-ui/core";
 import SkipNextIcon from "@material-ui/icons/SkipNext";
 import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
 import PlayCircleFilledIcon from "@material-ui/icons/PlayCircleFilled";
@@ -11,7 +11,6 @@ import { CurrentlyPlayingState } from "../types/currentlyPlayingState";
 import { responseError } from "../utils";
 import useSmoothProgress from "../hooks/useSmoothProgress";
 import SpotifyLogoRoundImage from "../img/spotify-logo-round.png";
-import GithubLogo from "../img/github-logo.png"; // TODO Move to about
 
 const placeholder1PxImage =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8+x8AAr8B3gzOjaQAAAAASUVORK5CYII="; // Generated using https://png-pixel.com/
@@ -24,6 +23,8 @@ interface PlayerProps {
 // TODO Add mobile support
 
 const Player: React.FC<PlayerProps> = ({ currentlyPlayingSong, token }) => {
+  const classes = useStyles();
+
   let albumArt = currentlyPlayingSong.currentlyPlayingObject?.item?.album.images[0].url;
   let title = currentlyPlayingSong.currentlyPlayingObject?.item?.name ?? "---";
   let artist =
@@ -75,88 +76,48 @@ const Player: React.FC<PlayerProps> = ({ currentlyPlayingSong, token }) => {
   };
 
   return (
-    <AppBar
-      position="static"
-      color="primary"
-      style={{ top: "auto", bottom: 0, background: "#f8f9fa", paddingTop: 6, paddingBottom: 6 }}
-    >
+    <AppBar position="static" color="primary" className={classes.appBar}>
       <Container maxWidth="md">
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "auto auto 1fr",
-            gridGap: 16
-          }}
-        >
-          <div
-            style={{
-              display: "inline-grid",
-              gridTemplateColumns: "auto 1fr",
-              gridTemplateRows: "1fr 1fr",
-              gridColumnGap: 5,
-              maxWidth: 250 // TODO Need to play with this
-            }}
-          >
-            <div
-              style={{
-                gridColumnStart: 1,
-                gridColumnEnd: 2,
-                gridRowStart: 1,
-                gridRowEnd: 3
-              }}
-            >
-              <img src={albumArt ?? placeholder1PxImage} style={{ height: 40, width: 40 }} />
+        <div className={classes.playerWrapper}>
+          <div className={classes.songWrapper}>
+            <div className={classes.songAlbumArtWrapper}>
+              <img src={albumArt ?? placeholder1PxImage} className={classes.songAlbumArt} />
             </div>
-            <div
-              style={{
-                color: "black",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis"
-              }}
-              title={title}
-            >
+            <div className={classes.songDetail} title={title}>
               {title}
             </div>
-            <div
-              style={{
-                color: "black",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis"
-              }}
-              title={artist}
-            >
+            <div className={classes.songDetail} title={artist}>
               {artist}
             </div>
           </div>
 
-          <div
-            style={{
-              display: "inline-grid",
-              gridTemplateColumns: "auto auto auto",
-              alignItems: "center"
-            }}
-          >
-            <SkipPreviousIcon fontSize="large" htmlColor="black" onClick={onSkipPrevious} />
+          <div className={classes.controlsWrapper}>
+            <SkipPreviousIcon
+              fontSize="large"
+              className={classes.control}
+              onClick={onSkipPrevious}
+            />
+
             {isPlaying ? (
               <PauseCircleFilledIcon
                 fontSize="large"
                 htmlColor="black"
                 onClick={onPlayPauseToggle}
+                className={classes.control}
               />
             ) : (
               <PlayCircleFilledIcon
                 fontSize="large"
                 htmlColor="black"
                 onClick={onPlayPauseToggle}
+                className={classes.control}
               />
             )}
 
-            <SkipNextIcon fontSize="large" htmlColor="black" onClick={onSkipNext} />
+            <SkipNextIcon fontSize="large" className={classes.control} onClick={onSkipNext} />
           </div>
 
-          <Box style={{ display: "inline-flex", alignItems: "center" }}>
+          <Box display="inline-flex" alignItems="center">
             <Slider
               valueLabelDisplay="off"
               value={smoothedProgressMs}
@@ -172,5 +133,52 @@ const Player: React.FC<PlayerProps> = ({ currentlyPlayingSong, token }) => {
     </AppBar>
   );
 };
+
+const useStyles = makeStyles(theme => ({
+  appBar: {
+    backgroundColor: theme.palette.background.paper,
+    top: "auto",
+    bottom: 0,
+    background: "#f8f9fa",
+    paddingTop: 6,
+    paddingBottom: 6
+  },
+  playerWrapper: {
+    display: "grid",
+    gridTemplateColumns: "auto auto 1fr",
+    gridGap: 16
+  },
+  songWrapper: {
+    display: "inline-grid",
+    gridTemplateColumns: "auto 1fr",
+    gridTemplateRows: "1fr 1fr",
+    gridColumnGap: 5,
+    maxWidth: 250 // TODO Need to play with this
+  },
+  songAlbumArtWrapper: {
+    gridColumnStart: 1,
+    gridColumnEnd: 2,
+    gridRowStart: 1,
+    gridRowEnd: 3
+  },
+  songAlbumArt: {
+    height: 40,
+    width: 40
+  },
+  songDetail: {
+    color: theme.palette.text.primary,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis"
+  },
+  controlsWrapper: {
+    display: "inline-grid",
+    gridTemplateColumns: "auto auto auto",
+    alignItems: "center"
+  },
+  control: {
+    color: theme.palette.text.primary
+  }
+}));
 
 export default Player;
