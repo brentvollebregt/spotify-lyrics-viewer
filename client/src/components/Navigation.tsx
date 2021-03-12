@@ -16,6 +16,7 @@ import LightModeIcon from "@material-ui/icons/Brightness7";
 import GitHubIcon from "@material-ui/icons/GitHub";
 
 import BannerImage from "../img/banner.png";
+import BannerImageDark from "../img/banner-dark.png";
 
 const navbarLinks: { [key: string]: string } = {
   "/": "Home",
@@ -60,7 +61,7 @@ const Navigation: React.FunctionComponent<IProps> = ({
       <Container maxWidth="md">
         <Toolbar>
           <img
-            src={BannerImage}
+            src={isDarkMode ? BannerImageDark : BannerImage}
             height="30"
             alt="Spotify Lyrics Viewer Banner Logo"
             style={{ cursor: "pointer" }}

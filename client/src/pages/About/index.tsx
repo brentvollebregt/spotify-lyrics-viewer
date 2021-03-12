@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography } from "@material-ui/core";
+import { Box, Link, Typography } from "@material-ui/core";
 
 const About: React.FC = () => {
   return (
@@ -16,7 +16,7 @@ const About: React.FC = () => {
         <Typography gutterBottom>
           To do this, we first log you into Spotify so we can see the current song playing. The
           title and artist are then used to try and find the lyrics on{" "}
-          <a href="https://genius.com/">GENIUS</a> and whatever lyrics matched the best are
+          <Link href="https://genius.com/">GENIUS</Link> and whatever lyrics matched the best are
           displayed to you.
         </Typography>
         <Typography gutterBottom>

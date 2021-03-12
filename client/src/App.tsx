@@ -36,8 +36,6 @@ const App: React.FC = () => {
   const currentlyPlayingSong = useCurrentlyPlayingSong(token, clearToken);
   const lyrics = useLyrics(currentlyPlayingSong);
 
-  console.log({ user, currentlyPlayingSong, lyrics });
-
   // Request for a token on load to see if data is already in the state
   useEffect(() => {
     spotifyGetCurrentToken().then(newToken => {
