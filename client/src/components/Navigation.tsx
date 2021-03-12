@@ -15,7 +15,6 @@ import DarkModeIcon from "@material-ui/icons/Brightness4";
 import LightModeIcon from "@material-ui/icons/Brightness7";
 import GitHubIcon from "@material-ui/icons/GitHub";
 
-import SpotifyLoginStatusButton from "./SpotifyLoginStatusButton";
 import BannerImage from "../img/banner.png";
 
 const navbarLinks: { [key: string]: string } = {

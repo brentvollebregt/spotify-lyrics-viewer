@@ -2,9 +2,17 @@ import { createMuiTheme } from "@material-ui/core/styles";
 
 const getTheme = (isDark: boolean) => {
   if (isDark) {
-    return createMuiTheme({});
+    return createMuiTheme({
+      palette: {
+        type: "dark"
+      }
+    });
   } else {
-    return createMuiTheme({});
+    return createMuiTheme({
+      palette: {
+        type: "light"
+      }
+    });
   }
 };
 
