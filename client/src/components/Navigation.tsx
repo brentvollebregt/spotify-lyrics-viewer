@@ -1,6 +1,19 @@
 import React from "react";
-import { AppBar, Toolbar, Typography, Container, Box, makeStyles } from "@material-ui/core";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Container,
+  Box,
+  makeStyles,
+  IconButton,
+  Avatar
+} from "@material-ui/core";
 import { navigate, usePath } from "hookrouter";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import DarkModeIcon from "@material-ui/icons/Brightness4";
+import LightModeIcon from "@material-ui/icons/Brightness7";
+import GitHubIcon from "@material-ui/icons/GitHub";
 
 import SpotifyLoginStatusButton from "./SpotifyLoginStatusButton";
 import BannerImage from "../img/banner.png";
@@ -13,17 +26,33 @@ const navbarLinks: { [key: string]: string } = {
 interface IProps {
   user: SpotifyApi.UserObjectPrivate | null;
   onLogout: () => void;
+  onThemeToggle: () => void;
+  isDarkMode: boolean;
 }
 
-const Navigation: React.FunctionComponent<IProps> = ({ user, onLogout }) => {
+const Navigation: React.FunctionComponent<IProps> = ({
+  user,
+  onLogout,
+  onThemeToggle,
+  isDarkMode
+}) => {
   const classes = useStyles();
-  const currentPath = usePath(); // TODO Active
+  const currentPath = usePath();
 
   const goTo = (location: string) => () => navigate(location);
-  const logoutCheck = () => {
-    const answer = window.confirm("Are you sure you want to logout?");
-    if (answer) {
-      onLogout();
+
+  const onGitHubIconClicked = () => {
+    window.location.href = "https://github.com/brentvollebregt/spotify-lyrics-viewer";
+  };
+
+  const onUserIconClick = () => {
+    if (user === null) {
+      navigate("/spotify-authorization");
+    } else {
+      const answer = window.confirm("Are you sure you want to logout?");
+      if (answer) {
+        onLogout();
+      }
     }
   };
 
@@ -53,9 +82,27 @@ const Navigation: React.FunctionComponent<IProps> = ({ user, onLogout }) => {
 
           <div style={{ flexGrow: 1 }} />
 
-          {/* TODO GitHub */}
+          <IconButton onClick={onGitHubIconClicked}>
+            <GitHubIcon />
+          </IconButton>
 
-          <SpotifyLoginStatusButton user={user} onLoggedInClick={logoutCheck} />
+          <IconButton onClick={onThemeToggle}>
+            {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+          </IconButton>
+
+          <IconButton onClick={onUserIconClick}>
+            {user !== null ? (
+              <Avatar
+                alt={user.display_name + " Logo"}
+                src={user.images !== undefined ? user.images[0].url : undefined}
+                style={{ width: 30, height: 30 }}
+              >
+                {user.display_name?.substring(0, 1)}
+              </Avatar>
+            ) : (
+              <AccountCircleIcon />
+            )}
+          </IconButton>
         </Toolbar>
       </Container>
     </AppBar>

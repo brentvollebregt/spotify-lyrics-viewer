@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRoutes, useRedirect } from "hookrouter";
-import { CssBaseline, Box, Container } from "@material-ui/core";
+import { CssBaseline, Box, Container, ThemeProvider } from "@material-ui/core";
 
 import Navigation from "./components/Navigation";
 import Player from "./components/Player";
@@ -16,9 +16,12 @@ import useUser from "./hooks/useUser";
 import useTokenRefresh from "./hooks/useTokenRefresh";
 import useCurrentlyPlayingSong from "./hooks/useCurrentlyPlayingSong";
 import useLyrics from "./hooks/useLyrics";
+import getTheme from "./theme";
 
 const App: React.FC = () => {
   const [token, setToken] = useState<IToken | null>(null);
+  const [darkMode, setDarkMode] = useState(false);
+  const theme = useMemo(() => getTheme(darkMode), [darkMode]); // Without this a new theme will be calculated each time a hook re-renders this component
 
   const onNewToken = (accessToken: string, expiresAt: number) => {
     setToken({ expiry: new Date(expiresAt), value: accessToken } as IToken);
@@ -69,10 +72,15 @@ const App: React.FC = () => {
   useRedirect("/about/", "/about");
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <div style={{ display: "grid", gridTemplateRows: "auto 1fr auto", height: "100%" }}>
-        <Navigation user={user} onLogout={clearToken} />
+        <Navigation
+          user={user}
+          onLogout={clearToken}
+          onThemeToggle={() => setDarkMode(m => !m)}
+          isDarkMode={darkMode}
+        />
 
         <Box py={3} style={{ overflow: "auto" }}>
           <Container maxWidth="md">{routeResult || <NotFound />}</Container>
@@ -80,7 +88,7 @@ const App: React.FC = () => {
 
         <Player currentlyPlayingSong={currentlyPlayingSong} token={token} />
       </div>
-    </>
+    </ThemeProvider>
   );
 };
 
