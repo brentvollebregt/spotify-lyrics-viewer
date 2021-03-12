@@ -49,18 +49,8 @@ When running the server locally, HTTPS needs to be setup due to the use of Secur
 - **[GENIUS](https://genius.com/) lyric fetching**
 - **Tokens stored in a session-like object**
   - Session is in a cookie due to server restrictions
+- **Dark theme**
 
 ## ❓ Why?
 
 I often get curious of what the lyrics of the current playing song is. I use Spotify a lot so having somewhere where I could login and it immediately provide the lyrics of the current playing song would be very helpful and save a lot of time.
-
-## 🚧 TODO
-
-The original target for this webapp was to be colourful in a darker sort of way (neon-like colours on darker backgrounds); this is still a target but not required.
-
-- Bright fluorescent colours as the background with black/white text
-  - Random on each entry but configurable in settings.
-  - Background colour pulse/transition option
-- Settings tab
-  - Set refresh delay
-  - Select colours

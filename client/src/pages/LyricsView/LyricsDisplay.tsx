@@ -106,8 +106,6 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
 
 const useStyles = makeStyles({
   lyrics: {
-    fontSize: 18,
-    lineHeight: "1.7em",
     whiteSpace: "pre-wrap"
   },
   root: {
