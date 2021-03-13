@@ -112,7 +112,11 @@ const Navigation: React.FunctionComponent<IProps> = ({
             {user !== null ? (
               <Avatar
                 alt={user.display_name + " Logo"}
-                src={user.images !== undefined ? user.images[0].url : undefined}
+                src={
+                  user.images !== undefined && user.images.length > 0
+                    ? user.images[0].url
+                    : undefined
+                }
                 className={classes.userIcon}
               >
                 {user.display_name?.substring(0, 1)}
