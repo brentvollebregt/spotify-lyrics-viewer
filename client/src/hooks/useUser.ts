@@ -20,7 +20,7 @@ const useUser = (token: IToken | null, clearToken: () => void) => {
         .catch(err => {
           console.error(err);
           const { hide } = cogoToast.error(
-            "Could not get your profile. Make sure you are connected to the internet.",
+            "Could not get your profile. Make sure you are connected to the internet and that cookies are allowed.",
             {
               position: "bottom-center",
               heading: "Error When Fetching Your Profile",
