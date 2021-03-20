@@ -38,10 +38,15 @@ const useLyrics = (currentlyPlaying: CurrentlyPlayingState) => {
           setLyrics(undefined);
         }
 
+        // Make replacements to track names to help better find lyrics
+        const trackNameWithReplacements = currentlyPlaying.currentlyPlayingObject.item.name
+          .replace(/\((feat\.|ft\.|with).+\)/, "")
+          .trim();
+
         // Get lyrics
         geniusGetLyrics(
           currentlyPlaying.currentlyPlayingObject.item.artists[0].name,
-          currentlyPlaying.currentlyPlayingObject.item.name
+          trackNameWithReplacements
         ).then(newLyrics => {
           if (currentlyPlaying.currentlyPlayingObject.item !== null) {
             setLyrics({
