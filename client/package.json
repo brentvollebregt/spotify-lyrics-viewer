@@ -16,7 +16,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-metatags-hook": "^1.1.2",
-    "react-scripts": "^3.4.0",
+    "react-scripts": "^4.0.3",
     "spotify-web-api-js": "^1.2.0",
     "typescript": "^3.7.5"
   },
