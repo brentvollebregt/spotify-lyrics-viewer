@@ -85,7 +85,7 @@ const Navigation: React.FunctionComponent<IProps> = ({
           </Link>
 
           {Object.keys(navbarLinks).map(path => (
-            <Box display="inline" ml={2}>
+            <Box key={path} display="inline" ml={2}>
               <Link
                 href={path}
                 onClick={goTo(path)}
