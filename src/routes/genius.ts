@@ -23,13 +23,13 @@ router.get("/lyrics", async (req, res) => {
   const bestSearchResults = await searchForMostProbableLyricsHit(artists, title);
 
   // Verify a match was found
-  if (bestSearchResults.hits.length === 0) {
+  if (bestSearchResults === null) {
     res.status(404).send("Unable to find lyrics");
     res.end();
     return;
   }
 
-  const lyricsAndDetails = await getLyrics(bestSearchResults.hits[0].result.path);
+  const lyricsAndDetails = await getLyrics(bestSearchResults.path);
   res.send(lyricsAndDetails);
   res.end();
 });

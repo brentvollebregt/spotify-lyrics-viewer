@@ -1,16 +1,16 @@
-import { ISearchResponse, search } from "../api/genius";
+import { Result, search } from "../api/genius";
 
 // An ideal search hit has the artist as the primary artist
 export const searchForMostProbableLyricsHit = async (
   artists: string[],
   title: string
-): Promise<ISearchResponse> => {
+): Promise<Result | null> => {
   const search1 = await search(`${artists[0]} ${title}`);
   if (
     search1.hits.length !== 0 &&
     search1.hits[0].result.primary_artist.name.indexOf(artists[0]) !== -1
   ) {
-    return search1;
+    return search1.hits[0].result;
   }
 
   const search2 = await search(`${artists.join(" & ")} ${title}`);
@@ -19,8 +19,8 @@ export const searchForMostProbableLyricsHit = async (
     false
   );
   if (search2.hits.length !== 0 && primaryArtistInSearch2) {
-    return search2;
+    return search2.hits[0].result;
   }
 
-  return search1;
+  return search1.hits[0].result;
 };
