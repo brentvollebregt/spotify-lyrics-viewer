@@ -45,7 +45,7 @@ const useLyrics = (currentlyPlaying: CurrentlyPlayingState) => {
 
         // Get lyrics
         geniusGetLyrics(
-          currentlyPlaying.currentlyPlayingObject.item.artists[0].name,
+          currentlyPlaying.currentlyPlayingObject.item.artists.map(x => x.name),
           trackNameWithReplacements
         ).then(newLyrics => {
           if (currentlyPlaying.currentlyPlayingObject.item !== null) {

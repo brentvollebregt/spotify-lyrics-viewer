@@ -1,5 +1,6 @@
 import express from "express";
-import { getLyrics, search } from "../api/genius";
+import { searchForMostProbableLyricsHit } from "../utils/genius";
+import { getLyrics } from "../api/genius";
 
 export const subRoute = "/api/genius";
 
@@ -7,23 +8,28 @@ const router = express.Router();
 
 router.get("/lyrics", async (req, res) => {
   // Verify expected parameters have been provided
-  const { artist, title } = req.query;
-  if (artist === undefined || title === undefined) {
+  let { artists, title }: { artists: string | string[]; title: string } = req.query;
+  if (artists === undefined || title === undefined) {
     res.status(400).send("Please provide an artist and title");
     res.end();
     return;
   }
 
-  const searchResults = await search(`${artist} ${title}`);
+  // If only one artist came in, it will be a string
+  if (typeof artists === "string") {
+    artists = [artists];
+  }
+
+  const bestSearchResults = await searchForMostProbableLyricsHit(artists, title);
 
   // Verify a match was found
-  if (searchResults.hits.length === 0) {
+  if (bestSearchResults.hits.length === 0) {
     res.status(404).send("Unable to find lyrics");
     res.end();
     return;
   }
 
-  const lyricsAndDetails = await getLyrics(searchResults.hits[0].result.path);
+  const lyricsAndDetails = await getLyrics(bestSearchResults.hits[0].result.path);
   res.send(lyricsAndDetails);
   res.end();
 });
