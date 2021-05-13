@@ -72,11 +72,7 @@ export function getLyrics(geniusUrl: string): Promise<ILyricsAndDetails> {
     const $ = cheerio.load(html); // Load in the page
     const title = getTitle($);
     const artist = getArtist($);
-    $("a", ".lyrics").each((index, element) => {
-      const e = $(element);
-      return e.replaceWith(e.html());
-    }); // Replace out all links in the scope
-    const lyrics = $($(".lyrics")[0]).text().trim(); // Get the lyrics as HTML
+    const lyrics = getLyricContents($);
     return { artist, geniusUrl, lyrics, title };
   });
 }
@@ -102,6 +98,25 @@ function getArtist($: CheerioStatic) {
   }
 
   const attempt2 = $("a[class*=SongHeader__Artist-]").text();
+  if (attempt2 !== "") {
+    return attempt2;
+  }
+
+  return "";
+}
+
+function getLyricContents($: CheerioStatic) {
+  $("a", ".lyrics").each((index, element) => {
+    const e = $(element);
+    return e.replaceWith(e.html());
+  }); // Replace out all links in the scope
+  const attempt1 = $($(".lyrics")[0]).text().trim();
+  if (attempt1 !== "") {
+    return attempt1;
+  }
+
+  $($("div[class*=Lyrics__Root-]").children()[0]).find("br").replaceWith("\n");
+  const attempt2 = $($("div[class*=Lyrics__Root-]").children()[0]).text();
   if (attempt2 !== "") {
     return attempt2;
   }
