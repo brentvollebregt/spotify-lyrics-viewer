@@ -68,9 +68,10 @@ export function search(term: string): Promise<ISearchResponse> {
 
 export function getLyrics(geniusUrl: string): Promise<ILyricsAndDetails> {
   return axios.get(`https://genius.com${geniusUrl}`).then(r => {
-    const $ = cheerio.load(r.data); // Load in the page
-    const title = $("h1.header_with_cover_art-primary_info-title").text();
-    const artist = $("a.header_with_cover_art-primary_info-primary_artist").text();
+    const html = r.data;
+    const $ = cheerio.load(html); // Load in the page
+    const title = getTitle($);
+    const artist = getArtist($);
     $("a", ".lyrics").each((index, element) => {
       const e = $(element);
       return e.replaceWith(e.html());
@@ -78,4 +79,32 @@ export function getLyrics(geniusUrl: string): Promise<ILyricsAndDetails> {
     const lyrics = $($(".lyrics")[0]).text().trim(); // Get the lyrics as HTML
     return { artist, geniusUrl, lyrics, title };
   });
+}
+
+function getTitle($: CheerioStatic) {
+  const attempt1 = $("h1.header_with_cover_art-primary_info-title").text();
+  if (attempt1 !== "") {
+    return attempt1;
+  }
+
+  const attempt2 = $("h1[class*=SongHeader__Title-]").text();
+  if (attempt2 !== "") {
+    return attempt2;
+  }
+
+  return "";
+}
+
+function getArtist($: CheerioStatic) {
+  const attempt1 = $("a.header_with_cover_art-primary_info-primary_artist").text();
+  if (attempt1 !== "") {
+    return attempt1;
+  }
+
+  const attempt2 = $("a[class*=SongHeader__Artist-]").text();
+  if (attempt2 !== "") {
+    return attempt2;
+  }
+
+  return "";
 }
