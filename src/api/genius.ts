@@ -115,8 +115,8 @@ function getLyricContents($: CheerioStatic) {
     return attempt1;
   }
 
-  $($("div[class*=Lyrics__Root-]").children()[0]).find("br").replaceWith("\n");
-  const attempt2 = $($("div[class*=Lyrics__Root-]").children()[0]).text();
+  $("div[class*=Lyrics__Root-]").children().find("br").replaceWith("\n");
+  const attempt2 = $("div[class*=Lyrics__Container-]").text();
   if (attempt2 !== "") {
     return attempt2;
   }
