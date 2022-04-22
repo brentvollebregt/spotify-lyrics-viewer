@@ -24,7 +24,7 @@ jobs:
           cd ..
         env:
           REACT_APP_API_ROOT: https://spotify-lyrics-viewer.herokuapp.com
-          REACT_APP_GOOGLE_ANALYTICS_TRACKING_ID: UA-117153268-4
+          REACT_APP_GOOGLE_ANALYTICS_TRACKING_ID: G-GHCZ0LMQWH
           CI: false
 
       - name: Deploy
