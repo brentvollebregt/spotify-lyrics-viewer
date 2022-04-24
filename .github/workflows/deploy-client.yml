@@ -1,4 +1,4 @@
-name: Build and Deploy Client to gh-pages
+name: Deploy Client to gh-pages
 
 on:
   push:
@@ -28,8 +28,10 @@ jobs:
           CI: false
 
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v2.5.0
-        env:
-          ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./client/build
           PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: ./client/build
+          cname: spotify-lyrics-viewer.nitratine.net
+          force_orphan: true # Only keep latest commit in gh-pages (to keep repo size down)
