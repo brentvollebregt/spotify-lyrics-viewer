@@ -7,7 +7,7 @@
     "@material-ui/icons": "^4.9.1",
     "@types/hookrouter": "^2.2.1",
     "@types/mark.js": "^8.11.4",
-    "@types/node": "^12.12.54",
+    "@types/node": "^14.14.31",
     "@types/react": "^16.9.48",
     "@types/react-dom": "^16.9.8",
     "cogo-toast": "^4.2.3",
@@ -17,15 +17,16 @@
     "react-dom": "^16.13.1",
     "react-metatags-hook": "^1.1.2",
     "react-scripts": "^4.0.3",
+    "sitemap": "^7.1.1",
     "spotify-web-api-js": "^1.2.0",
+    "ts-node": "^10.7.0",
     "typescript": "^3.7.5"
   },
   "scripts": {
     "start": "react-scripts start",
+    "prebuild": "ts-node -O {\\\"module\\\":\\\"commonjs\\\"} tools/generate-sitemap.ts",
     "build": "react-scripts build",
-    "postbuild": "node postbuild.js",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "postbuild": "ts-node -O {\\\"module\\\":\\\"commonjs\\\"} tools/copy-index.ts"
   },
   "eslintConfig": {
     "extends": "react-app"
