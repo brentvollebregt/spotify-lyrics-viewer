@@ -1,6 +1,6 @@
 import fs from "fs";
 
-const rootDestinations = ["/", "/about"];
+const rootDestinations = ["/about"];
 
 // Create a 404 fallback for GitHub Pages
 fs.copyFile("build/index.html", `build/404.html`, err => {
@@ -10,7 +10,7 @@ fs.copyFile("build/index.html", `build/404.html`, err => {
 
 // Copy index.html to path folders to be served by GitHub Pages
 rootDestinations.forEach(dest => {
-  const fullDestination = `build/${dest}`;
+  const fullDestination = `build${dest}`;
   if (!fs.existsSync(fullDestination)) {
     fs.mkdirSync(fullDestination);
   }
