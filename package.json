@@ -36,7 +36,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "spotify-web-api-node": "^4.0.0",
-    "typescript": "^3.6.4"
+    "typescript": "^3.9.4"
   },
   "devDependencies": {
     "ts-node-dev": "^1.0.0-pre.43",
