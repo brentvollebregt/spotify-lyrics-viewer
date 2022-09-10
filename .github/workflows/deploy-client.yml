@@ -24,7 +24,7 @@ jobs:
           npm run build
           cd ..
         env:
-          REACT_APP_API_ROOT: https://spotify-lyrics-viewer.herokuapp.com
+          REACT_APP_API_ROOT: https://spotify-lyrics-viewer.onrender.com
           REACT_APP_GOOGLE_ANALYTICS_TRACKING_ID: G-GHCZ0LMQWH
           CI: false
 
