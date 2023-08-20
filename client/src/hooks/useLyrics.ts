@@ -40,7 +40,18 @@ const useLyrics = (currentlyPlaying: CurrentlyPlayingState) => {
 
         // Make replacements to track names to help better find lyrics
         const trackNameWithReplacements = currentlyPlaying.currentlyPlayingObject.item.name
-          .replace(/\((feat\.|ft\.|with).+\)/, "")
+          .replace(/ \(feat.+\)/i, "") // Remove (feat. ...)
+          .replace(/ \(ft.+\)/i, "") // Remove (ft. ...)
+          .replace(/ \(with.+\)/i, "") // Remove (with. ...)
+          .replace(/ - \d{4} - Remaster/i, "") // Remove "- 2021 - Remaster"
+          .replace(/ - (\d{4} )?Remaster(ed)?.*/i, "") // Remove "- Remastered" and "- 2016 Remastered" and "- Remastered 2011" and " - 2016 Remaster"
+          .replace(/ - Original Album Version/i, "") // Remove "- Original Album Version"
+          .replace(/ \(Live\)/i, "") // Remove " (Live)"
+          .replace(/ - Acoustic/i, "") // Remove " - Acoustic"
+          .replace(/ - from .*/i, "") // Remove " - from ..."
+          .replace(/ - Live from .*/i, "") // Remove " - Live from ..."
+          .replace(/ - Live/i, "") // Remove " - Live"
+          .replace(/ - \d{4} Mix/i, "") // Remove " - 2023 Mix"
           .trim();
 
         // Get lyrics
