@@ -83,7 +83,7 @@ function getTitle($: CheerioStatic) {
     return attempt1;
   }
 
-  const attempt2 = $("h1[class*=SongHeader__Title-]").text();
+  const attempt2 = $("h1[class*=SongHeaderdesktop__]").text();
   if (attempt2 !== "") {
     return attempt2;
   }
@@ -97,7 +97,7 @@ function getArtist($: CheerioStatic) {
     return attempt1;
   }
 
-  const attempt2 = $("a[class*=SongHeader__Artist-]").text();
+  const attempt2 = $("a[class*=HeaderArtistAndTracklistdesktop__Artist-]").text();
   if (attempt2 !== "") {
     return attempt2;
   }
