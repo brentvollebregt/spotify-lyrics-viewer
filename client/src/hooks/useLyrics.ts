@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 
-import { geniusGetLyrics } from "../api";
+import { getLyrics } from "../api";
 import { CurrentlyPlayingState, PlayingStates } from "../types/currentlyPlayingState";
 
 interface ILyricDetails {
   content: string;
   artist: string;
   title: string;
-  geniusUrl: string;
+  syncedLyricsArray?: Array<Object>;
+  geniusUrl?: string;
 }
 
 interface ITrackLyrics {
@@ -55,9 +56,11 @@ const useLyrics = (currentlyPlaying: CurrentlyPlayingState) => {
           .trim();
 
         // Get lyrics
-        geniusGetLyrics(
+        getLyrics(
           currentlyPlaying.currentlyPlayingObject.item.artists.map(x => x.name),
-          trackNameWithReplacements
+          trackNameWithReplacements,
+          currentlyPlaying.currentlyPlayingObject.item.album.name,
+          currentlyPlaying.currentlyPlayingObject.item.duration_ms
         ).then(newLyrics => {
           if (currentlyPlaying.currentlyPlayingObject.item !== null) {
             setLyrics({

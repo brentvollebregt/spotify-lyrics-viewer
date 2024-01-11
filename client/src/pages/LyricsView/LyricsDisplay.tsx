@@ -89,6 +89,12 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
           <Typography component="div" className={classes.lyrics} ref={lyricsRef}>
             {lyrics}
           </Typography>
+          <Typography component="div" className={classes.mark} ref={lyricsRef}>
+            {lyrics}
+          </Typography>
+          <Typography component="div" className={classes.lyrics} ref={lyricsRef}>
+            {lyrics}
+          </Typography>
           <Box mt={2} textAlign="left">
             <Typography>
               <Link href={`https://genius.com${geniusUrl}`}>
@@ -107,6 +113,13 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
 const useStyles = makeStyles({
   lyrics: {
     whiteSpace: "pre-wrap"
+  },
+  mark:{
+    background: "#03fccf",
+    color: "black",
+    padding: "0.1em 0",
+    whiteSpace: "pre-wrap",
+    fontWeight: "bolder"
   },
   root: {
     margin: "auto",

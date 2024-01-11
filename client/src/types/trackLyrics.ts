@@ -2,7 +2,8 @@ interface ILyricDetails {
   content: string;
   artist: string;
   title: string;
-  geniusUrl: string;
+  syncedLyricsArray?: Array<Object>;
+  geniusUrl?: string;
 }
 
 export interface ITrackLyrics {
