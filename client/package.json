@@ -2,6 +2,7 @@
   "name": "spotify-lyrics-viewer-client",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://lhrolim.github.io/spotify-lyrics-viewer",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
@@ -27,6 +28,8 @@
     "start": "react-scripts start",
     "prebuild": "ts-node -O {\\\"module\\\":\\\"commonjs\\\"} tools/generate-sitemap.ts",
     "build": "react-scripts build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "postbuild": "ts-node -O {\\\"module\\\":\\\"commonjs\\\"} tools/copy-index.ts"
   },
   "eslintConfig": {
@@ -43,5 +46,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^6.1.1"
   }
 }

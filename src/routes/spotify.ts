@@ -53,7 +53,13 @@ router.get("/authentication-callback", async (req, res) => {
   req.session.authentication_state = undefined;
 
   // Pull out origin to redirect to and clear it
-  const originToRedirectTo = req.session.authentication_origin;
+  let originToRedirectTo = req.session.authentication_origin;
+  if (req.headers.referer) {
+    // Extract the base URL from the Referer header
+    const refererUrl = new URL(req.headers.referer);
+    originToRedirectTo = `${refererUrl.origin}${refererUrl.pathname}`;
+  }
+
   req.session.authentication_origin = undefined;
 
   // Setup API object (and clear used redirect uri)
