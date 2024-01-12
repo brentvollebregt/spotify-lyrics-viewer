@@ -6,9 +6,10 @@ import { ITrackLyrics } from "../../types/trackLyrics";
 
 interface IProps {
   lyricDetails?: ITrackLyrics;
+  currentlyPlayingSong?: any;
 }
 
-const TrackPlaying: React.FunctionComponent<IProps> = ({ lyricDetails }) => {
+const TrackPlaying: React.FunctionComponent<IProps> = ({ lyricDetails, currentlyPlayingSong }) => {
   // No lyrics yet
   if (lyricDetails === undefined) {
     return (
@@ -40,7 +41,7 @@ const TrackPlaying: React.FunctionComponent<IProps> = ({ lyricDetails }) => {
   }
 
   // Lyrics found
-  const { content, artist, title, geniusUrl,syncedLyricsArray } = lyricDetails.lyrics;
+  const { content, artist, title, geniusUrl, syncedLyricsArray } = lyricDetails.lyrics;
   return (
     <LyricsDisplay
       lyrics={content}
@@ -48,6 +49,7 @@ const TrackPlaying: React.FunctionComponent<IProps> = ({ lyricDetails }) => {
       lyricsTitle={title}
       geniusUrl={geniusUrl}
       syncedLyricsArray={syncedLyricsArray}
+      progressMs={currentlyPlayingSong.currentlyPlayingObject?.progress_ms ?? 0}
     />
   );
 };

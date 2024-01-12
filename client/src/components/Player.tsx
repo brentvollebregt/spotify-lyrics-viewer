@@ -8,7 +8,7 @@ import SpotifyWebApi from "spotify-web-api-js";
 
 import { IToken } from "../types/token";
 import { CurrentlyPlayingState } from "../types/currentlyPlayingState";
-import { responseError } from "../utils";
+import { responseError, formatMilliseconds } from "../utils";
 import useSmoothProgress from "../hooks/useSmoothProgress";
 import SpotifyLogoRoundImage from "../img/spotify-logo-round.png";
 
@@ -118,6 +118,8 @@ const Player: React.FC<PlayerProps> = ({ currentlyPlayingSong, token }) => {
           </div>
 
           <Box display="inline-flex" alignItems="center" className={classes.sliderWrapper}>
+            <span className={classes.timeControl}>{formatMilliseconds(progressMs)}</span>
+
             <Slider
               valueLabelDisplay="off"
               value={smoothedProgressMs}
@@ -128,6 +130,7 @@ const Player: React.FC<PlayerProps> = ({ currentlyPlayingSong, token }) => {
               onChange={onUserSlide}
               className={classes.slider}
             />
+            <span className={classes.timeControl}>{formatMilliseconds(durationMs)}</span>
           </Box>
         </div>
       </Container>
@@ -173,6 +176,11 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.text.primary,
     whiteSpace: "nowrap",
     overflow: "hidden",
+    textOverflow: "ellipsis"
+  },
+  timeControl: {
+    color: theme.palette.text.primary,
+    whiteSpace: "nowrap",
     textOverflow: "ellipsis"
   },
   controlsWrapper: {

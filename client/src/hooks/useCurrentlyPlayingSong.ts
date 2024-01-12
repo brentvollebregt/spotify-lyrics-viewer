@@ -5,7 +5,7 @@ import cogoToast from "cogo-toast";
 import { IToken } from "../types/token";
 import { CurrentlyPlayingState, PlayingStates } from "../types/currentlyPlayingState";
 
-const periodicTrackCheckDelayMs = 5000;
+const periodicTrackCheckDelayMs = 1000;
 
 const useCurrentlyPlayingSong = (token: IToken | null, invalidateToken: () => void) => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState<CurrentlyPlayingState>({

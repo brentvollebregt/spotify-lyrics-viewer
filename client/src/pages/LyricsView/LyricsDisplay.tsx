@@ -21,6 +21,7 @@ interface IProps {
   lyricsArtist?: string;
   lyricsTitle?: string;
   geniusUrl?: string;
+  progressMs?: number;
 }
 
 const LyricsDisplay: React.FunctionComponent<IProps> = ({
@@ -28,17 +29,22 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
   lyrics,
   lyricsArtist,
   lyricsTitle,
-  geniusUrl
+  geniusUrl,
+  progressMs
 }) => {
+  const clonedLyricsArray = syncedLyricsArray === undefined ? [] : [...syncedLyricsArray];
   const classes = useStyles();
   const lyricsRef = useRef<HTMLDivElement | null>(null);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [search, setSearch] = useState("");
   const [searchShown, setSearchShown] = useState(false);
-  const [syncedLyrics, setSyncedLyrics] = useState({ before: "", highlighted: "", after: lyrics });
-  // const [lyricsBeforeHighlight,setLyricsBeforeHighlight] = useState("")
-  // const [highlightedLyrics,setHighlightedLyrics] = useState("")
-  // const [lyricsAfterHighlight,setLyricsAfterHighlight] = useState(lyrics)
+  const [syncedLyrics, setSyncedLyrics] = useState({
+    array: clonedLyricsArray,
+    before: "",
+    highlighted: "",
+    after: lyrics
+  });
+  const [naturalSongProgress, setNaturalSongProgress] = useState(0);
 
   useEffect(() => {
     // Highlight text when the search is changed
@@ -58,43 +64,53 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
     }
   }, [searchShown]);
 
+  //accounting for rewinding the song
+  useEffect(() => {
+    if (progressMs === undefined) {
+      return; // song switched
+    }
+    if (progressMs < naturalSongProgress) {
+      const clonedLyricsArray = syncedLyricsArray === undefined ? [] : [...syncedLyricsArray];
+      setNaturalSongProgress(0);
+      setSyncedLyrics({ array: clonedLyricsArray, before: "", highlighted: "", after: lyrics });
+    }
+  }, [progressMs]);
+
   //making sure highlighted text is always visible
   useEffect(() => {
     const element = document.getElementById("highlighted-text");
     element?.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
-  }, []);
-
-  let elapsedTime = 3.5; //fix this magic number using spotify apis to sync progress eventually
-  let arrayPosition = 0;
+  }, [syncedLyricsArray, progressMs]);
 
   useEffect(() => {
-    if (syncedLyricsArray === undefined) {
-      //genius fallback was used and lfc was provided
+    const progressArray = syncedLyrics.array;
+    if (syncedLyricsArray === undefined || progressArray === undefined) {
+      //genius fallback was used and lfc was not provided
       return;
     }
-    let clonedSyncedLyricsArray = [...syncedLyricsArray];
-    const interval = setInterval(() => {
-      if (clonedSyncedLyricsArray.length === 0) {
-        //end of lyrics
-        return;
-      }
-      if (elapsedTime >= clonedSyncedLyricsArray[0].timestamp) {
-        const currentLyric = clonedSyncedLyricsArray.shift(); // acting as a queue
-        console.log("currentLyric: " + currentLyric.content);
-        setSyncedLyrics(prev => {
-          const before = prev.before + " \n " + prev.highlighted;
-          const highlighted = currentLyric.content;
-          const after = clonedSyncedLyricsArray.map(lfc => lfc.content).join(" \n ");
-          const currObject = { before, highlighted, after };
-          return currObject;
-        });
-      }
-      elapsedTime++;
-    }, 1000); // 1000 milliseconds = 1 second
-
-    // Cleanup interval on component unmount
-    return () => clearInterval(interval);
-  }, [syncedLyricsArray]);
+    // let clonedSyncedLyricsArray = [...syncedLyricsArray];
+    if (progressMs === undefined) {
+      //switching songs
+      return;
+    }
+    if (progressArray.length === 0) {
+      //end of lyrics
+      return;
+    }
+    const adjustProgress = progressMs + 135; // accounting for latency
+    setNaturalSongProgress(adjustProgress);
+    while (adjustProgress / 1000 >= progressArray[0].timestamp) {
+      const currentLyric = progressArray.shift(); // acting as a queue
+      console.log("currentLyric: " + currentLyric.content);
+      setSyncedLyrics(prev => {
+        const before = prev.before + " \n " + prev.highlighted;
+        const highlighted = currentLyric.content;
+        const after = progressArray.map(lfc => lfc.content).join(" \n ");
+        const currObject = { array: progressArray, before, highlighted, after };
+        return currObject;
+      });
+    }
+  }, [syncedLyricsArray, progressMs]);
 
   const onUserSearch = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
     setSearch(event.currentTarget.value === undefined ? "" : event.currentTarget.value);

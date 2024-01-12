@@ -8,3 +8,16 @@ export const responseError = (title: string, request: XMLHttpRequest) => {
     onClick: () => hide !== undefined && hide()
   });
 };
+
+export const formatMilliseconds = (milliseconds: number) => {
+  // Convert milliseconds to seconds
+  const totalSeconds = Math.floor(milliseconds / 1000);
+
+  // Calculate minutes and seconds
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  // Format the output to "minutes:seconds"
+  // Pad the seconds with a leading zero if it's less than 10
+  return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+};
