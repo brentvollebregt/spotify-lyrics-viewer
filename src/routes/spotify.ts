@@ -81,7 +81,9 @@ router.get("/authentication-callback", async (req, res) => {
     access_token: req.session.access_token,
     expires_at: req.session.expires_at
   };
-  res.redirect(`${originToRedirectTo}?${new URLSearchParams(responseData as any)}`);
+  res.redirect(
+    `${originToRedirectTo}/spotify-lyrics-viewer?${new URLSearchParams(responseData as any)}`
+  );
   res.end();
 });
 
