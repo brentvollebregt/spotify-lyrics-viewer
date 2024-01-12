@@ -99,7 +99,10 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
     }
     const adjustProgress = progressMs + 135; // accounting for latency
     setNaturalSongProgress(adjustProgress);
-    while (adjustProgress / 1000 >= progressArray[0].timestamp) {
+    const progressInSeconds = adjustProgress / 1000;
+    // while is used to account for scenarios where a song is fast forwarded
+    // typically it would be just one interaction on the loop
+    while (progressArray[0] && progressInSeconds >= progressArray[0].timestamp) {
       const currentLyric = progressArray.shift(); // acting as a queue
       console.log("currentLyric: " + currentLyric.content);
       setSyncedLyrics(prev => {
