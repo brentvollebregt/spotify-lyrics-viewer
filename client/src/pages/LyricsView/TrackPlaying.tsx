@@ -40,13 +40,14 @@ const TrackPlaying: React.FunctionComponent<IProps> = ({ lyricDetails }) => {
   }
 
   // Lyrics found
-  const { content, artist, title, geniusUrl } = lyricDetails.lyrics;
+  const { content, artist, title, geniusUrl,syncedLyricsArray } = lyricDetails.lyrics;
   return (
     <LyricsDisplay
       lyrics={content}
       lyricsArtist={artist}
       lyricsTitle={title}
       geniusUrl={geniusUrl}
+      syncedLyricsArray={syncedLyricsArray}
     />
   );
 };

@@ -7,5 +7,6 @@ export interface ILyricsAndDetails {
   lyrics: string;
   title: string;
   artist: string;
-  geniusUrl: string;
+  geniusUrl?: string;
+  syncedLyricsArray?: Array<Object>;
 }

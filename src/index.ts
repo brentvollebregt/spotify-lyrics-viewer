@@ -10,6 +10,7 @@ import Config from "./config";
 import GeniusRoutes, { subRoute as geniusSubRoute } from "./routes/genius";
 import SessionRoutes, { subRoute as sessionSubRoute } from "./routes/session";
 import SpotifyRoutes, { subRoute as spotifySubRoute } from "./routes/spotify";
+import LrcLibRoutes, { subRoute as lrclibSubRoute } from "./routes/lrclib";
 
 const app = express();
 const isProduction = app.get("env") === "production";
@@ -51,6 +52,7 @@ Config.client.routes.forEach(route =>
 app.use(geniusSubRoute, GeniusRoutes);
 app.use(sessionSubRoute, SessionRoutes);
 app.use(spotifySubRoute, SpotifyRoutes);
+app.use(lrclibSubRoute, LrcLibRoutes);
 
 const port = process.env.PORT || 5000;
 

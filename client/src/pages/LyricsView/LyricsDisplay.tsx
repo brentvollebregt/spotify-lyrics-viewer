@@ -17,12 +17,14 @@ import "./LyricsDisplay.css";
 
 interface IProps {
   lyrics?: string;
+  syncedLyricsArray?: Array<any>;
   lyricsArtist?: string;
   lyricsTitle?: string;
   geniusUrl?: string;
 }
 
 const LyricsDisplay: React.FunctionComponent<IProps> = ({
+  syncedLyricsArray,
   lyrics,
   lyricsArtist,
   lyricsTitle,
@@ -33,6 +35,10 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [search, setSearch] = useState("");
   const [searchShown, setSearchShown] = useState(false);
+  const [syncedLyrics, setSyncedLyrics] = useState({ before: "", highlighted: "", after: lyrics });
+  // const [lyricsBeforeHighlight,setLyricsBeforeHighlight] = useState("")
+  // const [highlightedLyrics,setHighlightedLyrics] = useState("")
+  // const [lyricsAfterHighlight,setLyricsAfterHighlight] = useState(lyrics)
 
   useEffect(() => {
     // Highlight text when the search is changed
@@ -51,6 +57,44 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
       searchInputRef.current.focus();
     }
   }, [searchShown]);
+
+  //making sure highlighted text is always visible
+  useEffect(() => {
+    const element = document.getElementById("highlighted-text");
+    element?.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+  }, []);
+
+  let elapsedTime = 3.5; //fix this magic number using spotify apis to sync progress eventually
+  let arrayPosition = 0;
+
+  useEffect(() => {
+    if (syncedLyricsArray === undefined) {
+      //genius fallback was used and lfc was provided
+      return;
+    }
+    let clonedSyncedLyricsArray = [...syncedLyricsArray];
+    const interval = setInterval(() => {
+      if (clonedSyncedLyricsArray.length === 0) {
+        //end of lyrics
+        return;
+      }
+      if (elapsedTime >= clonedSyncedLyricsArray[0].timestamp) {
+        const currentLyric = clonedSyncedLyricsArray.shift(); // acting as a queue
+        console.log("currentLyric: " + currentLyric.content);
+        setSyncedLyrics(prev => {
+          const before = prev.before + " \n " + prev.highlighted;
+          const highlighted = currentLyric.content;
+          const after = clonedSyncedLyricsArray.map(lfc => lfc.content).join(" \n ");
+          const currObject = { before, highlighted, after };
+          return currObject;
+        });
+      }
+      elapsedTime++;
+    }, 1000); // 1000 milliseconds = 1 second
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(interval);
+  }, [syncedLyricsArray]);
 
   const onUserSearch = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
     setSearch(event.currentTarget.value === undefined ? "" : event.currentTarget.value);
@@ -87,13 +131,13 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
       {lyrics ? (
         <div>
           <Typography component="div" className={classes.lyrics} ref={lyricsRef}>
-            {lyrics}
-          </Typography>
-          <Typography component="div" className={classes.mark} ref={lyricsRef}>
-            {lyrics}
-          </Typography>
-          <Typography component="div" className={classes.lyrics} ref={lyricsRef}>
-            {lyrics}
+            {syncedLyrics.before}
+            <br />
+            <span id="highlighted-text" className={classes.mark}>
+              {syncedLyrics.highlighted}
+            </span>
+            <br />
+            {syncedLyrics.after}
           </Typography>
           <Box mt={2} textAlign="left">
             <Typography>
@@ -114,9 +158,9 @@ const useStyles = makeStyles({
   lyrics: {
     whiteSpace: "pre-wrap"
   },
-  mark:{
+  mark: {
     background: "#03fccf",
-    color: "black",
+    color: "white",
     padding: "0.1em 0",
     whiteSpace: "pre-wrap",
     fontWeight: "bolder"
