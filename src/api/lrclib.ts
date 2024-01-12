@@ -26,16 +26,23 @@ export async function getLyrics(
     duration: (durationMs / 1000).toString()
   };
 
-  const response = await axios.get(`https://lrclib.net/api/get?${new URLSearchParams(parameters)}`);
-  const data = response.data;
-  let syncedLyricsArray = Array();
-  if (data.syncedLyrics != undefined) {
-    try {
-      const lrc = Lrc.parse(data.syncedLyrics);
-      syncedLyricsArray = syncedLyricsArray.concat(lrc.lyrics);
-    } catch (e) {
-      console.error(e);
+  try {
+    const response = await axios.get(
+      `https://lrclib.net/api/get?${new URLSearchParams(parameters)}`
+    );
+    const data = response.data;
+    let syncedLyricsArray = Array();
+    if (data.syncedLyrics != undefined) {
+      try {
+        const lrc = Lrc.parse(data.syncedLyrics);
+        syncedLyricsArray = syncedLyricsArray.concat(lrc.lyrics);
+      } catch (e) {
+        console.error(e);
+      }
     }
+    return { artist: artists[0], title: title, lyrics: data.plainLyrics, syncedLyricsArray };
+  } catch (e) {
+    //accounting for lrclib outage
+    return { artist: artists[0], title: title, lyrics: null, syncedLyricsArray: [] };
   }
-  return { artist: artists[0], title: title, lyrics: data.plainLyrics, syncedLyricsArray };
 }
