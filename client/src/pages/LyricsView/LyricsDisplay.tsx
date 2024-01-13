@@ -178,11 +178,10 @@ const useStyles = makeStyles({
     whiteSpace: "pre-wrap"
   },
   mark: {
-    background: "#03fccf",
-    color: "white",
     padding: "0.1em 0",
     whiteSpace: "pre-wrap",
-    fontWeight: "bolder"
+    fontWeight: "bolder",
+    fontSize: "5em"
   },
   root: {
     margin: "auto",
