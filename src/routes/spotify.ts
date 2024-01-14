@@ -5,6 +5,7 @@ import { randomString } from "../utils";
 import { isStoredTokenValid } from "../utils/spotify";
 import { ITokenExpiryPair } from "../dto";
 import { URLSearchParams } from "url";
+import config from "../config";
 
 export const subRoute = "/api/spotify";
 
@@ -23,13 +24,6 @@ router.get("/authenticate", (req, res) => {
     redirectUri
   });
   const state = randomString(16);
-
-  if (req.headers.referer) {
-    // Extract the base URL from the Referer header
-    const refererUrl = new URL(req.headers.referer);
-    const originToRedirectTo = `${refererUrl.origin}${refererUrl.pathname}`;
-    console.log("auth:" + originToRedirectTo);
-  }
 
   // Make the call and clear the session
   const authorizeURL = spotifyApi.createAuthorizeURL(
@@ -61,13 +55,6 @@ router.get("/authentication-callback", async (req, res) => {
 
   // Pull out origin to redirect to and clear it
   let originToRedirectTo = req.session.authentication_origin;
-  if (req.headers.referer) {
-    // Extract the base URL from the Referer header
-    const refererUrl = new URL(req.headers.referer);
-    originToRedirectTo = `${refererUrl.origin}${refererUrl.pathname}`;
-    console.log("callback: " + originToRedirectTo);
-  }
-
   req.session.authentication_origin = undefined;
 
   // Setup API object (and clear used redirect uri)
@@ -89,8 +76,8 @@ router.get("/authentication-callback", async (req, res) => {
     access_token: req.session.access_token,
     expires_at: req.session.expires_at
   };
-  const domain = ""; //'spotify-lyrics-viewer';
-  const redirectUrl = `${originToRedirectTo}?${new URLSearchParams(responseData as any)}`;
+  const domain = config.client.subdirectory; //'spotify-lyrics-viewer';
+  const redirectUrl = `${originToRedirectTo}${domain}?${new URLSearchParams(responseData as any)}`;
   console.log(redirectUrl);
   res.redirect(redirectUrl);
   res.end();
