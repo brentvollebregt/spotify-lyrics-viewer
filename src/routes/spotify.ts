@@ -58,6 +58,7 @@ router.get("/authentication-callback", async (req, res) => {
     // Extract the base URL from the Referer header
     const refererUrl = new URL(req.headers.referer);
     originToRedirectTo = `${refererUrl.origin}${refererUrl.pathname}`;
+    console.log(originToRedirectTo);
   }
 
   req.session.authentication_origin = undefined;
@@ -81,9 +82,8 @@ router.get("/authentication-callback", async (req, res) => {
     access_token: req.session.access_token,
     expires_at: req.session.expires_at
   };
-  const redirectUrl = `${originToRedirectTo}spotify-lyrics-viewer?${new URLSearchParams(
-    responseData as any
-  )}`;
+  const domain = ""; //'spotify-lyrics-viewer';
+  const redirectUrl = `${originToRedirectTo}?${new URLSearchParams(responseData as any)}`;
   console.log(redirectUrl);
   res.redirect(redirectUrl);
   res.end();

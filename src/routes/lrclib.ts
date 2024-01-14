@@ -27,7 +27,7 @@ router.get("/lyrics", async (req, res) => {
   }
 
   const lyricsAndDetails = await getLyrics(artists, title, albumName, duration);
-  if (lyricsAndDetails.lyrics == undefined || lyricsAndDetails.lyrics == "") {
+  if (!lyricsAndDetails.lyrics || lyricsAndDetails.lyrics === "") {
     const bestSearchResults = await searchForMostProbableLyricsHit(artists, title);
 
     // Verify a match was found

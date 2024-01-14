@@ -2,12 +2,6 @@ import axios from "axios";
 import { ILyricsAndDetails } from "../dto";
 import { Lrc } from "lrc-kit";
 
-export interface Stats {
-  unreviewed_annotations: number;
-  hot: boolean;
-  pageviews?: number;
-}
-
 export async function getLyrics(
   artists: string[],
   title: string,

@@ -31,7 +31,11 @@ const App: React.FC = () => {
     deleteSession();
   };
 
-  setBasepath(config.client.basename);
+  const baseName = config.client.basename;
+  if (baseName && baseName !== "/") {
+    //needed when we have a subdirectory in the url to adjust the links on home, about, etc
+    setBasepath(baseName);
+  }
 
   const user = useUser(token, clearToken);
   useTokenRefresh(token, onNewToken, clearToken);

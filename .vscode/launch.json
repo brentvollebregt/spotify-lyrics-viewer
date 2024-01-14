@@ -17,6 +17,17 @@
             "restart": true,
             "localRoot": "${workspaceFolder}",
             "remoteRoot": "."
-        }
+        },
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Debug Node.js",
+            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/ts-node-dev",
+            "args": ["--respawn", "--transpileOnly", "src/index.ts"],
+            "protocol": "inspector",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "skipFiles": ["<node_internals>/**"]
+          }
     ]
 }

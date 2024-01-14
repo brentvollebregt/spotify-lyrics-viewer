@@ -7,7 +7,6 @@ import fs from "fs";
 import cookieSession from "cookie-session";
 import path from "path";
 import Config from "./config";
-import GeniusRoutes, { subRoute as geniusSubRoute } from "./routes/genius";
 import SessionRoutes, { subRoute as sessionSubRoute } from "./routes/session";
 import SpotifyRoutes, { subRoute as spotifySubRoute } from "./routes/spotify";
 import LrcLibRoutes, { subRoute as lrclibSubRoute } from "./routes/lrclib";
@@ -49,7 +48,6 @@ Config.client.routes.forEach(route =>
 );
 
 // API Endpoints
-app.use(geniusSubRoute, GeniusRoutes);
 app.use(sessionSubRoute, SessionRoutes);
 app.use(spotifySubRoute, SpotifyRoutes);
 app.use(lrclibSubRoute, LrcLibRoutes);
