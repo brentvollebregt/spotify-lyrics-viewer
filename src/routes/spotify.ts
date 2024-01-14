@@ -24,6 +24,13 @@ router.get("/authenticate", (req, res) => {
   });
   const state = randomString(16);
 
+  if (req.headers.referer) {
+    // Extract the base URL from the Referer header
+    const refererUrl = new URL(req.headers.referer);
+    const originToRedirectTo = `${refererUrl.origin}${refererUrl.pathname}`;
+    console.log("auth:" + originToRedirectTo);
+  }
+
   // Make the call and clear the session
   const authorizeURL = spotifyApi.createAuthorizeURL(
     Config.spotify.permission_scope.split(" "),
@@ -58,7 +65,7 @@ router.get("/authentication-callback", async (req, res) => {
     // Extract the base URL from the Referer header
     const refererUrl = new URL(req.headers.referer);
     originToRedirectTo = `${refererUrl.origin}${refererUrl.pathname}`;
-    console.log(originToRedirectTo);
+    console.log("callback: " + originToRedirectTo);
   }
 
   req.session.authentication_origin = undefined;
