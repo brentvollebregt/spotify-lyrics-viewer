@@ -55,8 +55,6 @@ const useLyrics = (currentlyPlaying: CurrentlyPlayingState) => {
           .replace(/ - \d{4} Mix/i, "") // Remove " - 2023 Mix"
           .trim();
 
-        setLyrics(undefined);
-
         // Get lyrics
         getLyrics(
           currentlyPlaying.currentlyPlayingObject.item.artists.map(x => x.name),
