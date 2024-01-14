@@ -78,7 +78,6 @@ router.get("/authentication-callback", async (req, res) => {
   };
   const domain = config.client.subdirectory; //'spotify-lyrics-viewer';
   const redirectUrl = `${originToRedirectTo}${domain}?${new URLSearchParams(responseData as any)}`;
-  console.log(redirectUrl);
   res.redirect(redirectUrl);
   res.end();
 });

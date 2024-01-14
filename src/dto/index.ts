@@ -8,5 +8,10 @@ export interface ILyricsAndDetails {
   title: string;
   artist: string;
   geniusUrl?: string;
-  syncedLyricsArray?: Array<Object>;
+  syncedLyricsArray?: Array<ILRCContent>;
+}
+
+export interface ILRCContent {
+  content: string;
+  timestamp: number;
 }

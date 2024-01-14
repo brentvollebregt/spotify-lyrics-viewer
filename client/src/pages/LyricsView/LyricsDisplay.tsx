@@ -23,9 +23,14 @@ import { Sync } from "@material-ui/icons";
 // adjusting for latency to highlight lyrics due to the time it takes to render the components on screen
 const LATENCY_ADJUSTMENT_MAGIC_VALUE: number = 135;
 
+interface ILRCContent {
+  content: string;
+  timestamp: number;
+}
+
 interface IProps {
   lyrics?: string;
-  syncedLyricsArray?: Array<any>;
+  syncedLyricsArray?: Array<ILRCContent>;
   lyricsArtist?: string;
   lyricsTitle?: string;
   geniusUrl?: string;
@@ -35,9 +40,6 @@ interface IProps {
 const LyricsDisplay: React.FunctionComponent<IProps> = ({
   syncedLyricsArray,
   lyrics,
-  lyricsArtist,
-  lyricsTitle,
-  geniusUrl,
   progressMs
 }) => {
   //cloning the original lyrics array sp that we can restore the lyrics if a user rewinds the song
@@ -120,7 +122,7 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
     // while is used to account for scenarios where a song is fast forwarded
     // typically it would be just one interaction on the loop
     while (progressArray[0] && progressInSeconds >= progressArray[0].timestamp) {
-      const currentLyric = progressArray.shift(); // acting as a queue
+      const currentLyric = progressArray.shift() as ILRCContent; // acting as a queue
       setSyncedLyrics(prev => {
         const before = prev.before + " \n " + prev.highlighted;
         const highlighted = currentLyric.content;

@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 
 import { getLyrics } from "../api";
 import { CurrentlyPlayingState, PlayingStates } from "../types/currentlyPlayingState";
+import { ILRCContent } from "../types/trackLyrics";
 
 interface ILyricDetails {
   content: string;
   artist: string;
   title: string;
-  syncedLyricsArray?: Array<Object>;
+  syncedLyricsArray?: Array<ILRCContent>;
   geniusUrl?: string;
 }
 
@@ -71,7 +72,6 @@ const useLyrics = (currentlyPlaying: CurrentlyPlayingState) => {
                   : {
                       artist: newLyrics.artist,
                       content: newLyrics.lyrics,
-                      geniusUrl: newLyrics.geniusUrl,
                       title: newLyrics.title,
                       syncedLyricsArray: newLyrics.syncedLyricsArray
                     }

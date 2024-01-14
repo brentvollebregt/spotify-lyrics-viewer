@@ -41,13 +41,10 @@ const TrackPlaying: React.FunctionComponent<IProps> = ({ lyricDetails, currently
   }
 
   // Lyrics found
-  const { content, artist, title, geniusUrl, syncedLyricsArray } = lyricDetails.lyrics;
+  const { content, syncedLyricsArray } = lyricDetails.lyrics;
   return (
     <LyricsDisplay
       lyrics={content}
-      lyricsArtist={artist}
-      lyricsTitle={title}
-      geniusUrl={geniusUrl}
       syncedLyricsArray={syncedLyricsArray}
       progressMs={currentlyPlayingSong.currentlyPlayingObject?.progress_ms ?? 0}
     />
