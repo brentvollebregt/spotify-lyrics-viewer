@@ -40,5 +40,9 @@
   "devDependencies": {
     "ts-node-dev": "^1.0.0-pre.43",
     "tslint": "^5.20.0"
+  },
+  "engines" :{
+    "node": ">=18.12.1"
   }
+
 }
