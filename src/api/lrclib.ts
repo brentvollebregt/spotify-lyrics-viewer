@@ -2,6 +2,8 @@ import axios from "axios";
 import { ILyricsAndDetails } from "../dto";
 import { Lrc } from "lrc-kit";
 
+const LRCLIB_BASE_URL = "https://lrclib.net";
+
 export async function getLyrics(
   artists: string[],
   title: string,
@@ -34,7 +36,13 @@ export async function getLyrics(
         console.error(e);
       }
     }
-    return { artist: artists[0], title: title, lyrics: data.plainLyrics, syncedLyricsArray };
+    return {
+      artist: artists[0],
+      title: title,
+      lyrics: data.plainLyrics,
+      syncedLyricsArray,
+      lyricsSourceReference: LRCLIB_BASE_URL
+    };
   } catch (e) {
     //accounting for lrclib outage
     return { artist: artists[0], title: title, lyrics: null, syncedLyricsArray: [] };

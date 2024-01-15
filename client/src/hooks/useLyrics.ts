@@ -9,7 +9,7 @@ interface ILyricDetails {
   artist: string;
   title: string;
   syncedLyricsArray?: Array<ILRCContent>;
-  geniusUrl?: string;
+  lyricsSourceReference?: string;
 }
 
 interface ITrackLyrics {
@@ -73,7 +73,8 @@ const useLyrics = (currentlyPlaying: CurrentlyPlayingState) => {
                       artist: newLyrics.artist,
                       content: newLyrics.lyrics,
                       title: newLyrics.title,
-                      syncedLyricsArray: newLyrics.syncedLyricsArray
+                      syncedLyricsArray: newLyrics.syncedLyricsArray,
+                      lyricsSourceReference: newLyrics.lyricsSourceReference
                     }
             });
           }

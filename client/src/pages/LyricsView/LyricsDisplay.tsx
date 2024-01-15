@@ -29,13 +29,16 @@ interface IProps {
   syncedLyricsArray?: Array<ILRCContent>;
   lyricsArtist?: string;
   lyricsTitle?: string;
-  geniusUrl?: string;
+  lyricsSourceReference?: string;
   progressMs?: number;
 }
 
 const LyricsDisplay: React.FunctionComponent<IProps> = ({
   syncedLyricsArray,
   lyrics,
+  lyricsSourceReference,
+  lyricsArtist,
+  lyricsTitle,
   progressMs
 }) => {
   //cloning the original lyrics array sp that we can restore the lyrics if a user rewinds the song
@@ -177,11 +180,20 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
         <div>
           <Typography component="div" className={classes.lyrics} ref={lyricsRef}>
             {syncedLyrics.before}
+            <br />
             <span className={classes.mark} ref={highlightedRef}>
               {syncedLyrics.highlighted}
             </span>
+            <br />
             {syncedLyrics.after}
           </Typography>
+          <Box mt={2} textAlign="left">
+            <Typography>
+              <Link href={lyricsSourceReference}>
+                Lyrics for {lyricsTitle} by {lyricsArtist}
+              </Link>
+            </Typography>
+          </Box>
         </div>
       ) : (
         <CircularProgress size={30} />

@@ -47,6 +47,9 @@ const TrackPlaying: React.FunctionComponent<IProps> = ({ lyricDetails, currently
       lyrics={content}
       syncedLyricsArray={syncedLyricsArray}
       progressMs={currentlyPlayingSong.currentlyPlayingObject?.progress_ms ?? 0}
+      lyricsArtist={lyricDetails.lyrics?.artist}
+      lyricsTitle={lyricDetails.lyrics?.title}
+      lyricsSourceReference={lyricDetails.lyrics?.lyricsSourceReference}
     />
   );
 };

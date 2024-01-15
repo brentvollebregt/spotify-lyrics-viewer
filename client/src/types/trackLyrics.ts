@@ -3,6 +3,7 @@ interface ILyricDetails {
   artist: string;
   title: string;
   syncedLyricsArray?: Array<ILRCContent>;
+  lyricsSourceReference?: string;
 }
 
 export interface ITrackLyrics {
