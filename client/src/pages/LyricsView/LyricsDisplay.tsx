@@ -19,14 +19,10 @@ import SyncDisabledIcon from "@material-ui/icons/SyncDisabled";
 
 import "./LyricsDisplay.css";
 import { Sync } from "@material-ui/icons";
+import { ILRCContent } from "../../types/trackLyrics";
 
 // adjusting for latency to highlight lyrics due to the time it takes to render the components on screen
 const LATENCY_ADJUSTMENT_MAGIC_VALUE: number = 135;
-
-interface ILRCContent {
-  content: string;
-  timestamp: number;
-}
 
 interface IProps {
   lyrics?: string;
@@ -181,11 +177,9 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
         <div>
           <Typography component="div" className={classes.lyrics} ref={lyricsRef}>
             {syncedLyrics.before}
-            <br />
-            <span id="highlighted-text" className={classes.mark} ref={highlightedRef}>
+            <span className={classes.mark} ref={highlightedRef}>
               {syncedLyrics.highlighted}
             </span>
-            <br />
             {syncedLyrics.after}
           </Typography>
         </div>

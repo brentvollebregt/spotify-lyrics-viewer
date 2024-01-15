@@ -201,7 +201,9 @@ const useStyles = makeStyles(theme => ({
   slider: {
     [theme.breakpoints.down("xs")]: {
       padding: "10px 0"
-    }
+    },
+    marginLeft: "10px",
+    marginRight: "10px"
   }
 }));
 

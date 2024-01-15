@@ -54,7 +54,7 @@ router.get("/authentication-callback", async (req, res) => {
   req.session.authentication_state = undefined;
 
   // Pull out origin to redirect to and clear it
-  let originToRedirectTo = req.session.authentication_origin;
+  const originToRedirectTo = req.session.authentication_origin;
   req.session.authentication_origin = undefined;
 
   // Setup API object (and clear used redirect uri)
@@ -76,8 +76,10 @@ router.get("/authentication-callback", async (req, res) => {
     access_token: req.session.access_token,
     expires_at: req.session.expires_at
   };
-  const domain = config.client.subdirectory; //'spotify-lyrics-viewer';
-  const redirectUrl = `${originToRedirectTo}${domain}?${new URLSearchParams(responseData as any)}`;
+  const { subdirectory } = config.client; // For example, 'spotify-lyrics-viewer';
+  const redirectUrl = `${originToRedirectTo}${subdirectory}?${new URLSearchParams(
+    responseData as any
+  )}`;
   res.redirect(redirectUrl);
   res.end();
 });
