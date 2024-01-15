@@ -57,7 +57,7 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
   });
   const [naturalSongProgress, setNaturalSongProgress] = useState(0);
   const [syncEnabled, setSyncEnabled] = useState(true);
-  const [syncPossible] = useState(!!syncedLyricsArray);
+  const [syncPossible] = useState(!!syncedLyricsArray && syncedLyricsArray.length > 0);
 
   useEffect(() => {
     // Highlight text when the search is changed
@@ -180,11 +180,15 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
         <div>
           <Typography component="div" className={classes.lyrics} ref={lyricsRef}>
             {syncedLyrics.before}
-            <br />
-            <span className={classes.mark} ref={highlightedRef}>
-              {syncedLyrics.highlighted}
-            </span>
-            <br />
+            {syncPossible && syncedLyrics.highlighted !== "" && (
+              <div>
+                <br />
+                <span className={classes.mark} ref={highlightedRef}>
+                  {syncedLyrics.highlighted}
+                </span>
+                <br />{" "}
+              </div>
+            )}
             {syncedLyrics.after}
           </Typography>
           <Box mt={2} textAlign="left">
