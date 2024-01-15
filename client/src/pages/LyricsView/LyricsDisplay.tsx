@@ -31,6 +31,7 @@ interface IProps {
   lyricsTitle?: string;
   lyricsSourceReference?: string;
   progressMs?: number;
+  paused?: boolean;
 }
 
 const LyricsDisplay: React.FunctionComponent<IProps> = ({
@@ -39,7 +40,8 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
   lyricsSourceReference,
   lyricsArtist,
   lyricsTitle,
-  progressMs
+  progressMs,
+  paused
 }) => {
   //cloning the original lyrics array sp that we can restore the lyrics if a user rewinds the song
   const clonedLyricsArray = syncedLyricsArray === undefined ? [] : [...syncedLyricsArray];
@@ -81,6 +83,9 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
   useEffect(() => {
     if (progressMs === undefined) {
       return; // song switched
+    }
+    if (paused) {
+      return; // song is paused
     }
     if (progressMs < naturalSongProgress) {
       const clonedLyricsArray = syncedLyricsArray === undefined ? [] : [...syncedLyricsArray];

@@ -23,7 +23,8 @@ const useLyrics = (currentlyPlaying: CurrentlyPlayingState) => {
   useEffect(() => {
     // Get new lyrics when the current playing item changes
     if (
-      currentlyPlaying.state !== PlayingStates.Playing ||
+      (currentlyPlaying.state !== PlayingStates.Playing &&
+        currentlyPlaying.state !== PlayingStates.Paused) ||
       currentlyPlaying.currentlyPlayingObject.item === null
     ) {
       setLyrics(undefined);

@@ -50,6 +50,7 @@ const TrackPlaying: React.FunctionComponent<IProps> = ({ lyricDetails, currently
       lyricsArtist={lyricDetails.lyrics?.artist}
       lyricsTitle={lyricDetails.lyrics?.title}
       lyricsSourceReference={lyricDetails.lyrics?.lyricsSourceReference}
+      paused={currentlyPlayingSong.currentlyPlayingObject?.is_paused ?? true}
     />
   );
 };
