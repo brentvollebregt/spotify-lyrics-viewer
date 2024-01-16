@@ -3,10 +3,11 @@ import { Box, CircularProgress, Typography } from "@material-ui/core";
 
 import LyricsDisplay from "./LyricsDisplay";
 import { ITrackLyrics } from "../../types/trackLyrics";
+import { PlayingStatePaused, PlayingStatePlaying } from "../../types/currentlyPlayingState";
 
 interface IProps {
   lyricDetails?: ITrackLyrics;
-  currentlyPlayingSong?: any;
+  currentlyPlayingSong?: PlayingStatePlaying | PlayingStatePaused;
 }
 
 const TrackPlaying: React.FunctionComponent<IProps> = ({ lyricDetails, currentlyPlayingSong }) => {
@@ -46,11 +47,11 @@ const TrackPlaying: React.FunctionComponent<IProps> = ({ lyricDetails, currently
     <LyricsDisplay
       lyrics={content}
       syncedLyricsArray={syncedLyricsArray}
-      progressMs={currentlyPlayingSong.currentlyPlayingObject?.progress_ms ?? 0}
+      progressMs={currentlyPlayingSong?.currentlyPlayingObject?.progress_ms ?? 0}
       lyricsArtist={lyricDetails.lyrics?.artist}
       lyricsTitle={lyricDetails.lyrics?.title}
       lyricsSourceReference={lyricDetails.lyrics?.lyricsSourceReference}
-      paused={currentlyPlayingSong.currentlyPlayingObject?.is_paused ?? true}
+      paused={!currentlyPlayingSong?.currentlyPlayingObject?.is_playing ?? false}
     />
   );
 };

@@ -6,12 +6,12 @@ export enum PlayingStates {
   Paused
 }
 
-interface PlayingStatePlaying {
+export interface PlayingStatePlaying {
   state: PlayingStates.Playing;
   currentlyPlayingObject: SpotifyApi.CurrentlyPlayingObject;
 }
 
-interface PlayingStatePaused {
+export interface PlayingStatePaused {
   state: PlayingStates.Paused;
   currentlyPlayingObject: SpotifyApi.CurrentlyPlayingObject;
 }

@@ -45,6 +45,7 @@ export async function getLyrics(
     };
   } catch (e) {
     //accounting for lrclib outage
-    return { artist: artists[0], title: title, lyrics: null, syncedLyricsArray: [] };
+    console.error(e);
+    return { artist: artists[0], title: title, lyrics: undefined, syncedLyricsArray: [] };
   }
 }

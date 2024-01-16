@@ -26,9 +26,9 @@
     "start": "react-scripts start",
     "prebuild": "ts-node -O {\\\"module\\\":\\\"commonjs\\\"} tools/generate-sitemap.ts",
     "build": "react-scripts build",
+    "postbuild": "ts-node -O {\\\"module\\\":\\\"commonjs\\\"} tools/copy-index.ts",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "postbuild": "ts-node -O {\\\"module\\\":\\\"commonjs\\\"} tools/copy-index.ts"
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"

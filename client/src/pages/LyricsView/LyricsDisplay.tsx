@@ -61,6 +61,11 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
   const [syncEnabled, setSyncEnabled] = useState(true);
   const [syncPossible] = useState(!!syncedLyricsArray && syncedLyricsArray.length > 0);
 
+  const resetLyrics = () => {
+    const clonedLyricsArray = syncedLyricsArray === undefined ? [] : [...syncedLyricsArray];
+    setSyncedLyrics({ array: clonedLyricsArray, before: "", highlighted: "", after: lyrics });
+  };
+
   useEffect(() => {
     // Highlight text when the search is changed
     if (lyricsRef.current !== null) {
@@ -88,9 +93,8 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
       return; // song is paused
     }
     if (progressMs < naturalSongProgress) {
-      const clonedLyricsArray = syncedLyricsArray === undefined ? [] : [...syncedLyricsArray];
       setNaturalSongProgress(0);
-      setSyncedLyrics({ array: clonedLyricsArray, before: "", highlighted: "", after: lyrics });
+      resetLyrics();
     }
   }, [progressMs]);
 
@@ -100,7 +104,7 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
     }
-  }, [syncedLyricsArray, progressMs]);
+  }, [syncedLyrics]);
 
   useEffect(() => {
     const progressArray = syncedLyrics.array;
@@ -141,7 +145,12 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
     setSearch(event.currentTarget.value === undefined ? "" : event.currentTarget.value);
   const toggleSearchShown = () => setSearchShown(s => !s);
   const toggleSyncEnabled = () => {
-    setSyncEnabled(s => !s);
+    setSyncEnabled(s => {
+      if (s) {
+        resetLyrics();
+      }
+      return !s;
+    });
   };
 
   return (
@@ -191,7 +200,7 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
                 <span className={classes.mark} ref={highlightedRef}>
                   {syncedLyrics.highlighted}
                 </span>
-                <br />{" "}
+                <br />
               </div>
             )}
             {syncedLyrics.after}
@@ -232,7 +241,7 @@ const useStyles = makeStyles({
     margin: "-6px -6px 0 0",
     position: "fixed",
     right: "60px",
-    top: "60px"
+    top: 75
   }
 });
 

@@ -1,3 +1,5 @@
+import { ILRCContent } from "../../../src/dto";
+
 interface ILyricDetails {
   content: string;
   artist: string;
@@ -11,7 +13,4 @@ export interface ITrackLyrics {
   lyrics: ILyricDetails | undefined;
 }
 
-export interface ILRCContent {
-  content: string;
-  timestamp: number;
-}
+export type { ILRCContent };
