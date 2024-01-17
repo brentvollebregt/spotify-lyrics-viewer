@@ -13,16 +13,13 @@ import {
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import CloseIcon from "@material-ui/icons/Close";
-
 import SyncEnabledIcon from "@material-ui/icons/Sync";
 import SyncDisabledIcon from "@material-ui/icons/SyncDisabled";
-
 import "./LyricsDisplay.css";
-import { Sync } from "@material-ui/icons";
 import { ILRCContent } from "../../types/trackLyrics";
 
 // adjusting for latency to highlight lyrics due to the time it takes to render the components on screen
-const LATENCY_ADJUSTMENT_MAGIC_VALUE: number = 135;
+const LATENCY_ADJUSTMENT_MAGIC_VALUE_MS = 0.135;
 
 interface IProps {
   lyrics?: string;
@@ -30,8 +27,8 @@ interface IProps {
   lyricsArtist?: string;
   lyricsTitle?: string;
   lyricsSourceReference?: string;
-  progressMs?: number;
-  paused?: boolean;
+  progressMs: number;
+  paused: boolean;
 }
 
 const LyricsDisplay: React.FunctionComponent<IProps> = ({
@@ -43,31 +40,18 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
   progressMs,
   paused
 }) => {
-  //cloning the original lyrics array sp that we can restore the lyrics if a user rewinds the song
-  const clonedLyricsArray = syncedLyricsArray === undefined ? [] : [...syncedLyricsArray];
   const classes = useStyles();
   const lyricsRef = useRef<HTMLDivElement | null>(null);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const highlightedRef = useRef<HTMLSpanElement | null>(null);
   const [search, setSearch] = useState("");
   const [searchShown, setSearchShown] = useState(false);
-  const [syncedLyrics, setSyncedLyrics] = useState({
-    array: clonedLyricsArray,
-    before: "",
-    highlighted: "",
-    after: lyrics
-  });
-  const [naturalSongProgress, setNaturalSongProgress] = useState(0);
   const [syncEnabled, setSyncEnabled] = useState(true);
-  const [syncPossible] = useState(!!syncedLyricsArray && syncedLyricsArray.length > 0);
 
-  const resetLyrics = () => {
-    const clonedLyricsArray = syncedLyricsArray === undefined ? [] : [...syncedLyricsArray];
-    setSyncedLyrics({ array: clonedLyricsArray, before: "", highlighted: "", after: lyrics });
-  };
+  const isSyncingPossible = syncedLyricsArray !== undefined && syncedLyricsArray.length > 0;
 
+  // Highlight text when the search is changed
   useEffect(() => {
-    // Highlight text when the search is changed
     if (lyricsRef.current !== null) {
       const instance = new MarkJS(lyricsRef.current);
       instance.unmark();
@@ -77,81 +61,27 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
     }
   }, [search, lyrics]);
 
+  // Focus search input when the search button is clicked
   useEffect(() => {
-    // Focus search input when the search button is clicked
     if (searchShown && searchInputRef.current !== null) {
       searchInputRef.current.focus();
     }
   }, [searchShown]);
 
-  //accounting for rewinding the song
-  useEffect(() => {
-    if (progressMs === undefined) {
-      return; // song switched
-    }
-    if (paused) {
-      return; // song is paused
-    }
-    if (progressMs < naturalSongProgress) {
-      setNaturalSongProgress(0);
-      resetLyrics();
-    }
-  }, [progressMs]);
-
-  //making sure highlighted text is always visible
+  // Automatically scroll to highlighted text
   useEffect(() => {
     const element = highlightedRef.current;
-    if (element) {
+    if (syncEnabled && element !== null) {
       element.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
     }
-  }, [syncedLyrics]);
+  }, [syncEnabled, progressMs]);
 
-  useEffect(() => {
-    const progressArray = syncedLyrics.array;
-    if (syncedLyricsArray === undefined || progressArray === undefined) {
-      //genius fallback was used and lfc was not provided
-      return;
-    }
-    if (progressMs === undefined) {
-      //switching songs
-      return;
-    }
-    if (progressArray.length === 0) {
-      //end of lyrics
-      return;
-    }
-    if (!syncEnabled) {
-      //sync is disabled by the user
-      return;
-    }
-    const adjustProgress = progressMs + LATENCY_ADJUSTMENT_MAGIC_VALUE; // accounting for latency
-    setNaturalSongProgress(adjustProgress);
-    const progressInSeconds = adjustProgress / 1000;
-    // while is used to account for scenarios where a song is fast forwarded
-    // typically it would be just one interaction on the loop
-    while (progressArray[0] && progressInSeconds >= progressArray[0].timestamp) {
-      const currentLyric = progressArray.shift() as ILRCContent; // acting as a queue
-      setSyncedLyrics(prev => {
-        const before = prev.before + " \n " + prev.highlighted;
-        const highlighted = currentLyric.content;
-        const after = progressArray.map(lfc => lfc.content).join(" \n ");
-        const currObject = { array: progressArray, before, highlighted, after };
-        return currObject;
-      });
-    }
-  }, [syncedLyricsArray, progressMs]);
+  const lyricsState = calculateLyricsState(lyrics, syncedLyricsArray, progressMs, syncEnabled,paused);
 
   const onUserSearch = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
     setSearch(event.currentTarget.value === undefined ? "" : event.currentTarget.value);
   const toggleSearchShown = () => setSearchShown(s => !s);
-  const toggleSyncEnabled = () => {
-    setSyncEnabled(s => {
-      if (s) {
-        resetLyrics();
-      }
-      return !s;
-    });
-  };
+  const toggleSyncEnabled = () => setSyncEnabled(s => !s);
 
   return (
     <div className={classes.root}>
@@ -182,28 +112,26 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
             <SearchIcon fontSize="small" />
           </IconButton>
         )}
-        {syncPossible ? (
-          <IconButton onClick={toggleSyncEnabled}>
-            {syncEnabled ? <SyncEnabledIcon /> : <SyncDisabledIcon />}
-          </IconButton>
-        ) : (
-          <SyncDisabledIcon />
-        )}
+        <IconButton onClick={toggleSyncEnabled} disabled={!isSyncingPossible}>
+          {syncEnabled ? <SyncEnabledIcon /> : <SyncDisabledIcon />}
+        </IconButton>
       </Toolbar>
       {lyrics ? (
         <div>
           <Typography component="div" className={classes.lyrics} ref={lyricsRef}>
-            {syncedLyrics.before}
-            {syncPossible && syncedLyrics.highlighted !== "" && (
+            {lyricsState.before}
+
+            {lyricsState.highlighted !== "" && (
               <div>
                 <br />
                 <span className={classes.mark} ref={highlightedRef}>
-                  {syncedLyrics.highlighted}
+                  {lyricsState.highlighted}
                 </span>
                 <br />
               </div>
             )}
-            {syncedLyrics.after}
+
+            {lyricsState.after}
           </Typography>
           <Box mt={2} textAlign="left">
             <Typography>
@@ -218,6 +146,42 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
       )}
     </div>
   );
+};
+
+const calculateLyricsState = (
+  plainLyrics: string | undefined,
+  syncedLyricsArray: Array<ILRCContent> | undefined,
+  progressMs: number,
+  syncEnabled: boolean,
+  paused:boolean
+) => {
+  const progressSeconds = progressMs / 1000;
+  const artificialProgressSeconds = progressSeconds + LATENCY_ADJUSTMENT_MAGIC_VALUE_MS / 1000;
+
+  // If there is no syncedLyricsArray or sync is disabled, return the plain lyrics
+  if (syncedLyricsArray === undefined || syncedLyricsArray.length === 0 || !syncEnabled || paused) {
+    return {
+      before: "",
+      highlighted: "",
+      after: plainLyrics ?? ""
+    };
+  }
+
+  // Calculate the current lyric state based on progress
+  const passedLyricsAndCurrent =
+    syncedLyricsArray?.filter(x => x.timestamp <= artificialProgressSeconds) ?? [];
+  const passedLyrics = passedLyricsAndCurrent.slice(0, -1);
+  const currentLyrics =
+    passedLyricsAndCurrent.length > 0
+      ? passedLyricsAndCurrent[passedLyricsAndCurrent.length - 1]
+      : null;
+  const upcomingLyrics = syncedLyricsArray?.filter(x => x.timestamp > artificialProgressSeconds);
+
+  return {
+    before: passedLyrics.map(x => x.content).join(" \n "),
+    highlighted: currentLyrics?.content ?? "",
+    after: upcomingLyrics.map(x => x.content).join(" \n ")
+  };
 };
 
 const useStyles = makeStyles({
