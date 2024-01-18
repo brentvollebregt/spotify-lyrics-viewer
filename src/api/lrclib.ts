@@ -1,6 +1,6 @@
 import axios from "axios";
-import { ILyricsAndDetails } from "../dto";
 import { Lrc } from "lrc-kit";
+import { ILyricsAndDetails } from "../dto";
 
 const LRCLIB_BASE_URL = "https://lrclib.net";
 

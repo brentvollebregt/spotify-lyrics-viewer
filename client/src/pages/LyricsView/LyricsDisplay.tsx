@@ -1,22 +1,22 @@
-import React, { useEffect, useRef, useState } from "react";
-import MarkJS from "mark.js";
 import {
   Box,
   CircularProgress,
   IconButton,
   InputAdornment,
   Link,
-  makeStyles,
-  Toolbar,
   TextField,
-  Typography
+  Toolbar,
+  Typography,
+  makeStyles
 } from "@material-ui/core";
-import SearchIcon from "@material-ui/icons/Search";
 import CloseIcon from "@material-ui/icons/Close";
+import SearchIcon from "@material-ui/icons/Search";
 import SyncEnabledIcon from "@material-ui/icons/Sync";
 import SyncDisabledIcon from "@material-ui/icons/SyncDisabled";
-import "./LyricsDisplay.css";
+import MarkJS from "mark.js";
+import React, { useEffect, useRef, useState } from "react";
 import { ILRCContent } from "../../types/trackLyrics";
+import "./LyricsDisplay.css";
 
 // adjusting for latency to highlight lyrics due to the time it takes to render the components on screen
 const LATENCY_ADJUSTMENT_MAGIC_VALUE_MS = 0.135;

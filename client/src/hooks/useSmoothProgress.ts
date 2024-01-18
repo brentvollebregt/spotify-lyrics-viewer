@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import SpotifyWebApi from "spotify-web-api-js";
-
 import { IToken } from "../types/token";
 import { responseError } from "../utils";
 

@@ -1,9 +1,8 @@
-import React from "react";
 import { Box, CircularProgress, Typography } from "@material-ui/core";
-
-import LyricsDisplay from "./LyricsDisplay";
-import { ITrackLyrics } from "../../types/trackLyrics";
+import React from "react";
 import { PlayingStatePaused, PlayingStatePlaying } from "../../types/currentlyPlayingState";
+import { ITrackLyrics } from "../../types/trackLyrics";
+import LyricsDisplay from "./LyricsDisplay";
 
 interface IProps {
   lyricDetails?: ITrackLyrics;

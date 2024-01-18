@@ -1,11 +1,10 @@
 import express from "express";
 import SpotifyWebApi from "spotify-web-api-node";
-import Config from "../config";
+import { URLSearchParams } from "url";
+import { default as Config, default as config } from "../config";
+import { ITokenExpiryPair } from "../dto";
 import { randomString } from "../utils";
 import { isStoredTokenValid } from "../utils/spotify";
-import { ITokenExpiryPair } from "../dto";
-import { URLSearchParams } from "url";
-import config from "../config";
 
 export const subRoute = "/api/spotify";
 

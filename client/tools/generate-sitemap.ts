@@ -1,6 +1,6 @@
+import fs from "fs";
 import { SitemapStream, streamToPromise } from "sitemap";
 import { Readable } from "stream";
-import fs from "fs";
 
 const rootDestinations = ["/", "/about"];
 const siteUrl = "https://spotify-lyrics-viewer.nitratine.net";

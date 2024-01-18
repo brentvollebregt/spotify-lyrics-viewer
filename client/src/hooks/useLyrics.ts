@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { getLyrics } from "../api";
 import { CurrentlyPlayingState, PlayingStates } from "../types/currentlyPlayingState";
 import { ILRCContent } from "../types/trackLyrics";

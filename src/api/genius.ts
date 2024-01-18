@@ -1,8 +1,8 @@
 import axios from "axios";
 import cheerio from "cheerio";
 import diacritics from "diacritics";
-import { ILyricsAndDetails } from "../dto";
 import config from "../config";
+import { ILyricsAndDetails } from "../dto";
 
 export interface Stats {
   unreviewed_annotations: number;

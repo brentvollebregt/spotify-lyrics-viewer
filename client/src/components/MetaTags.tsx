@@ -1,7 +1,7 @@
 import React from "react";
 import useMetaTags from "react-metatags-hook";
-import BannerImage from "../img/banner.png";
 import config from "../config";
+import BannerImage from "../img/banner.png";
 
 interface IProps {
   titlePrefix?: string;

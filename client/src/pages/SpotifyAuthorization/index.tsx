@@ -1,7 +1,6 @@
-import React from "react";
-import { navigate } from "hookrouter";
 import { Box, CircularProgress, Typography } from "@material-ui/core";
-
+import { navigate } from "hookrouter";
+import React from "react";
 import Config from "../../config";
 
 interface IProps {

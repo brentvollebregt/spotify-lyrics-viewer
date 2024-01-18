@@ -1,7 +1,6 @@
+import cogoToast from "cogo-toast";
 import { useEffect, useState } from "react";
 import SpotifyWebApi from "spotify-web-api-js";
-import cogoToast from "cogo-toast";
-
 import { IToken } from "../types/token";
 
 const useUser = (token: IToken | null, clearToken: () => void) => {

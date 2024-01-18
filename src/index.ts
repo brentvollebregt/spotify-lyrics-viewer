@@ -1,15 +1,15 @@
 import dotenv from "dotenv";
 dotenv.config(); // Setup .env
 
-import express from "express";
-import https from "https";
-import fs from "fs";
 import cookieSession from "cookie-session";
+import express from "express";
+import fs from "fs";
+import https from "https";
 import path from "path";
 import Config from "./config";
+import LrcLibRoutes, { subRoute as lrclibSubRoute } from "./routes/lrclib";
 import SessionRoutes, { subRoute as sessionSubRoute } from "./routes/session";
 import SpotifyRoutes, { subRoute as spotifySubRoute } from "./routes/spotify";
-import LrcLibRoutes, { subRoute as lrclibSubRoute } from "./routes/lrclib";
 
 const app = express();
 const isProduction = app.get("env") === "production";

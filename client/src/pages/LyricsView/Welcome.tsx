@@ -1,7 +1,6 @@
-import React from "react";
-import { navigate } from "hookrouter";
 import { Avatar, Box, Button, Typography } from "@material-ui/core";
-
+import { navigate } from "hookrouter";
+import React from "react";
 import SpotifyLogoRoundImage from "../../img/spotify-logo-round.png";
 
 const Welcome: React.FunctionComponent = () => {

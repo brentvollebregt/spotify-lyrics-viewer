@@ -1,14 +1,12 @@
 import React from "react";
-
+import { CurrentlyPlayingState, PlayingStates } from "../../types/currentlyPlayingState";
+import { ITrackLyrics } from "../../types/trackLyrics";
 import Advertisement from "./Advertisement";
 import Error from "./Error";
 import Loading from "./Loading";
 import NoTrackPlaying from "./NoTrackPlaying";
 import TrackPlaying from "./TrackPlaying";
 import Welcome from "./Welcome";
-
-import { ITrackLyrics } from "../../types/trackLyrics";
-import { CurrentlyPlayingState, PlayingStates } from "../../types/currentlyPlayingState";
 
 interface IProps {
   user: SpotifyApi.UserObjectPrivate | null;

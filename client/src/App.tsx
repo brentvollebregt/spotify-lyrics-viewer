@@ -1,24 +1,21 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useRoutes, useRedirect } from "hookrouter";
-import { CssBaseline, Box, Container, ThemeProvider } from "@material-ui/core";
-
+import { Box, Container, CssBaseline, ThemeProvider } from "@material-ui/core";
+import { setBasepath, useRedirect, useRoutes } from "hookrouter";
+import React, { useEffect, useState } from "react";
+import { deleteSession, spotifyGetCurrentToken } from "./api";
+import MetaTags from "./components/MetaTags";
 import Navigation from "./components/Navigation";
 import Player from "./components/Player";
+import config from "./config";
+import useCurrentlyPlayingSong from "./hooks/useCurrentlyPlayingSong";
+import useLyrics from "./hooks/useLyrics";
+import useThemeState from "./hooks/useThemeState";
+import useTokenRefresh from "./hooks/useTokenRefresh";
+import useUser from "./hooks/useUser";
 import About from "./pages/About";
 import LyricsView from "./pages/LyricsView";
 import NotFound from "./pages/NotFound";
 import SpotifyAuthorization from "./pages/SpotifyAuthorization";
-
-import MetaTags from "./components/MetaTags";
-import { deleteSession, spotifyGetCurrentToken } from "./api";
 import { IToken } from "./types/token";
-import useUser from "./hooks/useUser";
-import useTokenRefresh from "./hooks/useTokenRefresh";
-import useCurrentlyPlayingSong from "./hooks/useCurrentlyPlayingSong";
-import useLyrics from "./hooks/useLyrics";
-import useThemeState from "./hooks/useThemeState";
-import { setBasepath } from "hookrouter";
-import config from "./config";
 
 const App: React.FC = () => {
   const [token, setToken] = useState<IToken | null>(null);

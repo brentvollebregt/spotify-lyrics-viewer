@@ -1,7 +1,7 @@
 import express from "express";
+import { getLyrics as fallbackLyrics } from "../api/genius";
 import { getLyrics } from "../api/lrclib";
 import { searchForMostProbableLyricsHit } from "../utils/genius";
-import { getLyrics as fallbackLyrics } from "../api/genius";
 
 export const subRoute = "/api/lrclib";
 

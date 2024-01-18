@@ -1,5 +1,5 @@
+import { ILyricsAndDetails, ITokenExpiryPair } from "../../../src/dto";
 import Config from "../config";
-import { ITokenExpiryPair, ILyricsAndDetails } from "../../../src/dto";
 
 export function getLyrics(
   artists: string[],

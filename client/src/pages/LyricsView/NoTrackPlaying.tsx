@@ -1,5 +1,5 @@
-import React from "react";
 import { Box, Typography } from "@material-ui/core";
+import React from "react";
 
 const NoTrackPlaying: React.FunctionComponent = () => {
   return (

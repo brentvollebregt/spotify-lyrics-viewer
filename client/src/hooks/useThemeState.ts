@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
-import { createMuiTheme } from "@material-ui/core/styles";
 import green from "@material-ui/core/colors/green";
+import { createMuiTheme } from "@material-ui/core/styles";
+import { useEffect, useMemo, useState } from "react";
 
 const localStorageKey = "dark-theme";
 

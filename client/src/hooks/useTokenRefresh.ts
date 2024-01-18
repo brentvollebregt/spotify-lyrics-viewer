@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
 import cogoToast from "cogo-toast";
-
-import { IToken } from "../types/token";
+import { useEffect, useState } from "react";
 import { spotifyRefreshToken } from "../api";
+import { IToken } from "../types/token";
 
 const useTokenRefresh = (
   token: IToken | null,

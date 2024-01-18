@@ -1,16 +1,15 @@
-import React from "react";
-import { AppBar, Box, Slider, Container, makeStyles } from "@material-ui/core";
+import { AppBar, Box, Container, Slider, makeStyles } from "@material-ui/core";
+import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled";
+import PlayCircleFilledIcon from "@material-ui/icons/PlayCircleFilled";
 import SkipNextIcon from "@material-ui/icons/SkipNext";
 import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
-import PlayCircleFilledIcon from "@material-ui/icons/PlayCircleFilled";
-import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled";
+import React from "react";
 import SpotifyWebApi from "spotify-web-api-js";
-
-import { IToken } from "../types/token";
-import { CurrentlyPlayingState } from "../types/currentlyPlayingState";
-import { responseError, formatMilliseconds } from "../utils";
 import useSmoothProgress from "../hooks/useSmoothProgress";
 import SpotifyLogoRoundImage from "../img/spotify-logo-round.png";
+import { CurrentlyPlayingState } from "../types/currentlyPlayingState";
+import { IToken } from "../types/token";
+import { formatMilliseconds, responseError } from "../utils";
 
 const placeholder1PxImage =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8+x8AAr8B3gzOjaQAAAAASUVORK5CYII="; // Generated using https://png-pixel.com/

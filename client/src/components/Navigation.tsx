@@ -1,26 +1,25 @@
-import React from "react";
 import {
   AppBar,
+  Avatar,
+  Box,
+  Container,
+  IconButton,
+  Link,
   Toolbar,
   Typography,
-  Container,
-  Box,
   makeStyles,
-  IconButton,
-  Avatar,
   useMediaQuery,
-  useTheme,
-  Link
+  useTheme
 } from "@material-ui/core";
-import { navigate, usePath } from "hookrouter";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import DarkModeIcon from "@material-ui/icons/Brightness4";
 import LightModeIcon from "@material-ui/icons/Brightness7";
 import GitHubIcon from "@material-ui/icons/GitHub";
-
-import LogoImage from "../img/logo.png";
-import BannerImage from "../img/banner.png";
+import { navigate, usePath } from "hookrouter";
+import React from "react";
 import BannerImageDark from "../img/banner-dark.png";
+import BannerImage from "../img/banner.png";
+import LogoImage from "../img/logo.png";
 
 const navbarLinks: { [key: string]: string } = {
   "/": "Home",
