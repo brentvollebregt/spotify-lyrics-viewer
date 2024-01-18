@@ -15,7 +15,7 @@ const MetaTags: React.FunctionComponent<React.PropsWithChildren<IProps>> = ({
   route,
   children
 }) => {
-  const title = (titlePrefix || "") + "Spotify Lyrics Viewer";
+  const title = (titlePrefix ?? "") + "Spotify Lyrics Viewer";
   useMetaTags({
     title,
     description,

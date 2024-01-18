@@ -28,10 +28,9 @@ const App: React.FC = () => {
     deleteSession();
   };
 
-  const baseName = config.client.basename;
-  if (baseName && baseName !== "/") {
-    //needed when we have a subdirectory in the url to adjust the links on home, about, etc
-    setBasepath(baseName);
+  if (config.client.basename !== undefined) {
+    // Needed when we have a subdirectory in the url to adjust the links on home, about, etc
+    setBasepath(config.client.basename);
   }
 
   const user = useUser(token, clearToken);
@@ -85,7 +84,7 @@ const App: React.FC = () => {
         />
 
         <Box py={3} style={{ overflow: "auto" }}>
-          <Container maxWidth="md">{routeResult || <NotFound />}</Container>
+          <Container maxWidth="md">{routeResult ?? <NotFound />}</Container>
         </Box>
 
         <Player currentlyPlayingSong={currentlyPlayingSong} token={token} />

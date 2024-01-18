@@ -1,8 +1,8 @@
-export default {
+const config = {
   client: {
     relative_build_directory: "../client/build",
     routes: ["/", "/about", "/spotify-authorization"],
-    subdirectory: process.env.CLIENT_DEPLOYMENT_SUBDIRECTORY || ""
+    subdirectory: process.env.CLIENT_DEPLOYMENT_SUBDIRECTORY ?? ""
   },
   genius: {
     access_token: process.env.GENIUS_ACCESS_TOKEN
@@ -17,3 +17,5 @@ export default {
     permission_scope: "user-modify-playback-state user-read-playback-state"
   }
 };
+
+export default config;
