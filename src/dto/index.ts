@@ -7,5 +7,11 @@ export interface ILyricsAndDetails {
   lyrics: string;
   title: string;
   artist: string;
-  geniusUrl: string;
+  lyricsSourceReference?: string;
+  syncedLyricsArray?: Array<ILRCContent>;
+}
+
+export interface ILRCContent {
+  content: string;
+  timestamp: number;
 }

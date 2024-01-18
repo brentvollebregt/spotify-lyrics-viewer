@@ -5,7 +5,7 @@ import cogoToast from "cogo-toast";
 import { IToken } from "../types/token";
 import { CurrentlyPlayingState, PlayingStates } from "../types/currentlyPlayingState";
 
-const periodicTrackCheckDelayMs = 5000;
+const periodicTrackCheckDelayMs = 1000;
 
 const useCurrentlyPlayingSong = (token: IToken | null, invalidateToken: () => void) => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState<CurrentlyPlayingState>({
@@ -23,8 +23,11 @@ const useCurrentlyPlayingSong = (token: IToken | null, invalidateToken: () => vo
         if (currentlyPlayingObject === "") {
           setCurrentlyPlaying({ state: PlayingStates.NotPlaying, currentlyPlayingObject: null }); // HTTP 204 when no track is currently playing
         } else {
+          const state: PlayingStates = currentlyPlayingObject.is_playing
+            ? PlayingStates.Playing
+            : PlayingStates.Paused;
           setCurrentlyPlaying({
-            state: PlayingStates.Playing,
+            state,
             currentlyPlayingObject: currentlyPlayingObject
           });
         }
@@ -66,7 +69,8 @@ const useCurrentlyPlayingSong = (token: IToken | null, invalidateToken: () => vo
     }
 
     if (
-      currentlyPlaying.state === PlayingStates.Playing &&
+      (currentlyPlaying.state === PlayingStates.Playing ||
+        currentlyPlaying.state === PlayingStates.Paused) &&
       currentlyPlaying.currentlyPlayingObject.item !== null
     ) {
       const timeToRefresh =

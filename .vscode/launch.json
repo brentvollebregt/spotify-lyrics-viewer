@@ -9,14 +9,15 @@
             "webRoot": "${workspaceFolder}/client"
         },
         {
-            "type": "node",
-            "request": "attach",
-            "name": "Attatch to Server",
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Debug",
+            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/ts-node-dev",
+            "args": ["--respawn", "--transpileOnly", "src/index.ts"],
             "protocol": "inspector",
-            "port": 9229,
-            "restart": true,
-            "localRoot": "${workspaceFolder}",
-            "remoteRoot": "."
-        }
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "skipFiles": ["<node_internals>/**"]
+          }
     ]
 }

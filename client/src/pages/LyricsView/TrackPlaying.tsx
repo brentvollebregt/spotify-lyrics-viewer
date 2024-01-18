@@ -3,12 +3,14 @@ import { Box, CircularProgress, Typography } from "@material-ui/core";
 
 import LyricsDisplay from "./LyricsDisplay";
 import { ITrackLyrics } from "../../types/trackLyrics";
+import { PlayingStatePaused, PlayingStatePlaying } from "../../types/currentlyPlayingState";
 
 interface IProps {
   lyricDetails?: ITrackLyrics;
+  currentlyPlayingSong?: PlayingStatePlaying | PlayingStatePaused;
 }
 
-const TrackPlaying: React.FunctionComponent<IProps> = ({ lyricDetails }) => {
+const TrackPlaying: React.FunctionComponent<IProps> = ({ lyricDetails, currentlyPlayingSong }) => {
   // No lyrics yet
   if (lyricDetails === undefined) {
     return (
@@ -40,13 +42,16 @@ const TrackPlaying: React.FunctionComponent<IProps> = ({ lyricDetails }) => {
   }
 
   // Lyrics found
-  const { content, artist, title, geniusUrl } = lyricDetails.lyrics;
+  const { content, syncedLyricsArray } = lyricDetails.lyrics;
   return (
     <LyricsDisplay
       lyrics={content}
-      lyricsArtist={artist}
-      lyricsTitle={title}
-      geniusUrl={geniusUrl}
+      syncedLyricsArray={syncedLyricsArray}
+      progressMs={currentlyPlayingSong?.currentlyPlayingObject?.progress_ms ?? 0}
+      lyricsArtist={lyricDetails.lyrics?.artist}
+      lyricsTitle={lyricDetails.lyrics?.title}
+      lyricsSourceReference={lyricDetails.lyrics?.lyricsSourceReference}
+      paused={!currentlyPlayingSong?.currentlyPlayingObject?.is_playing ?? false}
     />
   );
 };

@@ -2,11 +2,17 @@ export enum PlayingStates {
   Playing,
   NotPlaying,
   Loading,
-  Error
+  Error,
+  Paused
 }
 
-interface PlayingStatePlaying {
+export interface PlayingStatePlaying {
   state: PlayingStates.Playing;
+  currentlyPlayingObject: SpotifyApi.CurrentlyPlayingObject;
+}
+
+export interface PlayingStatePaused {
+  state: PlayingStates.Paused;
   currentlyPlayingObject: SpotifyApi.CurrentlyPlayingObject;
 }
 
@@ -27,6 +33,7 @@ interface PlayingStateError {
 
 export type CurrentlyPlayingState =
   | PlayingStatePlaying
+  | PlayingStatePaused
   | PlayingStateNotPlaying
   | PlayingStateLoading
   | PlayingStateError;

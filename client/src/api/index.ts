@@ -1,17 +1,21 @@
 import Config from "../config";
 import { ITokenExpiryPair, ILyricsAndDetails } from "../../../src/dto";
 
-export function geniusGetLyrics(
+export function getLyrics(
   artists: string[],
-  title: string
+  title: string,
+  albumName: string,
+  duration: number
 ): Promise<ILyricsAndDetails | null> {
   const parameters = new URLSearchParams();
   parameters.append("title", title);
   for (const artist of artists) {
     parameters.append("artists", artist);
   }
+  parameters.append("albumName", albumName);
+  parameters.append("duration", duration.toString());
 
-  return fetch(`${Config.api.root}/api/genius/lyrics?${parameters}`).then(r =>
+  return fetch(`${Config.api.root}/api/lrclib/lyrics?${parameters}`).then(r =>
     r.status === 200 ? r.json() : null
   );
 }

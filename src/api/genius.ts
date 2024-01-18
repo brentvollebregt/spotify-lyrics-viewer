@@ -67,13 +67,14 @@ export function search(term: string): Promise<ISearchResponse> {
 }
 
 export function getLyrics(geniusUrl: string): Promise<ILyricsAndDetails> {
-  return axios.get(`https://genius.com${geniusUrl}`).then(r => {
+  const fullGeniusURL = `https://genius.com${geniusUrl}`;
+  return axios.get(fullGeniusURL).then(r => {
     const html = r.data;
     const $ = cheerio.load(html); // Load in the page
     const title = getTitle($);
     const artist = getArtist($);
     const lyrics = getLyricContents($);
-    return { artist, geniusUrl, lyrics, title };
+    return { artist, lyricsSourceReference: fullGeniusURL, lyrics, title };
   });
 }
 

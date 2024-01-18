@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 
-import { geniusGetLyrics } from "../api";
+import { getLyrics } from "../api";
 import { CurrentlyPlayingState, PlayingStates } from "../types/currentlyPlayingState";
+import { ILRCContent } from "../types/trackLyrics";
 
 interface ILyricDetails {
   content: string;
   artist: string;
   title: string;
-  geniusUrl: string;
+  syncedLyricsArray?: Array<ILRCContent>;
+  lyricsSourceReference?: string;
 }
 
 interface ITrackLyrics {
@@ -21,7 +23,8 @@ const useLyrics = (currentlyPlaying: CurrentlyPlayingState) => {
   useEffect(() => {
     // Get new lyrics when the current playing item changes
     if (
-      currentlyPlaying.state !== PlayingStates.Playing ||
+      (currentlyPlaying.state !== PlayingStates.Playing &&
+        currentlyPlaying.state !== PlayingStates.Paused) ||
       currentlyPlaying.currentlyPlayingObject.item === null
     ) {
       setLyrics(undefined);
@@ -55,9 +58,11 @@ const useLyrics = (currentlyPlaying: CurrentlyPlayingState) => {
           .trim();
 
         // Get lyrics
-        geniusGetLyrics(
+        getLyrics(
           currentlyPlaying.currentlyPlayingObject.item.artists.map(x => x.name),
-          trackNameWithReplacements
+          trackNameWithReplacements,
+          currentlyPlaying.currentlyPlayingObject.item.album.name,
+          currentlyPlaying.currentlyPlayingObject.item.duration_ms
         ).then(newLyrics => {
           if (currentlyPlaying.currentlyPlayingObject.item !== null) {
             setLyrics({
@@ -68,8 +73,9 @@ const useLyrics = (currentlyPlaying: CurrentlyPlayingState) => {
                   : {
                       artist: newLyrics.artist,
                       content: newLyrics.lyrics,
-                      geniusUrl: newLyrics.geniusUrl,
-                      title: newLyrics.title
+                      title: newLyrics.title,
+                      syncedLyricsArray: newLyrics.syncedLyricsArray,
+                      lyricsSourceReference: newLyrics.lyricsSourceReference
                     }
             });
           }

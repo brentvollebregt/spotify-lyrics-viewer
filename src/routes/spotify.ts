@@ -5,6 +5,7 @@ import { randomString } from "../utils";
 import { isStoredTokenValid } from "../utils/spotify";
 import { ITokenExpiryPair } from "../dto";
 import { URLSearchParams } from "url";
+import config from "../config";
 
 export const subRoute = "/api/spotify";
 
@@ -75,7 +76,11 @@ router.get("/authentication-callback", async (req, res) => {
     access_token: req.session.access_token,
     expires_at: req.session.expires_at
   };
-  res.redirect(`${originToRedirectTo}?${new URLSearchParams(responseData as any)}`);
+  const { subdirectory } = config.client; // For example, 'spotify-lyrics-viewer';
+  const redirectUrl = `${originToRedirectTo}${subdirectory}?${new URLSearchParams(
+    responseData as any
+  )}`;
+  res.redirect(redirectUrl);
   res.end();
 });
 

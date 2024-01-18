@@ -17,6 +17,8 @@ import useTokenRefresh from "./hooks/useTokenRefresh";
 import useCurrentlyPlayingSong from "./hooks/useCurrentlyPlayingSong";
 import useLyrics from "./hooks/useLyrics";
 import useThemeState from "./hooks/useThemeState";
+import { setBasepath } from "hookrouter";
+import config from "./config";
 
 const App: React.FC = () => {
   const [token, setToken] = useState<IToken | null>(null);
@@ -28,6 +30,12 @@ const App: React.FC = () => {
     setToken(null);
     deleteSession();
   };
+
+  const baseName = config.client.basename;
+  if (baseName && baseName !== "/") {
+    //needed when we have a subdirectory in the url to adjust the links on home, about, etc
+    setBasepath(baseName);
+  }
 
   const user = useUser(token, clearToken);
   useTokenRefresh(token, onNewToken, clearToken);
