@@ -28,6 +28,9 @@ router.get("/lyrics", async (req, res) => {
 
   const lyricsAndDetails = await getLyrics(artists, title, albumName, duration);
   if (!lyricsAndDetails.lyrics || lyricsAndDetails.lyrics === "") {
+    console.log(
+      `Unable to find lyrics from lrclib, searching Genius ([${title}] by [${artists}] on [${albumName}] with duration of [${duration}])`
+    );
     const bestSearchResults = await searchForMostProbableLyricsHit(artists, title);
 
     // Verify a match was found
