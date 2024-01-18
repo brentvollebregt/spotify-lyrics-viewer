@@ -76,7 +76,13 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
     }
   }, [syncEnabled, progressMs]);
 
-  const lyricsState = calculateLyricsState(lyrics, syncedLyricsArray, progressMs, syncEnabled,paused);
+  const lyricsState = calculateLyricsState(
+    lyrics,
+    syncedLyricsArray,
+    progressMs,
+    syncEnabled,
+    paused
+  );
 
   const onUserSearch = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
     setSearch(event.currentTarget.value === undefined ? "" : event.currentTarget.value);
@@ -153,7 +159,7 @@ const calculateLyricsState = (
   syncedLyricsArray: Array<ILRCContent> | undefined,
   progressMs: number,
   syncEnabled: boolean,
-  paused:boolean
+  paused: boolean
 ) => {
   const progressSeconds = progressMs / 1000;
   const artificialProgressSeconds = progressSeconds + LATENCY_ADJUSTMENT_MAGIC_VALUE_MS / 1000;

@@ -28,7 +28,7 @@ const LyricsView: React.FunctionComponent<IProps> = ({ user, currentlyPlayingSon
   } else if (currentlyPlayingSong.currentlyPlayingObject.currently_playing_type === "ad") {
     return <Advertisement />;
   } else {
-    return <TrackPlaying lyricDetails={lyrics} currentlyPlayingSong={currentlyPlayingSong}/>;
+    return <TrackPlaying lyricDetails={lyrics} currentlyPlayingSong={currentlyPlayingSong} />;
   }
 };
 
