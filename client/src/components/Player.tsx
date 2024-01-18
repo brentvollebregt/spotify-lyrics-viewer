@@ -77,7 +77,11 @@ const Player: React.FC<PlayerProps> = ({ currentlyPlayingSong, token }) => {
         <div className={classes.playerWrapper}>
           <div className={classes.songWrapper}>
             <div className={classes.songAlbumArtWrapper}>
-              <img src={albumArt ?? placeholder1PxImage} className={classes.songAlbumArt} />
+              <img
+                src={albumArt ?? placeholder1PxImage}
+                className={classes.songAlbumArt}
+                alt={`Album art for current song`}
+              />
             </div>
             <div className={classes.songDetail} title={title}>
               {title}

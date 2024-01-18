@@ -79,6 +79,7 @@ const useLyrics = (currentlyPlaying: CurrentlyPlayingState) => {
         });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentlyPlaying]);
 
   return lyrics;

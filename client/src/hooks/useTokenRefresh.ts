@@ -45,6 +45,7 @@ const useTokenRefresh = (
         clearTimeout(tokenTimeout);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 };
 

@@ -59,6 +59,7 @@ const useCurrentlyPlayingSong = (token: IToken | null, invalidateToken: () => vo
     } else {
       setCurrentlyPlaying({ state: PlayingStates.Loading, currentlyPlayingObject: null });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   // Setup a check for a new song at the end of the current song
@@ -92,6 +93,7 @@ const useCurrentlyPlayingSong = (token: IToken | null, invalidateToken: () => vo
         clearTimeout(checkSongTimeout);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentlyPlaying]);
 
   // Setup timers to periodically check for a new song (in case someone skips)
@@ -103,6 +105,7 @@ const useCurrentlyPlayingSong = (token: IToken | null, invalidateToken: () => vo
     }, periodicTrackCheckDelayMs);
 
     return () => clearTimeout(intervalCheck);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   return currentlyPlaying;

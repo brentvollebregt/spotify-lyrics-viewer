@@ -40,7 +40,8 @@ const useSmoothProgress = (
         clearTimeout(smoothProgressTimer);
       }
     };
-  }, [userSlidingProgress, isPlaying]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userSlidingProgress, isPlaying, duration]);
 
   const onUserFinishedSliding = (event: React.ChangeEvent<{}>, value: number | number[]) => {
     const newProgress = Array.isArray(value) ? value[0] : value;
