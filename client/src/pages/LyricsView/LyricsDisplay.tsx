@@ -92,7 +92,6 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
   return (
     <div className={classes.root}>
       <Toolbar className={classes.toolbar}>
-        {/* TODO https://material-ui.com/components/text-fields/#input-adornments */}
         {searchShown ? (
           <Box mb={1}>
             <TextField

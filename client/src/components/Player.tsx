@@ -19,8 +19,6 @@ interface PlayerProps {
   token: IToken | null;
 }
 
-// TODO Add mobile support
-
 const Player: React.FC<PlayerProps> = ({ currentlyPlayingSong, token }) => {
   const classes = useStyles();
 
@@ -40,7 +38,6 @@ const Player: React.FC<PlayerProps> = ({ currentlyPlayingSong, token }) => {
   }
 
   const {
-    onUserStartSliding,
     onUserFinishedSliding,
     onUserSlide,
     progress: smoothedProgressMs
@@ -124,8 +121,7 @@ const Player: React.FC<PlayerProps> = ({ currentlyPlayingSong, token }) => {
               value={smoothedProgressMs}
               min={0}
               max={durationMs}
-              onMouseDown={onUserStartSliding}
-              onMouseUp={onUserFinishedSliding}
+              onChangeCommitted={onUserFinishedSliding}
               onChange={onUserSlide}
               className={classes.slider}
             />
@@ -159,7 +155,7 @@ const useStyles = makeStyles(theme => ({
     gridTemplateColumns: "auto 1fr",
     gridTemplateRows: "1fr 1fr",
     gridColumnGap: 5,
-    maxWidth: 250 // TODO Need to play with this
+    maxWidth: 250
   },
   songAlbumArtWrapper: {
     gridColumnStart: 1,

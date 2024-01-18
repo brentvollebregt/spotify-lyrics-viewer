@@ -42,8 +42,10 @@ const useSmoothProgress = (
     };
   }, [userSlidingProgress, isPlaying]);
 
-  const onUserStartSliding = () => setUserSlidingProgress(true);
-  const onUserFinishedSliding = () => {
+  const onUserFinishedSliding = (event: React.ChangeEvent<{}>, value: number | number[]) => {
+    const newProgress = Array.isArray(value) ? value[0] : value;
+    setProgress(newProgress);
+
     setUserSlidingProgress(false);
     if (token !== null) {
       const spotifyApi = new SpotifyWebApi();
@@ -51,10 +53,12 @@ const useSmoothProgress = (
       spotifyApi.seek(progress).catch(e => responseError("Failed to Seek", e));
     }
   };
-  const onUserSlide = (event: React.ChangeEvent<{}>, value: number | number[]) =>
+  const onUserSlide = (event: React.ChangeEvent<{}>, value: number | number[]) => {
+    setUserSlidingProgress(true);
     setProgress(Array.isArray(value) ? value[0] : value);
+  };
 
-  return { onUserStartSliding, onUserFinishedSliding, onUserSlide, progress };
+  return { onUserFinishedSliding, onUserSlide, progress };
 };
 
 export default useSmoothProgress;
