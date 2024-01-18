@@ -32,12 +32,10 @@ const useLyrics = (currentlyPlaying: CurrentlyPlayingState) => {
       if (
         lyrics === undefined || // We just don't have the lyrics
         currentlyPlaying.currentlyPlayingObject.item.id !== lyrics.currentlyPlayingItemId || // Song has changed
-        (lyrics.lyrics !== undefined && lyrics.lyrics.content === "") // The lyrics are empty for some reason
+        lyrics.lyrics?.content === "" // The lyrics are empty for some reason
       ) {
         // Only remove the current lyrics if they aren't empty for some reason (to keep the "Trying again" message)
-        if (
-          !(lyrics !== undefined && lyrics.lyrics !== undefined && lyrics.lyrics.content === "")
-        ) {
+        if (!(lyrics?.lyrics?.content === "")) {
           setLyrics(undefined);
         }
 

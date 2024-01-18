@@ -85,7 +85,7 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
   );
 
   const onUserSearch = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
-    setSearch(event.currentTarget.value === undefined ? "" : event.currentTarget.value);
+    setSearch(event.currentTarget.value ?? "");
   const toggleSearchShown = () => setSearchShown(s => !s);
   const toggleSyncEnabled = () => setSyncEnabled(s => !s);
 
