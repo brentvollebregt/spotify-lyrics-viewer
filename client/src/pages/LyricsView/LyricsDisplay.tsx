@@ -15,7 +15,7 @@ import SyncEnabledIcon from "@material-ui/icons/Sync";
 import SyncDisabledIcon from "@material-ui/icons/SyncDisabled";
 import MarkJS from "mark.js";
 import React, { useEffect, useRef, useState } from "react";
-import { ILRCContent } from "../../types/trackLyrics";
+import { ILRCContent } from "../../../../src/dto";
 import "./LyricsDisplay.css";
 
 // adjusting for latency to highlight lyrics due to the time it takes to render the components on screen
@@ -163,7 +163,7 @@ const calculateLyricsState = (
   const progressSeconds = progressMs / 1000;
   const artificialProgressSeconds = progressSeconds + LATENCY_ADJUSTMENT_MAGIC_VALUE_MS / 1000;
 
-  // If there is no syncedLyricsArray or sync is disabled, return the plain lyrics
+  // If there is no syncedLyricsArray or sync is disabled or the song is paused, return the plain lyrics
   if (syncedLyricsArray === undefined || syncedLyricsArray.length === 0 || !syncEnabled || paused) {
     return {
       before: "",
@@ -209,7 +209,7 @@ const useStyles = makeStyles({
     padding: 0,
     margin: "-6px -6px 0 0",
     position: "fixed",
-    right: "60px",
+    right: 60,
     top: 75
   }
 });

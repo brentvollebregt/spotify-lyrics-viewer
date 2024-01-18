@@ -198,8 +198,8 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       padding: "10px 0"
     },
-    marginLeft: "10px",
-    marginRight: "10px"
+    marginLeft: 10,
+    marginRight: 10
   }
 }));
 

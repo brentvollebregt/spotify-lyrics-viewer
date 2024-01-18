@@ -12,5 +12,3 @@ export interface ITrackLyrics {
   currentlyPlayingItemId: string;
   lyrics: ILyricDetails | undefined;
 }
-
-export type { ILRCContent };

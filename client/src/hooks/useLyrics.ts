@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
+import { ILRCContent } from "../../../src/dto";
 import { getLyrics } from "../api";
 import { CurrentlyPlayingState, PlayingStates } from "../types/currentlyPlayingState";
-import { ILRCContent } from "../types/trackLyrics";
 
 interface ILyricDetails {
   content: string;
