@@ -1,20 +1,7 @@
 import { useEffect, useState } from "react";
-import { ILRCContent } from "../../../src/dto";
 import { getLyrics } from "../api";
 import { CurrentlyPlayingState, PlayingStates } from "../types/currentlyPlayingState";
-
-interface ILyricDetails {
-  content: string;
-  artist: string;
-  title: string;
-  syncedLyricsArray?: Array<ILRCContent>;
-  lyricsSourceReference?: string;
-}
-
-interface ITrackLyrics {
-  currentlyPlayingItemId: string;
-  lyrics: ILyricDetails | undefined;
-}
+import { ITrackLyrics } from "../types/trackLyrics";
 
 const useLyrics = (currentlyPlaying: CurrentlyPlayingState) => {
   const [lyrics, setLyrics] = useState<ITrackLyrics | undefined>(undefined); // undefined = no lyrics yet, .lyrics=undefined = no lyrics exist
