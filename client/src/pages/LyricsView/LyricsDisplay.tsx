@@ -127,12 +127,10 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
             {lyricsState.before}
 
             {lyricsState.highlighted !== "" && (
-              <div>
-                <br />
-                <span className={classes.mark} ref={highlightedRef}>
+              <div className={classes.highlightedLyricsWrapper}>
+                <span className={classes.highlightedLyrics} ref={highlightedRef}>
                   {lyricsState.highlighted}
                 </span>
-                <br />
               </div>
             )}
 
@@ -189,15 +187,22 @@ const calculateLyricsState = (
   };
 };
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   lyrics: {
     whiteSpace: "pre-wrap"
   },
-  mark: {
+  highlightedLyricsWrapper: {
+    marginTop: 20,
+    marginBottom: 20
+  },
+  highlightedLyrics: {
     padding: "0.1em 0",
     whiteSpace: "pre-wrap",
     fontWeight: "bolder",
-    fontSize: "5em"
+    fontSize: "5em",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "3em"
+    }
   },
   root: {
     margin: "auto",
@@ -212,6 +217,6 @@ const useStyles = makeStyles({
     right: 60,
     top: 75
   }
-});
+}));
 
 export default LyricsDisplay;
