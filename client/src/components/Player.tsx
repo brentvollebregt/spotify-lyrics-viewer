@@ -190,7 +190,8 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center"
   },
   control: {
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
+    cursor: "pointer"
   },
   sliderWrapper: {
     [theme.breakpoints.down("xs")]: {
