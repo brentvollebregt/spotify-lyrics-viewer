@@ -25,7 +25,7 @@
   "scripts": {
     "start": "react-scripts start",
     "prebuild": "ts-node -O {\\\"module\\\":\\\"commonjs\\\"} tools/generate-sitemap.ts",
-    "build": "react-scripts build",
+    "build": "react-scripts --openssl-legacy-provider build",
     "postbuild": "ts-node -O {\\\"module\\\":\\\"commonjs\\\"} tools/copy-index.ts",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
