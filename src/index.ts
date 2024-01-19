@@ -34,6 +34,7 @@ app.use((req, res, next) => {
   if (Config.server.allowed_origins.indexOf(origin) !== -1) {
     res.header("Access-Control-Allow-Origin", origin);
   }
+  res.header("Access-Control-Max-Age", "600");
   res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Credentials", "true");

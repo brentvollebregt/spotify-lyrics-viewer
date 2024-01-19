@@ -1,10 +1,9 @@
 import cogoToast from "cogo-toast";
 import { useEffect, useState } from "react";
 import SpotifyWebApi from "spotify-web-api-js";
+import config from "../config";
 import { CurrentlyPlayingState, PlayingStates } from "../types/currentlyPlayingState";
 import { IToken } from "../types/token";
-
-const periodicTrackCheckDelayMs = 1000;
 
 const useCurrentlyPlayingSong = (token: IToken | null, invalidateToken: () => void) => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState<CurrentlyPlayingState>({
@@ -102,7 +101,7 @@ const useCurrentlyPlayingSong = (token: IToken | null, invalidateToken: () => vo
       if (token !== null) {
         updateCurrentPlaying(token.value);
       }
-    }, periodicTrackCheckDelayMs);
+    }, config.client.trackCheckDelaySeconds * 1000);
 
     return () => clearTimeout(intervalCheck);
     // eslint-disable-next-line react-hooks/exhaustive-deps
