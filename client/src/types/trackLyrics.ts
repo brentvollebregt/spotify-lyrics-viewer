@@ -1,14 +1,6 @@
-import { ILRCContent } from "../../../src/dto";
-
-interface ILyricDetails {
-  content: string;
-  artist: string;
-  title: string;
-  syncedLyricsArray?: Array<ILRCContent>;
-  lyricsSourceReference?: string;
-}
+import { IFoundLyrics } from "../../../src/dto";
 
 export interface ITrackLyrics {
   currentlyPlayingItemId: string;
-  lyrics: ILyricDetails | undefined;
+  lyrics: IFoundLyrics | undefined;
 }

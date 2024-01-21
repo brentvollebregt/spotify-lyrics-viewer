@@ -29,7 +29,10 @@ const TrackPlaying: React.FunctionComponent<IProps> = ({ lyricDetails, currently
   }
 
   // Lyrics miss
-  if (lyricDetails.lyrics.content === "") {
+  const lyricsAreEmpty =
+    lyricDetails?.lyrics?.plainLyrics === undefined &&
+    (lyricDetails?.lyrics?.syncedLyrics ?? undefined) === undefined;
+  if (lyricsAreEmpty) {
     return (
       <Box textAlign="center">
         <Typography>No lyrics found. Trying again.</Typography>
@@ -41,15 +44,10 @@ const TrackPlaying: React.FunctionComponent<IProps> = ({ lyricDetails, currently
   }
 
   // Lyrics found
-  const { content, syncedLyricsArray } = lyricDetails.lyrics;
   return (
     <LyricsDisplay
-      lyrics={content}
-      syncedLyricsArray={syncedLyricsArray}
+      lyricsDetails={lyricDetails.lyrics}
       progressMs={currentlyPlayingSong?.currentlyPlayingObject?.progress_ms ?? 0}
-      lyricsArtist={lyricDetails.lyrics?.artist}
-      lyricsTitle={lyricDetails.lyrics?.title}
-      lyricsSourceReference={lyricDetails.lyrics?.lyricsSourceReference}
       paused={!currentlyPlayingSong?.currentlyPlayingObject?.is_playing ?? false}
     />
   );

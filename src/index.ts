@@ -7,7 +7,7 @@ import fs from "fs";
 import https from "https";
 import path from "path";
 import Config from "./config";
-import LrcLibRoutes, { subRoute as lrclibSubRoute } from "./routes/lrclib";
+import LyricsRoutes, { subRoute as lyricsSubRoute } from "./routes/lyrics";
 import SessionRoutes, { subRoute as sessionSubRoute } from "./routes/session";
 import SpotifyRoutes, { subRoute as spotifySubRoute } from "./routes/spotify";
 
@@ -51,7 +51,7 @@ Config.client.routes.forEach(route =>
 // API Endpoints
 app.use(sessionSubRoute, SessionRoutes);
 app.use(spotifySubRoute, SpotifyRoutes);
-app.use(lrclibSubRoute, LrcLibRoutes);
+app.use(lyricsSubRoute, LyricsRoutes);
 
 const port = process.env.PORT || 5000;
 

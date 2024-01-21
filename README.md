@@ -26,9 +26,9 @@ Currently, Node 17 and above is the only dependency.
 2. Setup the server
    - Execute `npm install` to install dependencies
    - Execute `cp .env.example .env` (or `copy` for Windows) and populate `.env`
-     - `GENIUS_ACCESS_TOKEN` can be obtained by [creating a new API client](https://genius.com/developers)
      - `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET` can be obtained by [making a new Spotify application](https://developer.spotify.com/dashboard/applications)
      - `SERVER_SESSION_KEYS` is random text used to sign & verify cookie values (use spaces to separate)
+     - `GENIUS_ACCESS_TOKEN` can be obtained by [creating a new API client](https://genius.com/developers) (optional - if this is not provided, Genius will not be used as a backup to lrclib.net)
    - Execute `npm run build` to build the server
 3. Setup the client
    - `cd client` to change directories to the client project

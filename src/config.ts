@@ -1,7 +1,3 @@
-const geniusAccessToken = process.env.GENIUS_ACCESS_TOKEN;
-if (geniusAccessToken === undefined || geniusAccessToken === "") {
-  throw new Error("GENIUS_ACCESS_TOKEN has not been set");
-}
 const serverAllowedOrigins = process.env.SERVER_ALLOWED_ORIGINS;
 if (serverAllowedOrigins === undefined || serverAllowedOrigins === "") {
   throw new Error("SERVER_ALLOWED_ORIGINS has not been set");
@@ -26,7 +22,8 @@ const config = {
     subdirectory: process.env.CLIENT_DEPLOYMENT_SUBDIRECTORY ?? ""
   },
   genius: {
-    access_token: geniusAccessToken
+    access_token:
+      process.env.GENIUS_ACCESS_TOKEN === "" ? undefined : process.env.GENIUS_ACCESS_TOKEN
   },
   server: {
     allowed_origins: serverAllowedOrigins.split(","),

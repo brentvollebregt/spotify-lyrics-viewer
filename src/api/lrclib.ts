@@ -1,6 +1,6 @@
 import axios from "axios";
-import { Lrc } from "lrc-kit";
-import { ILyricsAndDetails } from "../dto";
+import { Lrc, Lyric } from "lrc-kit";
+import { IFoundLyrics } from "../dto";
 
 const LRCLIB_BASE_URL = "https://lrclib.net";
 
@@ -9,7 +9,7 @@ export async function getLyrics(
   title: string,
   albumName: string,
   durationMs: number
-): Promise<ILyricsAndDetails> {
+): Promise<IFoundLyrics | null> {
   const parameters: {
     artist_name: string;
     track_name: string;
@@ -22,30 +22,64 @@ export async function getLyrics(
     duration: (durationMs / 1000).toString()
   };
 
+  const requestUrl = `https://lrclib.net/api/get?${new URLSearchParams(parameters)}`;
+
   try {
-    const response = await axios.get(
-      `https://lrclib.net/api/get?${new URLSearchParams(parameters)}`
-    );
+    const response = await axios.get<LrcLibGetResponse>(requestUrl);
+
+    if (response.status === 404) {
+      return null;
+    }
+
     const data = response.data;
-    let syncedLyricsArray = Array();
+
+    if (
+      (data.syncedLyrics === null || data.syncedLyrics.length === 0) &&
+      (data.plainLyrics === null || data.plainLyrics === "")
+    ) {
+      console.warn(`Got empty response from '${requestUrl}'`);
+      return null;
+    }
+
+    let syncedLyrics: Lyric[] | null = null;
     if (data.syncedLyrics != undefined) {
       try {
         const lrc = Lrc.parse(data.syncedLyrics);
-        syncedLyricsArray = syncedLyricsArray.concat(lrc.lyrics);
+        if (lrc.lyrics.length > 0) {
+          syncedLyrics = lrc.lyrics;
+        }
       } catch (e) {
+        console.error(`Unable to parse syncedLyrics from '${requestUrl}'`);
         console.error(e);
       }
     }
+
     return {
-      artist: artists[0],
-      title: title,
-      lyrics: data.plainLyrics,
-      syncedLyricsArray,
-      lyricsSourceReference: LRCLIB_BASE_URL
-    };
+      artist: response.data.artistName,
+      title: response.data.trackName,
+      plainLyrics: data.plainLyrics === "" ? null : data.plainLyrics,
+      syncedLyrics: syncedLyrics,
+      attribution: LRCLIB_BASE_URL
+    } as IFoundLyrics;
   } catch (e) {
-    //accounting for lrclib outage
+    console.error(`Failed to call '${requestUrl}'`);
     console.error(e);
-    return { artist: artists[0], title: title, lyrics: "", syncedLyricsArray: [] };
+    return null;
   }
+}
+
+export interface LrcLibGetResponse {
+  id: number;
+  name: string;
+  trackName: string;
+  artistName: string;
+  albumName: string;
+  duration: number;
+  instrumental: boolean;
+  lang: string;
+  isrc: string;
+  spotifyId: string;
+  releaseDate: string;
+  plainLyrics: string | null;
+  syncedLyrics: string | null;
 }

@@ -15,13 +15,14 @@ const useLyrics = (currentlyPlaying: CurrentlyPlayingState) => {
     ) {
       setLyrics(undefined);
     } else {
-      if (
-        lyrics === undefined || // We just don't have the lyrics
-        currentlyPlaying.currentlyPlayingObject.item.id !== lyrics.currentlyPlayingItemId || // Song has changed
-        lyrics.lyrics?.content === "" // The lyrics are empty for some reason
-      ) {
+      const hasSongChanged =
+        currentlyPlaying.currentlyPlayingObject.item.id !== lyrics?.currentlyPlayingItemId;
+      const lyricsAreEmpty =
+        lyrics?.lyrics?.plainLyrics === undefined &&
+        (lyrics?.lyrics?.syncedLyrics ?? undefined) === undefined;
+      if (lyrics === undefined || hasSongChanged || lyricsAreEmpty) {
         // Only remove the current lyrics if they aren't empty for some reason (to keep the "Trying again" message)
-        if (!(lyrics?.lyrics?.content === "")) {
+        if (!lyricsAreEmpty) {
           setLyrics(undefined);
         }
 
@@ -51,16 +52,7 @@ const useLyrics = (currentlyPlaying: CurrentlyPlayingState) => {
           if (currentlyPlaying.currentlyPlayingObject.item !== null) {
             setLyrics({
               currentlyPlayingItemId: currentlyPlaying.currentlyPlayingObject.item.id,
-              lyrics:
-                newLyrics === null
-                  ? undefined
-                  : {
-                      artist: newLyrics.artist,
-                      content: newLyrics.lyrics,
-                      title: newLyrics.title,
-                      syncedLyricsArray: newLyrics.syncedLyricsArray,
-                      lyricsSourceReference: newLyrics.lyricsSourceReference
-                    }
+              lyrics: newLyrics ?? undefined
             });
           }
         });

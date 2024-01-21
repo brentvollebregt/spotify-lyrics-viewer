@@ -1,6 +1,5 @@
 import {
   Box,
-  CircularProgress,
   IconButton,
   InputAdornment,
   Link,
@@ -15,31 +14,19 @@ import SyncEnabledIcon from "@material-ui/icons/Sync";
 import SyncDisabledIcon from "@material-ui/icons/SyncDisabled";
 import MarkJS from "mark.js";
 import React, { useEffect, useRef, useState } from "react";
-import { ILRCContent } from "../../../../src/dto";
+import { IFoundLyrics } from "../../../../src/dto";
 import "./LyricsDisplay.css";
 
 // adjusting for latency to highlight lyrics due to the time it takes to render the components on screen
 const LATENCY_ADJUSTMENT_MAGIC_VALUE_MS = 0.135;
 
 interface IProps {
-  lyrics?: string;
-  syncedLyricsArray?: Array<ILRCContent>;
-  lyricsArtist?: string;
-  lyricsTitle?: string;
-  lyricsSourceReference?: string;
+  lyricsDetails: IFoundLyrics;
   progressMs: number;
   paused: boolean;
 }
 
-const LyricsDisplay: React.FunctionComponent<IProps> = ({
-  syncedLyricsArray,
-  lyrics,
-  lyricsSourceReference,
-  lyricsArtist,
-  lyricsTitle,
-  progressMs,
-  paused
-}) => {
+const LyricsDisplay: React.FunctionComponent<IProps> = ({ lyricsDetails, progressMs, paused }) => {
   const classes = useStyles();
   const lyricsRef = useRef<HTMLDivElement | null>(null);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
@@ -48,7 +35,7 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
   const [searchShown, setSearchShown] = useState(false);
   const [syncEnabled, setSyncEnabled] = useState(true);
 
-  const isSyncingPossible = syncedLyricsArray !== undefined && syncedLyricsArray.length > 0;
+  const isSyncingPossible = lyricsDetails.syncedLyrics !== null;
 
   // Highlight text when the search is changed
   useEffect(() => {
@@ -59,7 +46,7 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
         instance.mark(search);
       }
     }
-  }, [search, lyrics]);
+  }, [search, lyricsDetails]);
 
   // Focus search input when the search button is clicked
   useEffect(() => {
@@ -76,13 +63,7 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
     }
   }, [syncEnabled, progressMs]);
 
-  const lyricsState = calculateLyricsState(
-    lyrics,
-    syncedLyricsArray,
-    progressMs,
-    syncEnabled,
-    paused
-  );
+  const lyricsState = calculateLyricsState(lyricsDetails, progressMs, syncEnabled, paused);
 
   const onUserSearch = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
     setSearch(event.currentTarget.value ?? "");
@@ -121,39 +102,34 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({
           {syncEnabled ? <SyncEnabledIcon /> : <SyncDisabledIcon />}
         </IconButton>
       </Toolbar>
-      {lyrics ? (
-        <div>
-          <Typography component="div" className={classes.lyrics} ref={lyricsRef}>
-            {lyricsState.before}
+      <div>
+        <Typography component="div" className={classes.lyrics} ref={lyricsRef}>
+          {lyricsState.before}
 
-            {lyricsState.highlighted !== "" && (
-              <div className={classes.highlightedLyricsWrapper}>
-                <span className={classes.highlightedLyrics} ref={highlightedRef}>
-                  {lyricsState.highlighted}
-                </span>
-              </div>
-            )}
+          {lyricsState.highlighted !== "" && (
+            <div className={classes.highlightedLyricsWrapper}>
+              <span className={classes.highlightedLyrics} ref={highlightedRef}>
+                {lyricsState.highlighted}
+              </span>
+            </div>
+          )}
 
-            {lyricsState.after}
+          {lyricsState.after}
+        </Typography>
+        <Box mt={2} textAlign="left">
+          <Typography>
+            <Link href={lyricsDetails.attribution}>
+              Lyrics for {lyricsDetails.title} by {lyricsDetails.artist}
+            </Link>
           </Typography>
-          <Box mt={2} textAlign="left">
-            <Typography>
-              <Link href={lyricsSourceReference}>
-                Lyrics for {lyricsTitle} by {lyricsArtist}
-              </Link>
-            </Typography>
-          </Box>
-        </div>
-      ) : (
-        <CircularProgress size={30} />
-      )}
+        </Box>
+      </div>
     </div>
   );
 };
 
 const calculateLyricsState = (
-  plainLyrics: string | undefined,
-  syncedLyricsArray: Array<ILRCContent> | undefined,
+  lyricsDetails: IFoundLyrics,
   progressMs: number,
   syncEnabled: boolean,
   paused: boolean
@@ -162,23 +138,25 @@ const calculateLyricsState = (
   const artificialProgressSeconds = progressSeconds + LATENCY_ADJUSTMENT_MAGIC_VALUE_MS / 1000;
 
   // If there is no syncedLyricsArray or sync is disabled or the song is paused, return the plain lyrics
-  if (syncedLyricsArray === undefined || syncedLyricsArray.length === 0 || !syncEnabled || paused) {
+  if (lyricsDetails.syncedLyrics === null || !syncEnabled || paused) {
     return {
       before: "",
       highlighted: "",
-      after: plainLyrics ?? ""
+      after: lyricsDetails.plainLyrics ?? ""
     };
   }
 
   // Calculate the current lyric state based on progress
   const passedLyricsAndCurrent =
-    syncedLyricsArray?.filter(x => x.timestamp <= artificialProgressSeconds) ?? [];
+    lyricsDetails.syncedLyrics.filter(x => x.timestamp <= artificialProgressSeconds) ?? [];
   const passedLyrics = passedLyricsAndCurrent.slice(0, -1);
   const currentLyrics =
     passedLyricsAndCurrent.length > 0
       ? passedLyricsAndCurrent[passedLyricsAndCurrent.length - 1]
       : null;
-  const upcomingLyrics = syncedLyricsArray?.filter(x => x.timestamp > artificialProgressSeconds);
+  const upcomingLyrics = lyricsDetails.syncedLyrics.filter(
+    x => x.timestamp > artificialProgressSeconds
+  );
 
   return {
     before: passedLyrics.map(x => x.content).join(" \n "),

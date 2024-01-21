@@ -1,8 +1,7 @@
 import axios from "axios";
 import cheerio from "cheerio";
 import diacritics from "diacritics";
-import config from "../config";
-import { ILyricsAndDetails } from "../dto";
+import { IFoundLyrics } from "../dto";
 
 export interface Stats {
   unreviewed_annotations: number;
@@ -55,9 +54,9 @@ export interface ISearchResponse {
   hits: Hit[];
 }
 
-export function search(term: string): Promise<ISearchResponse> {
+export function searchGenius(term: string, geniusApiToken: string): Promise<ISearchResponse> {
   const parameters = {
-    access_token: config.genius.access_token,
+    access_token: geniusApiToken,
     q: diacritics.remove(term)
   };
   return axios
@@ -66,17 +65,38 @@ export function search(term: string): Promise<ISearchResponse> {
     .catch(e => console.error(e.data));
 }
 
-export function getLyrics(geniusUrl: string): Promise<ILyricsAndDetails> {
-  const fullGeniusURL = `https://genius.com${geniusUrl}`;
-  return axios.get(fullGeniusURL).then(r => {
-    const html = r.data;
-    const $ = cheerio.load(html); // Load in the page
-    const title = getTitle($);
-    const artist = getArtist($);
-    const lyrics = getLyricContents($);
-    return { artist, lyricsSourceReference: fullGeniusURL, lyrics, title };
-  });
-}
+const getGeniusPath = async (
+  artists: string[],
+  title: string,
+  albumName: string,
+  durationMs: number,
+  geniusApiToken: string
+) => {
+  const search1 = await searchGenius(`${artists[0]} ${title}`, geniusApiToken);
+  if (
+    search1.hits.length > 0 &&
+    search1.hits[0].result.primary_artist.name.indexOf(artists[0]) !== -1
+  ) {
+    return search1.hits[0].result.path;
+  }
+
+  const search2 = await searchGenius(`${artists.join(" & ")} ${title}`, geniusApiToken);
+  const primaryArtistInSearch2 = artists.reduce(
+    (acc, curr) =>
+      acc ||
+      (search2.hits.length > 0 && search2.hits[0].result.primary_artist.name.indexOf(curr) !== -1),
+    false
+  );
+  if (search2.hits.length !== 0 && primaryArtistInSearch2) {
+    return search2.hits[0].result.path;
+  }
+
+  if (search1.hits.length > 0) {
+    return search1.hits[0].result.path;
+  }
+
+  return null;
+};
 
 function getTitle($: CheerioStatic) {
   const attempt1 = $("h1.header_with_cover_art-primary_info-title").text();
@@ -126,3 +146,49 @@ function getLyricContents($: CheerioStatic) {
 
   return "";
 }
+
+export const getLyricsForPath = async (geniusPath: string): Promise<IFoundLyrics | null> => {
+  const requestUrl = `https://genius.com${geniusPath}`;
+
+  try {
+    const response = await axios.get<string>(requestUrl);
+
+    const html = response.data;
+    const $ = cheerio.load(html); // Load in the page
+    const title = getTitle($);
+    const artist = getArtist($);
+    const lyrics = getLyricContents($);
+
+    if (lyrics === undefined) {
+      return null;
+    }
+
+    return {
+      artist,
+      title,
+      plainLyrics: lyrics,
+      attribution: requestUrl,
+      syncedLyrics: null
+    } as IFoundLyrics;
+  } catch (e) {
+    console.error(`Failed to call '${requestUrl}'`);
+    console.error(e);
+    return null;
+  }
+};
+
+export const getLyrics = async (
+  artists: string[],
+  title: string,
+  albumName: string,
+  durationMs: number,
+  geniusApiToken: string
+) => {
+  const geniusPath = await getGeniusPath(artists, title, albumName, durationMs, geniusApiToken);
+  if (geniusPath === null) {
+    return null;
+  }
+
+  const lyrics = await getLyricsForPath(geniusPath);
+  return lyrics;
+};
