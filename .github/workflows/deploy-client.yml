@@ -27,7 +27,7 @@ jobs:
           REACT_APP_API_ROOT: https://spotify-lyrics-viewer.onrender.com
           REACT_APP_GOOGLE_ANALYTICS_TRACKING_ID: G-GHCZ0LMQWH
           CI: false
-          working-directory: ./client
+        working-directory: ./client
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
