@@ -17,7 +17,12 @@ const router = express.Router();
 router.get("/authenticate", (req, res) => {
   // Auth: https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow
   // Setup API object
-  const redirectUri = getRedirectUri(req.protocol, req.headers.host);
+  const headerHost = req.headers.host;
+  if (headerHost === undefined)
+    throw new Error("'host' header was not supplied on request to /authenticate");
+  if (req.session === null) throw new Error("Session has not been set");
+
+  const redirectUri = getRedirectUri(req.protocol, headerHost);
   const spotifyApi = new SpotifyWebApi({
     clientId: Config.spotify.client_id,
     redirectUri
@@ -42,6 +47,8 @@ router.get("/authenticate", (req, res) => {
 });
 
 router.get("/authentication-callback", async (req, res) => {
+  if (req.session === null) throw new Error("Session has not been set");
+
   const { code, state } = req.query;
 
   // Verify this request is expected (using the state value)
@@ -84,6 +91,8 @@ router.get("/authentication-callback", async (req, res) => {
 });
 
 router.get("/token", (req, res) => {
+  if (req.session === null) throw new Error("Session has not been set");
+
   // Verify the data in the session is sufficient to fulfil this request
   if (!isStoredTokenValid(req)) {
     res.status(401).send("No token available");
@@ -101,6 +110,11 @@ router.get("/token", (req, res) => {
 });
 
 router.get("/refresh-token", async (req, res) => {
+  const headerHost = req.headers.host;
+  if (headerHost === undefined)
+    throw new Error("'host' header was not supplied on request to /refresh-token");
+  if (req.session === null) throw new Error("Session has not been set");
+
   // Verify the data in the session is sufficient to fulfil this request
   if (!isStoredTokenValid(req)) {
     res.status(401).send("No token available");
@@ -112,7 +126,7 @@ router.get("/refresh-token", async (req, res) => {
   const spotifyApi = new SpotifyWebApi({
     clientId: Config.spotify.client_id,
     clientSecret: Config.spotify.client_secret,
-    redirectUri: getRedirectUri(req.protocol, req.headers.host)
+    redirectUri: getRedirectUri(req.protocol, headerHost)
   });
   spotifyApi.setAccessToken(req.session.access_token);
   spotifyApi.setRefreshToken(req.session.refresh_token);

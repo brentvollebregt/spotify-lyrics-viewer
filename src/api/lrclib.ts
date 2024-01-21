@@ -46,6 +46,6 @@ export async function getLyrics(
   } catch (e) {
     //accounting for lrclib outage
     console.error(e);
-    return { artist: artists[0], title: title, lyrics: undefined, syncedLyricsArray: [] };
+    return { artist: artists[0], title: title, lyrics: "", syncedLyricsArray: [] };
   }
 }

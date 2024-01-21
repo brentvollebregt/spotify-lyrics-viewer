@@ -109,7 +109,9 @@ function getArtist($: CheerioStatic) {
 function getLyricContents($: CheerioStatic) {
   $("a", ".lyrics").each((index, element) => {
     const e = $(element);
-    return e.replaceWith(e.html());
+    const elementHtml = e.html();
+    if (elementHtml === null) throw new Error("Unexpected application state: elementHtml === null");
+    return e.replaceWith(elementHtml);
   }); // Replace out all links in the scope
   const attempt1 = $($(".lyrics")[0]).text().trim();
   if (attempt1 !== "") {
