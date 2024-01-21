@@ -49,18 +49,22 @@ router.get("/authenticate", (req, res) => {
 router.get("/authentication-callback", async (req, res) => {
   if (req.session === null) throw new Error("Session has not been set");
 
+  const requestOrigin = req.session.authentication_origin;
+  const { subdirectory } = config.client; // For example, 'spotify-lyrics-viewer';
+
   const { code, state } = req.query;
 
   // Verify this request is expected (using the state value)
   if (state === undefined || state !== req.session.authentication_state) {
-    res.status(400).send("Unexpected state value");
+    console.error("Unexpected state value");
+    // Redirect back to the home page
+    res.redirect(`${requestOrigin}${subdirectory}`);
     res.end();
     return;
   }
   req.session.authentication_state = undefined;
 
-  // Pull out origin to redirect to and clear it
-  const originToRedirectTo = req.session.authentication_origin;
+  // Clear origin previously pulled out
   req.session.authentication_origin = undefined;
 
   // Setup API object (and clear used redirect uri)
@@ -82,10 +86,8 @@ router.get("/authentication-callback", async (req, res) => {
     access_token: req.session.access_token,
     expires_at: req.session.expires_at
   };
-  const { subdirectory } = config.client; // For example, 'spotify-lyrics-viewer';
-  const redirectUrl = `${originToRedirectTo}${subdirectory}?${new URLSearchParams(
-    responseData as any
-  )}`;
+
+  const redirectUrl = `${requestOrigin}${subdirectory}?${new URLSearchParams(responseData as any)}`;
   res.redirect(redirectUrl);
   res.end();
 });
