@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
+import { IFoundLyrics } from "../../../src/dto";
 import { getLyrics } from "../api";
 import { CurrentlyPlayingState, PlayingStates } from "../types/currentlyPlayingState";
 import { ITrackLyrics } from "../types/trackLyrics";
+
+const getLyricsPromiseCache: Record<string, Promise<IFoundLyrics | null>> = {};
 
 const useLyrics = (currentlyPlaying: CurrentlyPlayingState) => {
   const [lyrics, setLyrics] = useState<ITrackLyrics | undefined>(undefined); // undefined = no lyrics yet, .lyrics=undefined = no lyrics exist
@@ -43,19 +46,41 @@ const useLyrics = (currentlyPlaying: CurrentlyPlayingState) => {
           .trim();
 
         // Get lyrics
-        getLyrics(
-          currentlyPlaying.currentlyPlayingObject.item.artists.map(x => x.name),
-          trackNameWithReplacements,
-          currentlyPlaying.currentlyPlayingObject.item.album.name,
-          currentlyPlaying.currentlyPlayingObject.item.duration_ms
-        ).then(newLyrics => {
+        const getLyricsPromiseCacheKey = JSON.stringify({
+          artists: currentlyPlaying.currentlyPlayingObject.item.artists.map(x => x.name),
+          title: trackNameWithReplacements,
+          album: currentlyPlaying.currentlyPlayingObject.item.album.name
+        });
+
+        const getLyricsPromise =
+          getLyricsPromiseCache[getLyricsPromiseCacheKey] ??
+          getLyrics(
+            currentlyPlaying.currentlyPlayingObject.item.artists.map(x => x.name),
+            trackNameWithReplacements,
+            currentlyPlaying.currentlyPlayingObject.item.album.name,
+            currentlyPlaying.currentlyPlayingObject.item.duration_ms
+          );
+        getLyricsPromiseCache[getLyricsPromiseCacheKey] = getLyricsPromise;
+
+        let didCancel = false;
+        const processPromise = async () => {
+          const getLyricsResult = await getLyricsPromise;
+
+          if (didCancel) {
+            return;
+          }
+
           if (currentlyPlaying.currentlyPlayingObject.item !== null) {
             setLyrics({
               currentlyPlayingItemId: currentlyPlaying.currentlyPlayingObject.item.id,
-              lyrics: newLyrics ?? undefined
+              lyrics: getLyricsResult ?? undefined
             });
           }
-        });
+        };
+        processPromise();
+        return () => {
+          didCancel = true;
+        };
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
