@@ -17,16 +17,17 @@ jobs:
         with:
           node-version: "20.x"
 
-      - name: Install Dependencies and Build
-        run: |
-          cd client
-          npm install
-          npm run build
-          cd ..
+      - name: Install Dependencies
+        run: npm install
+        working-directory: ./client
+
+      - name: Build
+        run: npm run build
         env:
           REACT_APP_API_ROOT: https://spotify-lyrics-viewer.onrender.com
           REACT_APP_GOOGLE_ANALYTICS_TRACKING_ID: G-GHCZ0LMQWH
           CI: false
+          working-directory: ./client
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
