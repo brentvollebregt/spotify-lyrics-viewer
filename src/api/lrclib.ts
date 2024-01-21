@@ -62,8 +62,9 @@ export async function getLyrics(
       attribution: LRCLIB_BASE_URL
     } as IFoundLyrics;
   } catch (e) {
-    console.error(`Failed to call '${requestUrl}'`);
-    console.error(e);
+    // Can include 404 and anything else non-2xx
+    console.warn(`Failed to call '${requestUrl}'`);
+    console.warn(e);
     return null;
   }
 }
