@@ -7,7 +7,8 @@ const useSmoothProgress = (
   progressMs: number,
   duration: number,
   isPlaying: boolean,
-  token: IToken | null
+  token: IToken | null,
+  smoothingDelay: number = 500
 ) => {
   const [progress, setProgress] = useState(0);
   const [userSlidingProgress, setUserSlidingProgress] = useState(false);
@@ -26,7 +27,6 @@ const useSmoothProgress = (
       clearTimeout(smoothProgressTimer);
     }
 
-    const smoothingDelay = 500;
     setSmoothProgressTimer(
       setInterval(() => {
         if (!userSlidingProgress && isPlaying) {

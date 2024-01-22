@@ -118,7 +118,7 @@ const Player: React.FC<PlayerProps> = ({ currentlyPlayingSong, token }) => {
           </div>
 
           <Box display="inline-flex" alignItems="center" className={classes.sliderWrapper}>
-            <span className={classes.timeControl}>{formatMilliseconds(progressMs)}</span>
+            <span className={classes.timeControl}>{formatMilliseconds(smoothedProgressMs)}</span>
 
             <Slider
               valueLabelDisplay="off"

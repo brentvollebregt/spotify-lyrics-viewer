@@ -13,12 +13,10 @@ import SearchIcon from "@material-ui/icons/Search";
 import SyncEnabledIcon from "@material-ui/icons/Sync";
 import SyncDisabledIcon from "@material-ui/icons/SyncDisabled";
 import MarkJS from "mark.js";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { IFoundLyrics } from "../../../../src/dto";
+import useSmoothProgress from "../../hooks/useSmoothProgress";
 import "./LyricsDisplay.css";
-
-// adjusting for latency to highlight lyrics due to the time it takes to render the components on screen
-const LATENCY_ADJUSTMENT_MAGIC_VALUE_MS = 0.135;
 
 interface IProps {
   lyricsDetails: IFoundLyrics;
@@ -34,6 +32,14 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({ lyricsDetails, progres
   const [search, setSearch] = useState("");
   const [searchShown, setSearchShown] = useState(false);
   const [syncEnabled, setSyncEnabled] = useState(true);
+
+  const { progress: smoothedProgressMs } = useSmoothProgress(
+    progressMs,
+    Infinity,
+    !paused,
+    null,
+    250
+  );
 
   const isSyncingPossible = lyricsDetails.syncedLyrics !== null;
 
@@ -61,9 +67,12 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({ lyricsDetails, progres
     if (syncEnabled && element !== null) {
       element.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
     }
-  }, [syncEnabled, progressMs]);
+  }, [syncEnabled, smoothedProgressMs]);
 
-  const lyricsState = calculateLyricsState(lyricsDetails, progressMs, syncEnabled, paused);
+  const lyricsState = useMemo(
+    () => calculateLyricsState(lyricsDetails, smoothedProgressMs, syncEnabled, paused),
+    [lyricsDetails, smoothedProgressMs, syncEnabled, paused]
+  );
 
   const onUserSearch = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
     setSearch(event.currentTarget.value ?? "");
@@ -135,7 +144,6 @@ const calculateLyricsState = (
   paused: boolean
 ) => {
   const progressSeconds = progressMs / 1000;
-  const artificialProgressSeconds = progressSeconds + LATENCY_ADJUSTMENT_MAGIC_VALUE_MS / 1000;
 
   // If there is no syncedLyricsArray or sync is disabled or the song is paused, return the plain lyrics
   if (lyricsDetails.syncedLyrics === null || !syncEnabled || paused) {
@@ -148,15 +156,13 @@ const calculateLyricsState = (
 
   // Calculate the current lyric state based on progress
   const passedLyricsAndCurrent =
-    lyricsDetails.syncedLyrics.filter(x => x.timestamp <= artificialProgressSeconds) ?? [];
+    lyricsDetails.syncedLyrics.filter(x => x.timestamp <= progressSeconds) ?? [];
   const passedLyrics = passedLyricsAndCurrent.slice(0, -1);
   const currentLyrics =
     passedLyricsAndCurrent.length > 0
       ? passedLyricsAndCurrent[passedLyricsAndCurrent.length - 1]
       : null;
-  const upcomingLyrics = lyricsDetails.syncedLyrics.filter(
-    x => x.timestamp > artificialProgressSeconds
-  );
+  const upcomingLyrics = lyricsDetails.syncedLyrics.filter(x => x.timestamp > progressSeconds);
 
   return {
     before: passedLyrics.map(x => x.content).join(" \n "),
