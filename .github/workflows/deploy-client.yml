@@ -29,6 +29,7 @@ jobs:
         env:
           REACT_APP_API_ROOT: https://spotify-lyrics-viewer.onrender.com
           REACT_APP_GOOGLE_ANALYTICS_TRACKING_ID: G-GHCZ0LMQWH
+          REACT_APP_TRACK_CHECK_DELAY_SECONDS: 5
           CI: false
         working-directory: ./client
 
