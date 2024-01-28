@@ -25,7 +25,9 @@ export async function getLyrics(
   const requestUrl = `https://lrclib.net/api/get?${new URLSearchParams(parameters)}`;
 
   try {
-    const response = await axios.get<LrcLibGetResponse>(requestUrl);
+    const response = await axios.get<LrcLibGetResponse>(requestUrl, {
+      validateStatus: status => status === 200 || status === 404
+    });
 
     if (response.status === 404) {
       return null;
