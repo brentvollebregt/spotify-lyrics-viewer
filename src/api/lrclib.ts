@@ -3,6 +3,8 @@ import { Lrc, Lyric } from "lrc-kit";
 import { IFoundLyrics } from "../dto";
 
 const LRCLIB_BASE_URL = "https://lrclib.net";
+const LRCLIB_USER_AGENT =
+  "Spotify Lyrics Viewer (https://github.com/brentvollebregt/spotify-lyrics-viewer)";
 
 export async function getLyrics(
   artists: string[],
@@ -26,6 +28,9 @@ export async function getLyrics(
 
   try {
     const response = await axios.get<LrcLibGetResponse>(requestUrl, {
+      headers: {
+        "User-Agent": LRCLIB_USER_AGENT
+      },
       validateStatus: status => status === 200 || status === 404
     });
 
@@ -66,7 +71,21 @@ export async function getLyrics(
   } catch (e) {
     // Can include 404 and anything else non-2xx
     console.warn(`Failed to call '${requestUrl}'`);
-    console.warn(e);
+
+    if (e instanceof Error && e.stack !== undefined) {
+      console.warn(e.stack);
+    }
+
+    if (axios.isAxiosError(e)) {
+      if (e.response !== undefined) {
+        console.log(`Response: HTTP${e.response.status} ${e.response.statusText}`);
+        console.log(`Response headers: ${JSON.stringify(e.response.headers)}`);
+        console.log(`Response data: ${JSON.stringify(e.response.data)}`);
+      }
+    } else {
+      console.warn(e);
+    }
+
     return null;
   }
 }
