@@ -69,7 +69,7 @@ export async function getLyrics(
       attribution: LRCLIB_BASE_URL
     } as IFoundLyrics;
   } catch (e) {
-    // Can include 404 and anything else non-2xx
+    // Anything non-200 or 404 is considered an error
     console.warn(`Failed to call '${requestUrl}'`);
 
     if (e instanceof Error && e.stack !== undefined) {
@@ -81,6 +81,8 @@ export async function getLyrics(
         console.log(`Response: HTTP${e.response.status} ${e.response.statusText}`);
         console.log(`Response headers: ${JSON.stringify(e.response.headers)}`);
         console.log(`Response data: ${JSON.stringify(e.response.data)}`);
+      } else {
+        console.log("No response");
       }
     } else {
       console.warn(e);

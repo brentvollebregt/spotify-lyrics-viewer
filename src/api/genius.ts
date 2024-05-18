@@ -151,7 +151,13 @@ export const getLyricsForPath = async (geniusPath: string): Promise<IFoundLyrics
   const requestUrl = `https://genius.com${geniusPath}`;
 
   try {
-    const response = await axios.get<string>(requestUrl);
+    const response = await axios.get<string>(requestUrl, {
+      validateStatus: status => status === 200 || status === 404
+    });
+
+    if (response.status === 404) {
+      return null;
+    }
 
     const html = response.data;
     const $ = cheerio.load(html); // Load in the page
@@ -171,8 +177,25 @@ export const getLyricsForPath = async (geniusPath: string): Promise<IFoundLyrics
       syncedLyrics: null
     } as IFoundLyrics;
   } catch (e) {
-    console.error(`Failed to call '${requestUrl}'`);
-    console.error(e);
+    // Anything non-200 or 404 is considered an error
+    console.warn(`Failed to call '${requestUrl}'`);
+
+    if (e instanceof Error && e.stack !== undefined) {
+      console.warn(e.stack);
+    }
+
+    if (axios.isAxiosError(e)) {
+      if (e.response !== undefined) {
+        console.log(`Response: HTTP${e.response.status} ${e.response.statusText}`);
+        console.log(`Response headers: ${JSON.stringify(e.response.headers)}`);
+        console.log(`Response data: ${JSON.stringify(e.response.data)}`);
+      } else {
+        console.log("No response");
+      }
+    } else {
+      console.warn(e);
+    }
+
     return null;
   }
 };
