@@ -11,6 +11,13 @@ import LyricsRoutes, { subRoute as lyricsSubRoute } from "./routes/lyrics";
 import SessionRoutes, { subRoute as sessionSubRoute } from "./routes/session";
 import SpotifyRoutes, { subRoute as spotifySubRoute } from "./routes/spotify";
 
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Unhandled Rejection at:", promise, "reason:", reason);
+  if (reason instanceof Error) {
+    console.error(reason.stack);
+  }
+});
+
 const app = express();
 const isProduction = app.get("env") === "production";
 
