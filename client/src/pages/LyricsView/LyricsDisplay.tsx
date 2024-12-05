@@ -112,21 +112,21 @@ const LyricsDisplay: React.FunctionComponent<IProps> = ({ lyricsDetails, progres
         </IconButton>
       </Toolbar>
       <div>
-        <Typography component="div" className={classes.lyrics} ref={lyricsRef}>
-          {lyricsState.before}
+        <Typography component="div" className={classes.lyrics} ref={lyricsRef} id="lyrics-main">
+          <span id="lyrics-passed">{lyricsState.before}</span>
 
           {lyricsState.highlighted !== "" && (
             <div className={classes.highlightedLyricsWrapper}>
-              <span className={classes.highlightedLyrics} ref={highlightedRef}>
+              <span className={classes.highlightedLyrics} ref={highlightedRef} id="lyrics-current">
                 {lyricsState.highlighted}
               </span>
             </div>
           )}
 
-          {lyricsState.after}
+          <span id="lyrics-upcoming">{lyricsState.after}</span>
         </Typography>
         <Box mt={2} textAlign="left">
-          <Typography>
+          <Typography id="lyrics-provider">
             <Link href={lyricsDetails.attribution}>
               Lyrics for {lyricsDetails.title} by {lyricsDetails.artist}
             </Link>
