@@ -63,7 +63,7 @@ app.use(lyricsSubRoute, LyricsRoutes);
 const port = process.env.PORT || 5000;
 
 if (!isProduction) {
-  // Even when running locally, we need to use HTTPS.Read the README for details.
+  // Even when running locally, we need to use HTTPS. Read the README for details.
   https
     .createServer(
       {

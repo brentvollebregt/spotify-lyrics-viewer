@@ -22,7 +22,7 @@
 
 Currently, Node 17 and above is the only dependency.
 
-1. Clone the repo.
+1. Clone the repo
 2. Setup the server
    - Execute `npm install` to install dependencies
    - Execute `cp .env.example .env` (or `copy` for Windows) and populate `.env`
@@ -44,9 +44,13 @@ Currently, Node 17 and above is the only dependency.
 
 The client will use the `REACT_APP_API_ROOT` environment variable value to decide where to send requests. If this is not provided, the current hosted URL will be used.
 
+The client can be started by executing `npm run start` in `./client`.
+
 #### Server
 
-`npm run dev` can be used for development of the server; this allows for hot-reloading. Running the client using `npm start` and setting `REACT_APP_API_ROOT` on the client to where the server is running will allow for a development setup with hot-reloading.
+`npm run dev` in the root can be used for development of the server; this allows for hot-reloading.
+
+Running the client using `npm start` in `./client` and setting `REACT_APP_API_ROOT` on the client to where the server is running will allow for a development setup with hot-reloading.
 
 > The "Debug Server" launch configuration in vs code can be used to debug the server
 
