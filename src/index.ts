@@ -1,8 +1,8 @@
 import dotenv from "dotenv";
 dotenv.config(); // Setup .env
 
-import cookieSession from "cookie-session";
 import express from "express";
+import session from "express-session";
 import fs from "fs";
 import https from "https";
 import path from "path";
@@ -21,39 +21,46 @@ process.on("unhandledRejection", (reason, promise) => {
 const app = express();
 const isProduction = app.get("env") === "production";
 
-app.set("trust proxy", 1); // Trust first proxy
-
+app.set("trust proxy", 1);
 app.use(express.json());
 
-// Session
+// iOS-proof session
 app.use(
-  cookieSession({
-    keys: Config.server.session_keys,
-    maxAge: 48 * 60 * 60 * 1000, // Expires in 48 hours
-    sameSite: "none",
-    secure: true // This is why we need SSL in dev
+  session({
+    secret: Config.server.session_keys[0],
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 48 * 60 * 60 * 1000
+    }
   })
 );
 
-// CORS
+// CORS (iOS-friendly)
 app.use((req, res, next) => {
-  const origin = req.get("origin") ?? req.get("referrer");
-  if (origin !== undefined && Config.server.allowed_origins.indexOf(origin) !== -1) {
+  const origin = req.headers.origin;
+
+  if (origin && Config.server.allowed_origins.includes(origin)) {
     res.header("Access-Control-Allow-Origin", origin);
   }
-  res.header("Access-Control-Max-Age", "600");
+
+  res.header("Access-Control-Allow-Credentials", "true");
   res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Credentials", "true");
+
   next();
 });
 
 // Static files from the React app
 const clientBuildDirectory = path.join(__dirname, Config.client.relative_build_directory);
-app.use(express.static(clientBuildDirectory)); // Non-index.html files
-Config.client.routes.forEach(route =>
-  app.use(route, express.static(path.join(clientBuildDirectory, "index.html")))
-);
+app.use(express.static(clientBuildDirectory));
+
+Config.client.routes.forEach(route => {
+  app.use(route, express.static(path.join(clientBuildDirectory, "index.html")));
+});
 
 // API Endpoints
 app.use(sessionSubRoute, SessionRoutes);
@@ -63,7 +70,7 @@ app.use(lyricsSubRoute, LyricsRoutes);
 const port = process.env.PORT || 5000;
 
 if (!isProduction) {
-  // Even when running locally, we need to use HTTPS. Read the README for details.
+  // Even when running locally, we need to use HTTPS. Read the
   https
     .createServer(
       {
